@@ -36,7 +36,7 @@
   .card-title::after { content: ''; flex: 1; height: 0.5px; background: var(--gray-border); }
 
   /* TIPO */
-  .tipo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .tipo-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
   .tipo-btn { border: 1.5px solid var(--gray-border); border-radius: var(--radius); padding: 14px 10px; text-align: center; cursor: pointer; transition: all .15s; background: var(--white); }
   .tipo-btn:hover { border-color: var(--red); background: var(--red-light); }
   .tipo-btn.selected { border-color: var(--red); background: var(--red-light); }
@@ -85,10 +85,11 @@
   .toggle-option input:checked + .toggle-pill { border-color: var(--red); background: var(--red); color: var(--white); }
 
   /* CHECKS */
-  .check-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid var(--gray-border); }
+  .check-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--gray-border); cursor: pointer; }
   .check-row:last-child { border-bottom: none; }
-  .check-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--red); cursor: pointer; flex-shrink: 0; }
-  .check-label { font-size: 13px; flex: 1; }
+  .check-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--red); cursor: pointer; flex-shrink: 0; appearance: auto; -webkit-appearance: auto; border: 2px solid var(--gray-border); border-radius: 4px; }
+  .check-label { font-size: 13px; flex: 1; cursor: pointer; user-select: none; }
+  .check-row:hover { background: var(--gray-light); border-radius: var(--radius); padding-left: 8px; padding-right: 8px; margin: 0 -8px; }
 
   /* ALERT */
   .alert-box { background: var(--red-light); border: 0.5px solid var(--red-mid); border-radius: var(--radius); padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--red); display: none; }
@@ -109,7 +110,7 @@
   .hidden { display: none !important; }
 
   @media (max-width: 500px) {
-    .tipo-grid { grid-template-columns: 1fr; }
+    .tipo-grid { grid-template-columns: 1fr 1fr; }
     .field-row-2, .field-row-3 { grid-template-columns: 1fr; }
     .header-title { display: none; }
   }
@@ -140,6 +141,11 @@
           <div class="tipo-icon">🔙</div>
           <div class="tipo-label">Desmovilización</div>
           <div class="tipo-sub">Retiro de cliente</div>
+        </div>
+        <div class="tipo-btn" onclick="setTipo('cambio',this)">
+          <div class="tipo-icon">🔄</div>
+          <div class="tipo-label">Cambio de equipo</div>
+          <div class="tipo-sub">Sale uno, entra otro</div>
         </div>
         <div class="tipo-btn" onclick="setTipo('accesorio',this)">
           <div class="tipo-icon">🔧</div>
@@ -222,8 +228,102 @@
       </div>
     </div>
 
+
+    <!-- 3C. CAMBIO DE EQUIPO -->
+    <div class="card hidden" id="card-cambio">
+      <div class="card-title">Equipo que sale</div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Código del equipo que sale <span class="req">*</span></label>
+          <select id="cambio-equipo-sale" onchange="onCambioSaleChange()">
+            <option value="">Seleccionar equipo…</option>
+          </select>
+        </div>
+        <div class="field-group hidden" id="field-cambio-acc-sale">
+          <label>Accesorio que lleva</label>
+          <select id="cambio-acc-sale"></select>
+        </div>
+      </div>
+      <div class="galera-badge" style="margin-top:4px">📍 Destino: Galera SMM — La Mañanitas</div>
+
+      <div class="seccion-divider"><span>Equipo que entra</span></div>
+
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Código del equipo que entra <span class="req">*</span></label>
+          <select id="cambio-equipo-entra" onchange="onCambioEntraChange()">
+            <option value="">Seleccionar equipo…</option>
+          </select>
+        </div>
+        <div class="field-group hidden" id="field-cambio-acc-entra">
+          <label>Accesorio que trae</label>
+          <select id="cambio-acc-entra"></select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Origen del equipo entrante <span class="req">*</span></label>
+        <div class="origen-toggle" style="margin-bottom:0">
+          <button class="origen-btn active" id="btn-cambio-galera" onclick="setCambioOrigen('galera')">📦 Galera SMM</button>
+          <button class="origen-btn" id="btn-cambio-proveedor" onclick="setCambioOrigen('proveedor')">🏭 Proveedor</button>
+          <button class="origen-btn" id="btn-cambio-proyecto" onclick="setCambioOrigen('proyecto')">🔄 Otro proyecto</button>
+        </div>
+      </div>
+
+      <div class="hidden" id="panel-cambio-proveedor" style="margin-top:12px">
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Nombre del proveedor <span class="req">*</span></label>
+            <input type="text" id="cambio-proveedor-nombre" placeholder="Ej: Rental Corp Panama">
+          </div>
+          <div class="field-group">
+            <label>Contacto del proveedor</label>
+            <input type="text" id="cambio-proveedor-contacto" placeholder="Nombre y/o teléfono">
+          </div>
+        </div>
+      </div>
+
+      <div class="hidden" id="panel-cambio-otproyecto" style="margin-top:12px">
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Cliente / proyecto de origen <span class="req">*</span></label>
+            <input type="text" id="cambio-origen-cliente" placeholder="Ej: Consorcio HPH">
+          </div>
+          <div class="field-group">
+            <label>Ubicación</label>
+            <input type="text" id="cambio-origen-ubicacion" placeholder="Ej: Línea 3 Metro">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTE (solo para cambio de equipo) -->
+    <div class="card hidden" id="card-cambio-cliente">
+      <div class="card-title">Cliente / Proyecto</div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Cliente <span class="req">*</span></label>
+          <input type="text" id="cambio-cliente" placeholder="Ej: Consorcio RC Puentes">
+        </div>
+        <div class="field-group">
+          <label>Proyecto <span class="req">*</span></label>
+          <input type="text" id="cambio-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
+        </div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Ubicación</label>
+          <input type="text" id="cambio-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
+        </div>
+        <div class="field-group">
+          <label>Contacto en proyecto</label>
+          <input type="text" id="cambio-contacto" placeholder="Nombre y/o teléfono">
+        </div>
+      </div>
+    </div>
+
     <!-- 4. RETIRO Y ENTREGA -->
-    <div class="card">
+    <div class="card" id="card-retiro-entrega">
       <div class="card-title">Retiro — origen</div>
 
       <!-- Toggle origen -->
@@ -305,14 +405,14 @@
     <!-- 6. CONDICIONES -->
     <div class="card">
       <div class="card-title">Condiciones del equipo</div>
-      <div class="check-row">
+      <label class="check-row" for="cond-operador">
         <input type="checkbox" id="cond-operador">
         <span class="check-label">Operador incluido</span>
-      </div>
-      <div class="check-row">
+      </label>
+      <label class="check-row" for="cond-diesel">
         <input type="checkbox" id="cond-diesel">
         <span class="check-label">Diesel incluido</span>
-      </div>
+      </label>
       <div class="check-row" style="padding-bottom:0;border-bottom:none">
         <div style="flex:1">
           <div class="check-label" style="margin-bottom:8px">Propiedad del equipo</div>
@@ -426,6 +526,7 @@
     poblarVendedores();
     poblarEquipos();
     poblarAccSolo();
+    poblarCambioEquipos();
     document.getElementById('fecha-solicitud').valueAsDate = new Date();
   });
 
@@ -434,8 +535,15 @@
     tipoActual = tipo;
     document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
     el.classList.add('selected');
-    document.getElementById('card-equipo').classList.toggle('hidden', tipo === 'accesorio');
-    document.getElementById('card-solo-accesorio').classList.toggle('hidden', tipo !== 'accesorio');
+
+    const esCambio    = tipo === 'cambio';
+    const esAccesorio = tipo === 'accesorio';
+
+    document.getElementById('card-equipo').classList.toggle('hidden', esAccesorio || esCambio);
+    document.getElementById('card-solo-accesorio').classList.toggle('hidden', !esAccesorio);
+    document.getElementById('card-cambio').classList.toggle('hidden', !esCambio);
+    document.getElementById('card-cambio-cliente').classList.toggle('hidden', !esCambio);
+    document.getElementById('card-retiro-entrega').classList.toggle('hidden', esCambio);
   }
 
   // ── Origen ────────────────────────────────────────────────
@@ -573,6 +681,74 @@
     }
   }
 
+  // ── Cambio de equipo helpers ─────────────────────────────
+  let cambioOrigenActual = 'galera';
+
+  function setCambioOrigen(origen) {
+    cambioOrigenActual = origen;
+    ['galera','proveedor','proyecto'].forEach(o => {
+      document.getElementById('btn-cambio-' + o).classList.toggle('active', o === origen);
+    });
+    document.getElementById('panel-cambio-proveedor').classList.toggle('hidden', origen !== 'proveedor');
+    document.getElementById('panel-cambio-otproyecto').classList.toggle('hidden', origen !== 'proyecto');
+  }
+
+  function onCambioSaleChange() {
+    const sel  = document.getElementById('cambio-equipo-sale');
+    const tipo = sel.options[sel.selectedIndex]?.value || '';
+    const info = ACCESORIOS_POR_TIPO[tipo];
+    const field = document.getElementById('field-cambio-acc-sale');
+    const acc   = document.getElementById('cambio-acc-sale');
+    acc.innerHTML = '';
+    if (!info) { field.classList.add('hidden'); return; }
+    field.classList.remove('hidden');
+    acc.innerHTML = `<option value="${info.default}" selected>${info.default} (por defecto)</option>`;
+    info.opcionales.forEach(o => acc.innerHTML += `<option value="${o}">${o}</option>`);
+  }
+
+  function onCambioEntraChange() {
+    const sel  = document.getElementById('cambio-equipo-entra');
+    const tipo = sel.options[sel.selectedIndex]?.value || '';
+    const info = ACCESORIOS_POR_TIPO[tipo];
+    const field = document.getElementById('field-cambio-acc-entra');
+    const acc   = document.getElementById('cambio-acc-entra');
+    acc.innerHTML = '';
+    if (!info) { field.classList.add('hidden'); return; }
+    field.classList.remove('hidden');
+    acc.innerHTML = `<option value="${info.default}" selected>${info.default} (por defecto)</option>`;
+    info.opcionales.forEach(o => acc.innerHTML += `<option value="${o}">${o}</option>`);
+  }
+
+  function poblarCambioEquipos() {
+    ['cambio-equipo-sale','cambio-equipo-entra'].forEach(id => {
+      const sel = document.getElementById(id);
+      const grupos = {};
+      EQUIPOS.forEach(eq => {
+        if (!grupos[eq.tipo]) grupos[eq.tipo] = [];
+        grupos[eq.tipo].push(eq);
+      });
+      const labels = {
+        excavadora:'Excavadoras', retroexcavadora:'Retroexcavadoras',
+        miniexcavadora:'Miniexcavadoras', minicargador:'Minicargadores',
+        telehandler:'Telehandlers', compactadora:'Compactadoras / Rolas',
+        bulldozer:'Bulldozers', motoniveladora:'Motoniveladoras'
+      };
+      Object.keys(labels).forEach(tipo => {
+        if (!grupos[tipo]) return;
+        const og = document.createElement('optgroup');
+        og.label = labels[tipo];
+        grupos[tipo].forEach(eq => {
+          const opt = document.createElement('option');
+          opt.value = eq.tipo;
+          opt.textContent = eq.codigo + ' — ' + eq.desc;
+          opt.dataset.codigo = eq.codigo;
+          og.appendChild(opt);
+        });
+        sel.appendChild(og);
+      });
+    });
+  }
+
   // ── Nueva solicitud ───────────────────────────────────────
   function nuevaSolicitud() {
     document.getElementById('form-area').style.display = 'block';
@@ -580,6 +756,10 @@
     document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
     tipoActual = '';
     setOrigen('galera');
+    setCambioOrigen('galera');
+    document.getElementById('card-cambio').classList.add('hidden');
+    document.getElementById('card-cambio-cliente').classList.add('hidden');
+    document.getElementById('card-retiro-entrega').classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>

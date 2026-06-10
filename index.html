@@ -492,7 +492,7 @@
   }
 
   // ── Enviar ────────────────────────────────────────────────
-  function submitForm() {
+  async function submitForm() {
     const alertBox = document.getElementById('alert-box');
     const vendedor       = document.getElementById('vendedor').value;
     const fechaMovil     = document.getElementById('fecha-movil').value;
@@ -507,6 +507,11 @@
     }
 
     alertBox.style.display = 'none';
+
+    const btn = document.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+
     const ref   = generateRef();
     const tipos = { movilizacion: 'Movilización', desmovilizacion: 'Desmovilización', accesorio: 'Solo accesorio' };
     const sel   = document.getElementById('equipo-codigo');
@@ -514,16 +519,58 @@
       ? (sel.options[sel.selectedIndex]?.dataset.codigo || sel.value)
       : document.getElementById('acc-solo-codigo').value;
 
-    document.getElementById('success-ref').textContent = ref;
-    document.getElementById('success-msg').innerHTML =
-      `<strong>${tipos[tipoActual]}</strong> — ${equipo || '—'}<br>` +
-      `Cliente: ${entregaCliente} / ${entregaProyecto}<br>` +
-      `Solicitado por: ${vendedor}<br><br>` +
-      `${CONFIG.responsable_ops} y el equipo han sido notificados.`;
+    // Construir objeto para Supabase
+    const data = {
+      referencia:            ref,
+      tipo:                  tipoActual,
+      vendedor:              vendedor,
+      fecha_solicitud:       document.getElementById('fecha-solicitud').value,
+      fecha_movilizacion:    fechaMovil,
+      fecha_inicio_alquiler: fechaAlquiler,
+      equipo_codigo:         equipo || null,
+      equipo_tipo:           tipoActual !== 'accesorio' ? (sel.options[sel.selectedIndex]?.value || null) : null,
+      accesorio_actual:      document.getElementById('accesorio-actual')?.value || null,
+      acc_accion:            document.getElementById('acc-accion')?.value || null,
+      acc_nuevo:             document.getElementById('acc-nuevo-codigo')?.value || null,
+      acc_destino:           document.querySelector('input[name="acc-destino"]:checked')?.value || null,
+      origen:                origenActual,
+      retiro_cliente:        origenActual === 'proyecto' ? document.getElementById('retiro-cliente').value : 'SMM — Galera',
+      retiro_proyecto:       origenActual === 'proyecto' ? document.getElementById('retiro-proyecto').value : 'La Mañanitas',
+      retiro_ubicacion:      origenActual === 'proyecto' ? document.getElementById('retiro-ubicacion').value : 'La Mañanitas',
+      retiro_contacto:       origenActual === 'proyecto' ? document.getElementById('retiro-contacto').value : null,
+      entrega_cliente:       entregaCliente,
+      entrega_proyecto:      entregaProyecto,
+      entrega_ubicacion:     document.getElementById('entrega-ubicacion').value || null,
+      entrega_contacto:      document.getElementById('entrega-contacto').value || null,
+      operador:              document.getElementById('cond-operador').checked,
+      diesel:                document.getElementById('cond-diesel').checked,
+      propiedad:             document.querySelector('input[name="propiedad"]:checked')?.value || 'smm',
+      notas:                 document.getElementById('notas').value || null,
+      estado:                'pendiente'
+    };
 
-    document.getElementById('form-area').style.display = 'none';
-    document.getElementById('success-screen').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      await guardarSolicitud(data);
+
+      document.getElementById('success-ref').textContent = ref;
+      document.getElementById('success-msg').innerHTML =
+        `<strong>${tipos[tipoActual]}</strong> — ${equipo || '—'}<br>` +
+        `Cliente: ${entregaCliente} / ${entregaProyecto}<br>` +
+        `Solicitado por: ${vendedor}<br><br>` +
+        `${CONFIG.responsable_ops} y el equipo han sido notificados.`;
+
+      document.getElementById('form-area').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch(e) {
+      alertBox.textContent = '⚠ Error al guardar. Intenta de nuevo.';
+      alertBox.style.display = 'block';
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Enviar solicitud';
+    }
   }
 
   // ── Nueva solicitud ───────────────────────────────────────
@@ -536,5 +583,30 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
+
+<script>
+// ── Supabase config ──────────────────────────────────────────
+const SUPABASE_URL = "https://ujoxrtwyfsqabhrjtjlr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqb3hydHd5ZnNxYWJocmp0amxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMTA4NzksImV4cCI6MjA5NjY4Njg3OX0.BSKtUjdvoUMsJ7L6buzUKjDM3ZxWipf-6Tz7YhS3C-4";
+
+async function guardarSolicitud(data) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/solicitudes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Prefer": "return=representation"
+    },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  return await res.json();
+}
+</script>
+
 </body>
 </html>

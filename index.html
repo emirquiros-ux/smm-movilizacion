@@ -1,137 +1,809 @@
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMM — Solicitud de Movilización</title>
+<style>
+  :root {
+    --red: #C0392B;
+    --red-light: #fdf2f1;
+    --red-mid: #e8c5c2;
+    --gray-dark: #1a1a1a;
+    --gray: #2c2c2c;
+    --gray-mid: #6b6b6b;
+    --gray-light: #f5f5f5;
+    --gray-border: #e0e0e0;
+    --white: #ffffff;
+    --green: #1a7a4a;
+    --green-light: #edf7f2;
+    --green-border: #b8e0cc;
+    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --radius: 8px;
+    --radius-lg: 12px;
   }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--gray-light); color: var(--gray-dark); min-height: 100vh; }
 
-  const RESEND_KEY = process.env.RESEND_API_KEY;
-  if (!RESEND_KEY) {
-    return res.status(500).json({ error: 'Missing API key' });
+  .header { background: var(--white); border-bottom: 3px solid var(--red); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .header-inner { max-width: 720px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .header-title { color: var(--gray-mid); font-size: 13px; }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  .card { background: var(--white); border: 0.5px solid var(--gray-border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; }
+  .card-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-mid); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .card-title::after { content: ''; flex: 1; height: 0.5px; background: var(--gray-border); }
+
+  /* TIPO */
+  .tipo-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+  .tipo-btn { border: 1.5px solid var(--gray-border); border-radius: var(--radius); padding: 14px 10px; text-align: center; cursor: pointer; transition: all .15s; background: var(--white); }
+  .tipo-btn:hover { border-color: var(--red); background: var(--red-light); }
+  .tipo-btn.selected { border-color: var(--red); background: var(--red-light); }
+  .tipo-icon { font-size: 20px; margin-bottom: 6px; }
+  .tipo-label { font-size: 12px; font-weight: 500; color: var(--gray-dark); }
+  .tipo-sub { font-size: 10px; color: var(--gray-mid); margin-top: 2px; }
+
+  /* ORIGEN TOGGLE */
+  .origen-toggle { display: flex; background: var(--gray-light); border: 0.5px solid var(--gray-border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+  .origen-btn { flex: 1; padding: 10px 12px; font-size: 12px; font-weight: 500; text-align: center; cursor: pointer; border: none; background: transparent; color: var(--gray-mid); transition: all .15s; border-right: 0.5px solid var(--gray-border); font-family: var(--font); }
+  .origen-btn:last-child { border-right: none; }
+  .origen-btn.active { background: var(--red); color: var(--white); }
+
+  .galera-badge { display: flex; align-items: center; gap: 8px; background: var(--green-light); border: 0.5px solid var(--green-border); border-radius: var(--radius); padding: 10px 14px; font-size: 13px; color: var(--green); font-weight: 500; }
+  .galera-badge span { font-size: 11px; color: #3a9a62; font-weight: 400; }
+
+  /* FIELDS */
+  .field-group { margin-bottom: 14px; }
+  .field-group:last-child { margin-bottom: 0; }
+  .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  label { display: block; font-size: 12px; font-weight: 500; color: var(--gray-mid); margin-bottom: 5px; }
+  .req { color: var(--red); }
+  .lbl-opt { font-size: 10px; background: var(--gray-light); color: var(--gray-mid); padding: 1px 6px; border-radius: 4px; margin-left: 5px; font-weight: 400; }
+  .lbl-def { font-size: 10px; background: var(--green-light); color: var(--green); padding: 1px 6px; border-radius: 4px; margin-left: 5px; font-weight: 400; }
+  input, select, textarea { width: 100%; border: 0.5px solid var(--gray-border); border-radius: var(--radius); padding: 9px 12px; font-size: 13px; font-family: var(--font); color: var(--gray-dark); background: var(--white); transition: border-color .15s; -webkit-appearance: none; appearance: none; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.08); }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6b6b' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+  .info-note { font-size: 11px; color: var(--gray-mid); margin-top: 4px; line-height: 1.4; }
+
+  /* DIVIDER */
+  .seccion-divider { display: flex; align-items: center; gap: 10px; margin: 20px 0 16px; }
+  .seccion-divider span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-mid); white-space: nowrap; }
+  .seccion-divider::before, .seccion-divider::after { content: ''; flex: 1; height: 0.5px; background: var(--gray-border); }
+
+  /* ACCESORIO PANEL */
+  .acc-panel { background: var(--gray-light); border: 0.5px dashed var(--gray-border); border-radius: var(--radius); padding: 14px; margin-top: 12px; }
+  .acc-panel-title { font-size: 11px; font-weight: 600; color: var(--gray-mid); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+
+  /* TOGGLE PILLS */
+  .toggle-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .toggle-option input[type="radio"], .toggle-option input[type="checkbox"] { display: none; }
+  .toggle-option { cursor: pointer; }
+  .toggle-pill { border: 1px solid var(--gray-border); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 500; color: var(--gray-mid); cursor: pointer; transition: all .15s; display: inline-block; user-select: none; }
+  .toggle-option input:checked + .toggle-pill { border-color: var(--red); background: var(--red); color: var(--white); }
+
+  /* CHECKS */
+  .check-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--gray-border); cursor: pointer; }
+  .check-row:last-child { border-bottom: none; }
+  .check-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--red); cursor: pointer; flex-shrink: 0; appearance: auto; -webkit-appearance: auto; border: 2px solid var(--gray-border); border-radius: 4px; }
+  .check-label { font-size: 13px; flex: 1; cursor: pointer; user-select: none; }
+  .check-row:hover { background: var(--gray-light); border-radius: var(--radius); padding-left: 8px; padding-right: 8px; margin: 0 -8px; }
+
+  /* ALERT */
+  .alert-box { background: var(--red-light); border: 0.5px solid var(--red-mid); border-radius: var(--radius); padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--red); display: none; }
+
+  /* SUBMIT */
+  .btn-submit { width: 100%; background: var(--red); color: var(--white); border: none; border-radius: var(--radius); padding: 14px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background .15s; margin-top: 24px; font-family: var(--font); }
+  .btn-submit:hover { background: #a93226; }
+  .btn-submit:active { transform: scale(0.99); }
+
+  /* SUCCESS */
+  .success-screen { display: none; background: var(--white); border: 0.5px solid var(--gray-border); border-radius: var(--radius-lg); padding: 40px 24px; text-align: center; }
+  .success-icon { width: 56px; height: 56px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; }
+  .success-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .success-sub { font-size: 13px; color: var(--gray-mid); margin-bottom: 20px; line-height: 1.6; }
+  .success-ref { font-size: 13px; background: var(--gray-light); border-radius: var(--radius); padding: 10px 16px; display: inline-block; font-weight: 600; letter-spacing: .04em; }
+  .btn-nueva { margin-top: 20px; background: var(--gray-light); color: var(--gray-dark); border: 0.5px solid var(--gray-border); border-radius: var(--radius); padding: 10px 20px; font-size: 13px; cursor: pointer; font-family: var(--font); }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 500px) {
+    .tipo-grid { grid-template-columns: 1fr 1fr; }
+    .field-row-2, .field-row-3 { grid-template-columns: 1fr; }
+    .header-title { display: none; }
   }
+</style>
+</head>
+<body>
 
-  const data = req.body;
-
-  const tipos = {
-    movilizacion: 'Movilización',
-    desmovilizacion: 'Desmovilización',
-    cambio: 'Cambio de equipo',
-    accesorio: 'Solo accesorio'
-  };
-  const tipoLabel = tipos[data.tipo] || data.tipo;
-
-  const origenTexto = data.origen === 'galera'
-    ? 'SMM — Galera La Mañanitas'
-    : `${data.retiro_cliente} / ${data.retiro_proyecto}`;
-
-  const condiciones = [
-    data.operador ? '✓ Operador incluido' : '✗ Sin operador',
-    data.diesel   ? '✓ Diesel incluido'   : '✗ Sin diesel',
-    `Propiedad: ${data.propiedad === 'smm' ? 'SMM' : 'Arrendada'}`
-  ].join(' &nbsp;|&nbsp; ');
-
-  const notasHtml = data.notas
-    ? `<tr><td colspan="2" style="padding:12px 16px;background:#fffbf0;border-top:0.5px solid #f0e0a0">
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#c8a030;margin-bottom:4px">📝 Notas</div>
-        <div style="font-size:13px;color:#6b4c00">${data.notas}</div>
-      </td></tr>`
-    : '';
-
-  const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:0;background:#f0f0f0;font-family:'Segoe UI',system-ui,sans-serif">
-<div style="max-width:580px;margin:0 auto;padding:20px 0">
-
-  <div style="background:#fff;border-top:4px solid #C0392B;border-radius:12px 12px 0 0;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #e0e0e0">
-    <div style="font-size:16px;font-weight:700;color:#1a1a1a;letter-spacing:.04em">SMM <span style="font-weight:400;color:#888;font-size:12px">SUPER MEGA MÁQUINAS</span></div>
-    <div style="font-size:11px;color:#aaa;text-align:right">Nueva solicitud<br>${new Date().toLocaleDateString('es-PA', {day:'numeric',month:'short',year:'numeric'})}</div>
-  </div>
-
-  <div style="background:#fff;padding:24px 28px">
-    <div style="background:#fdf2f1;border:0.5px solid #e8c5c2;border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
-      <div style="width:8px;height:8px;background:#C0392B;border-radius:50%;flex-shrink:0"></div>
-      <span style="font-size:13px;color:#C0392B;font-weight:500">Nueva solicitud de movilización registrada</span>
-    </div>
-
-    <div style="background:#f5f5f5;border-radius:8px;padding:10px 16px;display:inline-block;font-size:13px;font-weight:600;color:#1a1a1a;letter-spacing:.04em;margin-bottom:20px">📋 ${data.referencia}</div>
-
-    <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#aaa;margin-bottom:10px">Detalles del movimiento</div>
-    <table style="width:100%;border:0.5px solid #e0e0e0;border-radius:8px;border-collapse:collapse;overflow:hidden;margin-bottom:20px">
-      <tr>
-        <td style="padding:10px 14px;border-right:0.5px solid #e0e0e0;border-bottom:0.5px solid #e0e0e0;width:50%">
-          <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Tipo</div>
-          <div style="font-size:13px;font-weight:500;color:#1a1a1a">${tipoLabel}</div>
-        </td>
-        <td style="padding:10px 14px;border-bottom:0.5px solid #e0e0e0">
-          <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Equipo</div>
-          <div style="font-size:13px;font-weight:500;color:#1a1a1a">${data.equipo_codigo || '—'}</div>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:10px 14px;border-right:0.5px solid #e0e0e0;border-bottom:0.5px solid #e0e0e0">
-          <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Fecha movilización</div>
-          <div style="font-size:13px;font-weight:500;color:#1a1a1a">${data.fecha_movilizacion}</div>
-        </td>
-        <td style="padding:10px 14px;border-bottom:0.5px solid #e0e0e0">
-          <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Inicio alquiler</div>
-          <div style="font-size:13px;font-weight:500;color:#1a1a1a">${data.fecha_inicio_alquiler}</div>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:10px 14px;border-right:0.5px solid #e0e0e0">
-          <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Solicitado por</div>
-          <div style="font-size:13px;font-weight:500;color:#1a1a1a">${data.vendedor}</div>
-        </td>
-        <td style="padding:10px 14px">
-          <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Accesorio</div>
-          <div style="font-size:13px;font-weight:500;color:#1a1a1a">${data.accesorio_actual || '—'}</div>
-        </td>
-      </tr>
-      ${notasHtml}
-    </table>
-
-    <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#aaa;margin-bottom:10px">Ruta</div>
-    <div style="background:#f5f5f5;border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:20px">
-      <div style="flex:1">
-        <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em">Origen</div>
-        <div style="font-size:13px;font-weight:600;color:#1a1a1a">${origenTexto}</div>
-      </div>
-      <div style="font-size:20px;color:#C0392B">→</div>
-      <div style="flex:1;text-align:right">
-        <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em">Destino</div>
-        <div style="font-size:13px;font-weight:600;color:#1a1a1a">${data.entrega_cliente}</div>
-        <div style="font-size:11px;color:#6b6b6b">${data.entrega_proyecto}</div>
-      </div>
-    </div>
-
-    <div style="font-size:12px;color:#6b6b6b;text-align:center;padding:8px 0">${condiciones}</div>
-  </div>
-
-  <div style="background:#f5f5f5;border-radius:0 0 12px 12px;padding:14px 28px;text-align:center;font-size:11px;color:#aaa;line-height:1.6;border-top:0.5px solid #e0e0e0">
-    Super Mega Máquinas · Heavy Equipment Rental<br>
-    Este correo fue generado automáticamente — no responder directamente.
+<div class="header">
+  <div class="header-inner">
+    <img src="data:image/png;base64,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" style="height:44px;width:auto;" alt="Super Mega Máquinas">
+    <div class="header-title">Solicitud de Movilización</div>
   </div>
 </div>
-</body></html>`;
 
-  // Send to all recipients from config
-  const destinatarios = ['emir.quiros@infratec.com.pa'];
+<div class="container">
+  <div id="form-area">
 
-  const emailRes = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${RESEND_KEY}`
-    },
-    body: JSON.stringify({
-      from: 'SMM Movilizaciones <onboarding@resend.dev>',
-      to: destinatarios,
-      subject: `[${data.referencia}] Nueva solicitud — ${tipoLabel} ${data.equipo_codigo || ''}`,
-      html: htmlContent
-    })
-  });
+    <!-- 1. TIPO -->
+    <div class="card">
+      <div class="card-title">Tipo de solicitud</div>
+      <div class="tipo-grid">
+        <div class="tipo-btn" onclick="setTipo('movilizacion',this)">
+          <div class="tipo-icon">🚛</div>
+          <div class="tipo-label">Movilización</div>
+          <div class="tipo-sub">Traslado a cliente</div>
+        </div>
+        <div class="tipo-btn" onclick="setTipo('desmovilizacion',this)">
+          <div class="tipo-icon">🔙</div>
+          <div class="tipo-label">Desmovilización</div>
+          <div class="tipo-sub">Retiro de cliente</div>
+        </div>
+        <div class="tipo-btn" onclick="setTipo('cambio',this)">
+          <div class="tipo-icon">🔄</div>
+          <div class="tipo-label">Cambio de equipo</div>
+          <div class="tipo-sub">Sale uno, entra otro</div>
+        </div>
+        <div class="tipo-btn" onclick="setTipo('accesorio',this)">
+          <div class="tipo-icon">🔧</div>
+          <div class="tipo-label">Solo accesorio</div>
+          <div class="tipo-sub">Sin equipo base</div>
+        </div>
+      </div>
+    </div>
 
-  if (!emailRes.ok) {
-    const err = await emailRes.text();
-    return res.status(500).json({ error: err });
+    <!-- 2. RESPONSABLE -->
+    <div class="card">
+      <div class="card-title">Responsable</div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Vendedor / Solicitante <span class="req">*</span></label>
+          <select id="vendedor"><option value="">Seleccionar…</option></select>
+        </div>
+        <div class="field-group">
+          <label>Fecha de solicitud <span class="req">*</span></label>
+          <input type="date" id="fecha-solicitud">
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. EQUIPO -->
+    <div class="card" id="card-equipo">
+      <div class="card-title">Equipo</div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Código del equipo <span class="req">*</span></label>
+          <select id="equipo-codigo" onchange="onEquipoChange()"><option value="">Seleccionar equipo…</option></select>
+        </div>
+        <div class="field-group hidden" id="field-acc-default">
+          <label>Accesorio actual <span class="lbl-def" id="lbl-def-badge">por defecto</span></label>
+          <select id="accesorio-actual"></select>
+          <p class="info-note" id="info-acc"></p>
+        </div>
+      </div>
+
+      <!-- Panel cambio accesorio -->
+      <div class="acc-panel hidden" id="panel-cambio-acc">
+        <div class="acc-panel-title">Cambio de accesorio</div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Acción</label>
+            <select id="acc-accion" onchange="onAccionChange()">
+              <option value="">Seleccionar…</option>
+              <option value="entrega">Entrega con el equipo</option>
+              <option value="cambio">Cambiar antes de entregar</option>
+              <option value="retirar">Retirar accesorio</option>
+            </select>
+          </div>
+          <div class="field-group hidden" id="field-acc-nuevo">
+            <label>Nuevo accesorio <span class="req">*</span></label>
+            <select id="acc-nuevo-codigo"><option value="">Seleccionar…</option></select>
+          </div>
+        </div>
+        <div class="hidden" id="field-acc-destino">
+          <label>Accesorio retirado va a</label>
+          <div class="toggle-group">
+            <label class="toggle-option"><input type="radio" name="acc-destino" value="galera"><span class="toggle-pill">Galera SMM</span></label>
+            <label class="toggle-option"><input type="radio" name="acc-destino" value="queda"><span class="toggle-pill">Se queda en proyecto</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3B. SOLO ACCESORIO -->
+    <div class="card hidden" id="card-solo-accesorio">
+      <div class="card-title">Accesorio</div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Código del accesorio <span class="req">*</span></label>
+          <select id="acc-solo-codigo"><option value="">Seleccionar…</option></select>
+        </div>
+        <div class="field-group">
+          <label>Compatible con equipo <span class="lbl-opt">opcional</span></label>
+          <input type="text" id="acc-equipo-compat" placeholder="Ej: E-09-2 del cliente">
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 3C. CAMBIO DE EQUIPO -->
+    <div class="card hidden" id="card-cambio">
+      <div class="card-title">Equipo que sale</div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Código del equipo que sale <span class="req">*</span></label>
+          <select id="cambio-equipo-sale" onchange="onCambioSaleChange()">
+            <option value="">Seleccionar equipo…</option>
+          </select>
+        </div>
+        <div class="field-group hidden" id="field-cambio-acc-sale">
+          <label>Accesorio que lleva</label>
+          <select id="cambio-acc-sale"></select>
+        </div>
+      </div>
+      <div class="galera-badge" style="margin-top:4px">📍 Destino: Galera SMM — La Mañanitas</div>
+
+      <div class="seccion-divider"><span>Equipo que entra</span></div>
+
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Código del equipo que entra <span class="req">*</span></label>
+          <select id="cambio-equipo-entra" onchange="onCambioEntraChange()">
+            <option value="">Seleccionar equipo…</option>
+          </select>
+        </div>
+        <div class="field-group hidden" id="field-cambio-acc-entra">
+          <label>Accesorio que trae</label>
+          <select id="cambio-acc-entra"></select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Origen del equipo entrante <span class="req">*</span></label>
+        <div class="origen-toggle" style="margin-bottom:0">
+          <button class="origen-btn active" id="btn-cambio-galera" onclick="setCambioOrigen('galera')">📦 Galera SMM</button>
+          <button class="origen-btn" id="btn-cambio-proveedor" onclick="setCambioOrigen('proveedor')">🏭 Proveedor</button>
+          <button class="origen-btn" id="btn-cambio-proyecto" onclick="setCambioOrigen('proyecto')">🔄 Otro proyecto</button>
+        </div>
+      </div>
+
+      <div class="hidden" id="panel-cambio-proveedor" style="margin-top:12px">
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Nombre del proveedor <span class="req">*</span></label>
+            <input type="text" id="cambio-proveedor-nombre" placeholder="Ej: Rental Corp Panama">
+          </div>
+          <div class="field-group">
+            <label>Contacto del proveedor</label>
+            <input type="text" id="cambio-proveedor-contacto" placeholder="Nombre y/o teléfono">
+          </div>
+        </div>
+      </div>
+
+      <div class="hidden" id="panel-cambio-otproyecto" style="margin-top:12px">
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Cliente / proyecto de origen <span class="req">*</span></label>
+            <input type="text" id="cambio-origen-cliente" placeholder="Ej: Consorcio HPH">
+          </div>
+          <div class="field-group">
+            <label>Ubicación</label>
+            <input type="text" id="cambio-origen-ubicacion" placeholder="Ej: Línea 3 Metro">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTE (solo para cambio de equipo) -->
+    <div class="card hidden" id="card-cambio-cliente">
+      <div class="card-title">Cliente / Proyecto</div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Cliente <span class="req">*</span></label>
+          <input type="text" id="cambio-cliente" placeholder="Ej: Consorcio RC Puentes">
+        </div>
+        <div class="field-group">
+          <label>Proyecto <span class="req">*</span></label>
+          <input type="text" id="cambio-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
+        </div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Ubicación</label>
+          <input type="text" id="cambio-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
+        </div>
+        <div class="field-group">
+          <label>Contacto en proyecto</label>
+          <input type="text" id="cambio-contacto" placeholder="Nombre y/o teléfono">
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. RETIRO Y ENTREGA -->
+    <div class="card" id="card-retiro-entrega">
+      <div class="card-title">Retiro — origen</div>
+
+      <!-- Toggle origen -->
+      <div class="origen-toggle">
+        <button class="origen-btn active" id="btn-galera" onclick="setOrigen('galera')">📦 Desde galera SMM</button>
+        <button class="origen-btn" id="btn-proyecto" onclick="setOrigen('proyecto')">🔄 Desde otro proyecto</button>
+      </div>
+
+      <!-- Panel galera: solo badge, sin campos -->
+      <div id="panel-galera">
+        <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div>
+      </div>
+
+      <!-- Panel proyecto a proyecto -->
+      <div id="panel-proyecto" class="hidden">
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Cliente de retiro <span class="req">*</span></label>
+            <input type="text" id="retiro-cliente" placeholder="Ej: Consorcio HPH">
+          </div>
+          <div class="field-group">
+            <label>Proyecto de retiro <span class="req">*</span></label>
+            <input type="text" id="retiro-proyecto" placeholder="Ej: Línea 3 Metro">
+          </div>
+        </div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Ubicación de retiro <span class="req">*</span></label>
+            <input type="text" id="retiro-ubicacion" placeholder="Ej: Arraiján, Colón">
+          </div>
+          <div class="field-group">
+            <label>Contacto de retiro</label>
+            <input type="text" id="retiro-contacto" placeholder="Nombre y/o teléfono">
+          </div>
+        </div>
+      </div>
+
+      <!-- Entrega — siempre visible -->
+      <div class="seccion-divider"><span>Entrega — destino</span></div>
+
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Cliente <span class="req">*</span></label>
+          <input type="text" id="entrega-cliente" placeholder="Ej: Consorcio RC Puentes">
+        </div>
+        <div class="field-group">
+          <label>Proyecto <span class="req">*</span></label>
+          <input type="text" id="entrega-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
+        </div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Ubicación de entrega <span class="req">*</span></label>
+          <input type="text" id="entrega-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
+        </div>
+        <div class="field-group">
+          <label>Contacto de entrega</label>
+          <input type="text" id="entrega-contacto" placeholder="Nombre y/o teléfono">
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. FECHAS -->
+    <div class="card">
+      <div class="card-title">Fechas</div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Fecha de movilización solicitada <span class="req">*</span></label>
+          <input type="date" id="fecha-movil">
+        </div>
+        <div class="field-group">
+          <label>Fecha inicio de alquiler <span class="req">*</span></label>
+          <input type="date" id="fecha-alquiler">
+          <p class="info-note">Base para el control operativo</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CONDICIONES -->
+    <div class="card">
+      <div class="card-title">Condiciones del equipo</div>
+      <label class="check-row" for="cond-operador">
+        <input type="checkbox" id="cond-operador">
+        <span class="check-label">Operador incluido</span>
+      </label>
+      <label class="check-row" for="cond-diesel">
+        <input type="checkbox" id="cond-diesel">
+        <span class="check-label">Diesel incluido</span>
+      </label>
+      <div class="check-row" style="padding-bottom:0;border-bottom:none">
+        <div style="flex:1">
+          <div class="check-label" style="margin-bottom:8px">Propiedad del equipo</div>
+          <div class="toggle-group">
+            <label class="toggle-option"><input type="radio" name="propiedad" value="smm" checked><span class="toggle-pill">SMM</span></label>
+            <label class="toggle-option"><input type="radio" name="propiedad" value="arrendada"><span class="toggle-pill">Arrendada</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. NOTAS -->
+    <div class="card">
+      <div class="card-title">Notas y observaciones</div>
+      <textarea id="notas" placeholder="Instrucciones especiales, condiciones de entrega, restricciones de horario, cambios de accesorio…"></textarea>
+    </div>
+
+    <div class="alert-box" id="alert-box">⚠ Por favor completa todos los campos requeridos.</div>
+    <button class="btn-submit" onclick="submitForm()">Enviar solicitud</button>
+
+  </div><!-- /form-area -->
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Solicitud enviada</div>
+    <div class="success-sub" id="success-msg"></div>
+    <div class="success-ref" id="success-ref"></div>
+    <br>
+    <button class="btn-nueva" onclick="nuevaSolicitud()">Nueva solicitud</button>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+  let tipoActual = '';
+  let origenActual = 'galera';
+
+  // ── Poblar vendedores ──────────────────────────────────────
+  function poblarVendedores() {
+    const sel = document.getElementById('vendedor');
+    VENDEDORES.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      sel.appendChild(opt);
+    });
   }
 
-  return res.status(200).json({ ok: true });
+  // ── Poblar equipos agrupados por tipo ─────────────────────
+  function poblarEquipos() {
+    const sel = document.getElementById('equipo-codigo');
+    const grupos = {};
+    EQUIPOS.forEach(eq => {
+      if (!grupos[eq.tipo]) grupos[eq.tipo] = [];
+      grupos[eq.tipo].push(eq);
+    });
+
+    const labels = {
+      excavadora: 'Excavadoras', retroexcavadora: 'Retroexcavadoras',
+      miniexcavadora: 'Miniexcavadoras', minicargador: 'Minicargadores',
+      telehandler: 'Telehandlers', compactadora: 'Compactadoras / Rolas',
+      bulldozer: 'Bulldozers', motoniveladora: 'Motoniveladoras'
+    };
+
+    Object.keys(labels).forEach(tipo => {
+      if (!grupos[tipo]) return;
+      const og = document.createElement('optgroup');
+      og.label = labels[tipo];
+      grupos[tipo].forEach(eq => {
+        const opt = document.createElement('option');
+        opt.value = eq.tipo;
+        opt.textContent = eq.codigo + (eq.desc ? ' — ' + eq.desc : '');
+        opt.dataset.codigo = eq.codigo;
+        og.appendChild(opt);
+      });
+      sel.appendChild(og);
+    });
+  }
+
+  // ── Poblar accesorios independientes ──────────────────────
+  function poblarAccSolo() {
+    const sel = document.getElementById('acc-solo-codigo');
+    const grupos = {};
+    ACCESORIOS.forEach(a => {
+      if (!grupos[a.tipo]) grupos[a.tipo] = [];
+      grupos[a.tipo].push(a);
+    });
+
+    const labels = {
+      martillo: 'Martillos', balde: 'Baldes',
+      orquilla: 'Orquillas', barredora: 'Barredoras', forro: 'Forros'
+    };
+
+    Object.keys(labels).forEach(tipo => {
+      if (!grupos[tipo]) return;
+      const og = document.createElement('optgroup');
+      og.label = labels[tipo];
+      grupos[tipo].forEach(a => {
+        const opt = document.createElement('option');
+        opt.value = a.codigo;
+        opt.textContent = a.codigo + ' — ' + a.nombre;
+        og.appendChild(opt);
+      });
+      sel.appendChild(og);
+    });
+  }
+
+  // ── Init ──────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    poblarVendedores();
+    poblarEquipos();
+    poblarAccSolo();
+    poblarCambioEquipos();
+    document.getElementById('fecha-solicitud').valueAsDate = new Date();
+  });
+
+  // ── Tipo de movimiento ────────────────────────────────────
+  function setTipo(tipo, el) {
+    tipoActual = tipo;
+    document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+
+    const esCambio    = tipo === 'cambio';
+    const esAccesorio = tipo === 'accesorio';
+
+    document.getElementById('card-equipo').classList.toggle('hidden', esAccesorio || esCambio);
+    document.getElementById('card-solo-accesorio').classList.toggle('hidden', !esAccesorio);
+    document.getElementById('card-cambio').classList.toggle('hidden', !esCambio);
+    document.getElementById('card-cambio-cliente').classList.toggle('hidden', !esCambio);
+    document.getElementById('card-retiro-entrega').classList.toggle('hidden', esCambio);
+  }
+
+  // ── Origen ────────────────────────────────────────────────
+  function setOrigen(origen) {
+    origenActual = origen;
+    document.getElementById('btn-galera').classList.toggle('active', origen === 'galera');
+    document.getElementById('btn-proyecto').classList.toggle('active', origen === 'proyecto');
+    document.getElementById('panel-galera').classList.toggle('hidden', origen !== 'galera');
+    document.getElementById('panel-proyecto').classList.toggle('hidden', origen !== 'proyecto');
+  }
+
+  // ── Equipo seleccionado → accesorios ─────────────────────
+  function onEquipoChange() {
+    const sel = document.getElementById('equipo-codigo');
+    const tipo = sel.options[sel.selectedIndex]?.value || '';
+    const info = ACCESORIOS_POR_TIPO[tipo];
+    const fieldDef = document.getElementById('field-acc-default');
+    const panelCambio = document.getElementById('panel-cambio-acc');
+    const accActual = document.getElementById('accesorio-actual');
+    const accNuevo = document.getElementById('acc-nuevo-codigo');
+
+    accActual.innerHTML = '';
+    accNuevo.innerHTML = '<option value="">Seleccionar…</option>';
+
+    if (!info) {
+      fieldDef.classList.add('hidden');
+      panelCambio.classList.add('hidden');
+      return;
+    }
+
+    fieldDef.classList.remove('hidden');
+    accActual.innerHTML = `<option value="${info.default}" selected>${info.default} (por defecto)</option>`;
+    info.opcionales.forEach(o => {
+      accActual.innerHTML += `<option value="${o}">${o}</option>`;
+      accNuevo.innerHTML  += `<option value="${o}">${o}</option>`;
+    });
+    accNuevo.innerHTML += `<option value="${info.default}">${info.default}</option>`;
+    document.getElementById('info-acc').textContent = `Opcionales: ${info.opcionales.join(', ')}`;
+    panelCambio.classList.remove('hidden');
+  }
+
+  // ── Acción sobre accesorio ────────────────────────────────
+  function onAccionChange() {
+    const accion = document.getElementById('acc-accion').value;
+    document.getElementById('field-acc-nuevo').classList.toggle('hidden', accion !== 'cambio');
+    document.getElementById('field-acc-destino').classList.toggle('hidden', accion !== 'cambio' && accion !== 'retirar');
+  }
+
+  // ── Referencia automática ─────────────────────────────────
+  function generateRef() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    return `${CONFIG.prefijo_ref}-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${Math.floor(Math.random()*900)+100}`;
+  }
+
+  // ── Enviar ────────────────────────────────────────────────
+  async function submitForm() {
+    const alertBox = document.getElementById('alert-box');
+    const vendedor       = document.getElementById('vendedor').value;
+    const fechaMovil     = document.getElementById('fecha-movil').value;
+    const fechaAlquiler  = document.getElementById('fecha-alquiler').value;
+    const entregaCliente = document.getElementById('entrega-cliente').value;
+    const entregaProyecto= document.getElementById('entrega-proyecto').value;
+
+    if (!tipoActual || !vendedor || !fechaMovil || !fechaAlquiler || !entregaCliente || !entregaProyecto) {
+      alertBox.style.display = 'block';
+      alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    alertBox.style.display = 'none';
+
+    const btn = document.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+
+    const ref   = generateRef();
+    const tipos = { movilizacion: 'Movilización', desmovilizacion: 'Desmovilización', accesorio: 'Solo accesorio' };
+    const sel   = document.getElementById('equipo-codigo');
+    const equipo = tipoActual !== 'accesorio'
+      ? (sel.options[sel.selectedIndex]?.dataset.codigo || sel.value)
+      : document.getElementById('acc-solo-codigo').value;
+
+    // Construir objeto para Supabase
+    const data = {
+      referencia:            ref,
+      tipo:                  tipoActual,
+      vendedor:              vendedor,
+      fecha_solicitud:       document.getElementById('fecha-solicitud').value,
+      fecha_movilizacion:    fechaMovil,
+      fecha_inicio_alquiler: fechaAlquiler,
+      equipo_codigo:         equipo || null,
+      equipo_tipo:           tipoActual !== 'accesorio' ? (sel.options[sel.selectedIndex]?.value || null) : null,
+      accesorio_actual:      document.getElementById('accesorio-actual')?.value || null,
+      acc_accion:            document.getElementById('acc-accion')?.value || null,
+      acc_nuevo:             document.getElementById('acc-nuevo-codigo')?.value || null,
+      acc_destino:           document.querySelector('input[name="acc-destino"]:checked')?.value || null,
+      origen:                origenActual,
+      retiro_cliente:        origenActual === 'proyecto' ? document.getElementById('retiro-cliente').value : 'SMM — Galera',
+      retiro_proyecto:       origenActual === 'proyecto' ? document.getElementById('retiro-proyecto').value : 'La Mañanitas',
+      retiro_ubicacion:      origenActual === 'proyecto' ? document.getElementById('retiro-ubicacion').value : 'La Mañanitas',
+      retiro_contacto:       origenActual === 'proyecto' ? document.getElementById('retiro-contacto').value : null,
+      entrega_cliente:       entregaCliente,
+      entrega_proyecto:      entregaProyecto,
+      entrega_ubicacion:     document.getElementById('entrega-ubicacion').value || null,
+      entrega_contacto:      document.getElementById('entrega-contacto').value || null,
+      operador:              document.getElementById('cond-operador').checked,
+      diesel:                document.getElementById('cond-diesel').checked,
+      propiedad:             document.querySelector('input[name="propiedad"]:checked')?.value || 'smm',
+      notas:                 document.getElementById('notas').value || null,
+      estado:                'pendiente'
+    };
+
+    try {
+      await guardarSolicitud(data);
+      enviarEmail(data).catch(e => console.warn('Email:', e));
+
+      document.getElementById('success-ref').textContent = ref;
+      document.getElementById('success-msg').innerHTML =
+        `<strong>${tipos[tipoActual]}</strong> — ${equipo || '—'}<br>` +
+        `Cliente: ${entregaCliente} / ${entregaProyecto}<br>` +
+        `Solicitado por: ${vendedor}<br><br>` +
+        `${CONFIG.responsable_ops} y el equipo han sido notificados.`;
+
+      document.getElementById('form-area').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch(e) {
+      alertBox.textContent = '⚠ Error al guardar. Intenta de nuevo.';
+      alertBox.style.display = 'block';
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Enviar solicitud';
+    }
+  }
+
+  // ── Cambio de equipo helpers ─────────────────────────────
+  let cambioOrigenActual = 'galera';
+
+  function setCambioOrigen(origen) {
+    cambioOrigenActual = origen;
+    ['galera','proveedor','proyecto'].forEach(o => {
+      document.getElementById('btn-cambio-' + o).classList.toggle('active', o === origen);
+    });
+    document.getElementById('panel-cambio-proveedor').classList.toggle('hidden', origen !== 'proveedor');
+    document.getElementById('panel-cambio-otproyecto').classList.toggle('hidden', origen !== 'proyecto');
+  }
+
+  function onCambioSaleChange() {
+    const sel  = document.getElementById('cambio-equipo-sale');
+    const tipo = sel.options[sel.selectedIndex]?.value || '';
+    const info = ACCESORIOS_POR_TIPO[tipo];
+    const field = document.getElementById('field-cambio-acc-sale');
+    const acc   = document.getElementById('cambio-acc-sale');
+    acc.innerHTML = '';
+    if (!info) { field.classList.add('hidden'); return; }
+    field.classList.remove('hidden');
+    acc.innerHTML = `<option value="${info.default}" selected>${info.default} (por defecto)</option>`;
+    info.opcionales.forEach(o => acc.innerHTML += `<option value="${o}">${o}</option>`);
+  }
+
+  function onCambioEntraChange() {
+    const sel  = document.getElementById('cambio-equipo-entra');
+    const tipo = sel.options[sel.selectedIndex]?.value || '';
+    const info = ACCESORIOS_POR_TIPO[tipo];
+    const field = document.getElementById('field-cambio-acc-entra');
+    const acc   = document.getElementById('cambio-acc-entra');
+    acc.innerHTML = '';
+    if (!info) { field.classList.add('hidden'); return; }
+    field.classList.remove('hidden');
+    acc.innerHTML = `<option value="${info.default}" selected>${info.default} (por defecto)</option>`;
+    info.opcionales.forEach(o => acc.innerHTML += `<option value="${o}">${o}</option>`);
+  }
+
+  function poblarCambioEquipos() {
+    ['cambio-equipo-sale','cambio-equipo-entra'].forEach(id => {
+      const sel = document.getElementById(id);
+      const grupos = {};
+      EQUIPOS.forEach(eq => {
+        if (!grupos[eq.tipo]) grupos[eq.tipo] = [];
+        grupos[eq.tipo].push(eq);
+      });
+      const labels = {
+        excavadora:'Excavadoras', retroexcavadora:'Retroexcavadoras',
+        miniexcavadora:'Miniexcavadoras', minicargador:'Minicargadores',
+        telehandler:'Telehandlers', compactadora:'Compactadoras / Rolas',
+        bulldozer:'Bulldozers', motoniveladora:'Motoniveladoras'
+      };
+      Object.keys(labels).forEach(tipo => {
+        if (!grupos[tipo]) return;
+        const og = document.createElement('optgroup');
+        og.label = labels[tipo];
+        grupos[tipo].forEach(eq => {
+          const opt = document.createElement('option');
+          opt.value = eq.tipo;
+          opt.textContent = eq.codigo + ' — ' + eq.desc;
+          opt.dataset.codigo = eq.codigo;
+          og.appendChild(opt);
+        });
+        sel.appendChild(og);
+      });
+    });
+  }
+
+  // ── Nueva solicitud ───────────────────────────────────────
+  function nuevaSolicitud() {
+    document.getElementById('form-area').style.display = 'block';
+    document.getElementById('success-screen').style.display = 'none';
+    document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
+    tipoActual = '';
+    setOrigen('galera');
+    setCambioOrigen('galera');
+    document.getElementById('card-cambio').classList.add('hidden');
+    document.getElementById('card-cambio-cliente').classList.add('hidden');
+    document.getElementById('card-retiro-entrega').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+<script>
+// ── Supabase config ──────────────────────────────────────────
+const SUPABASE_URL = "https://ujoxrtwyfsqabhrjtjlr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqb3hydHd5ZnNxYWJocmp0amxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMTA4NzksImV4cCI6MjA5NjY4Njg3OX0.BSKtUjdvoUMsJ7L6buzUKjDM3ZxWipf-6Tz7YhS3C-4";
+
+async function guardarSolicitud(data) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/solicitudes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Prefer": "return=representation"
+    },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  return await res.json();
 }
+
+async function enviarEmail(data) {
+  // Agregar lista de destinatarios desde config
+  data.emails_alerta = ['emir.quiros@infratec.com.pa'];
+
+  const res = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.warn('Email error:', err);
+  }
+}
+</script>
+
+</body>
+</html>

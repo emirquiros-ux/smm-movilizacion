@@ -215,7 +215,17 @@
 
     <!-- 3B. SOLO ACCESORIO -->
     <div class="card hidden" id="card-solo-accesorio">
-      <div class="card-title">Accesorio</div>
+      <div class="card-title">Accesorio / Herramienta</div>
+
+      <div class="field-group" style="margin-bottom:16px">
+        <label>Tipo de movimiento <span class="req">*</span></label>
+        <div class="origen-toggle">
+          <button class="origen-btn active" id="btn-acc-movil" onclick="setAccSubtipo('movilizacion')">🚛 Movilización</button>
+          <button class="origen-btn" id="btn-acc-desmovil" onclick="setAccSubtipo('desmovilizacion')">🔙 Desmovilización</button>
+          <button class="origen-btn" id="btn-acc-cambio" onclick="setAccSubtipo('cambio')">🔄 Cambio</button>
+        </div>
+      </div>
+
       <div class="field-row-2">
         <div class="field-group">
           <label>Código del accesorio <span class="req">*</span></label>
@@ -226,6 +236,119 @@
           <input type="text" id="acc-equipo-compat" placeholder="Ej: E-09-2 del cliente">
         </div>
       </div>
+
+      <div class="hidden" id="panel-acc-cambio-entra">
+        <div class="seccion-divider"><span>Accesorio que entra</span></div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Accesorio entrante <span class="req">*</span></label>
+            <select id="acc-solo-codigo-entra"><option value="">Seleccionar…</option></select>
+          </div>
+          <div class="field-group">
+            <label>Compatible con equipo <span class="lbl-opt">opcional</span></label>
+            <input type="text" id="acc-equipo-compat-entra" placeholder="Ej: E-09-2 del cliente">
+          </div>
+        </div>
+      </div>
+
+      <div class="seccion-divider"><span id="lbl-acc-origen">Origen</span></div>
+
+      <div id="panel-acc-origen-movil">
+        <div class="origen-toggle">
+          <button class="origen-btn active" id="btn-acc-orig-galera" onclick="setAccOrigen('galera')">📦 Galera SMM</button>
+          <button class="origen-btn" id="btn-acc-orig-otro" onclick="setAccOrigen('otro')">🔄 Otro origen</button>
+        </div>
+        <div id="panel-acc-galera">
+          <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div>
+        </div>
+        <div id="panel-acc-otro" class="hidden">
+          <div class="field-row-2">
+            <div class="field-group">
+              <label>Lugar de origen</label>
+              <input type="text" id="acc-origen-lugar" placeholder="Ej: Taller, proveedor">
+            </div>
+            <div class="field-group">
+              <label>Contacto</label>
+              <input type="text" id="acc-origen-contacto" placeholder="Nombre y/o teléfono">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-acc-origen-cliente" class="hidden">
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Cliente <span class="req">*</span></label>
+            <input type="text" id="acc-cliente" placeholder="Ej: Consorcio RC Puentes">
+          </div>
+          <div class="field-group">
+            <label>Proyecto <span class="req">*</span></label>
+            <input type="text" id="acc-proyecto" placeholder="Ej: ACP Miraflores">
+          </div>
+        </div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Ubicación</label>
+            <input type="text" id="acc-ubicacion" placeholder="Ej: ACP, Línea 3">
+          </div>
+          <div class="field-group">
+            <label>Contacto</label>
+            <input type="text" id="acc-contacto" placeholder="Nombre y/o teléfono">
+          </div>
+        </div>
+      </div>
+
+      <div class="seccion-divider"><span id="lbl-acc-destino">Destino</span></div>
+
+      <div id="panel-acc-destino-cliente">
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Cliente <span class="req">*</span></label>
+            <input type="text" id="acc-dest-cliente" placeholder="Ej: Consorcio RC Puentes">
+          </div>
+          <div class="field-group">
+            <label>Proyecto <span class="req">*</span></label>
+            <input type="text" id="acc-dest-proyecto" placeholder="Ej: ACP Miraflores">
+          </div>
+        </div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Ubicación</label>
+            <input type="text" id="acc-dest-ubicacion" placeholder="Ej: ACP, Línea 3">
+          </div>
+          <div class="field-group">
+            <label>Contacto</label>
+            <input type="text" id="acc-dest-contacto" placeholder="Nombre y/o teléfono">
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-acc-destino-galera" class="hidden">
+        <div class="origen-toggle">
+          <button class="origen-btn active" id="btn-acc-dest-galera" onclick="setAccDestino('galera')">📦 Galera SMM</button>
+          <button class="origen-btn" id="btn-acc-dest-otro" onclick="setAccDestino('otro')">🔄 Otro destino</button>
+        </div>
+        <div id="panel-acc-dest-galera-badge">
+          <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(destino por defecto)</span></div>
+        </div>
+        <div id="panel-acc-dest-otro" class="hidden">
+          <div class="field-row-2">
+            <div class="field-group">
+              <label>Lugar de destino</label>
+              <input type="text" id="acc-dest-otro-lugar" placeholder="Ej: Taller externo">
+            </div>
+            <div class="field-group">
+              <label>Contacto</label>
+              <input type="text" id="acc-dest-otro-contacto" placeholder="Nombre y/o teléfono">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-acc-destino-mismo" class="hidden">
+        <div class="galera-badge">🔄 Mismo cliente / proyecto — el accesorio se cambia en sitio</div>
+      </div>
+
     </div>
 
 
@@ -324,66 +447,117 @@
 
     <!-- 4. RETIRO Y ENTREGA -->
     <div class="card" id="card-retiro-entrega">
-      <div class="card-title">Retiro — origen</div>
 
-      <!-- Toggle origen -->
-      <div class="origen-toggle">
-        <button class="origen-btn active" id="btn-galera" onclick="setOrigen('galera')">📦 Desde galera SMM</button>
-        <button class="origen-btn" id="btn-proyecto" onclick="setOrigen('proyecto')">🔄 Desde otro proyecto</button>
-      </div>
-
-      <!-- Panel galera: solo badge, sin campos -->
-      <div id="panel-galera">
-        <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div>
-      </div>
-
-      <!-- Panel proyecto a proyecto -->
-      <div id="panel-proyecto" class="hidden">
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Cliente de retiro <span class="req">*</span></label>
-            <input type="text" id="retiro-cliente" placeholder="Ej: Consorcio HPH">
-          </div>
-          <div class="field-group">
-            <label>Proyecto de retiro <span class="req">*</span></label>
-            <input type="text" id="retiro-proyecto" placeholder="Ej: Línea 3 Metro">
-          </div>
+      <!-- ORIGEN (movilizacion) -->
+      <div id="seccion-origen-movil">
+        <div class="card-title">Retiro — origen</div>
+        <div class="origen-toggle">
+          <button class="origen-btn active" id="btn-galera" onclick="setOrigen('galera')">📦 Desde galera SMM</button>
+          <button class="origen-btn" id="btn-proyecto" onclick="setOrigen('proyecto')">🔄 Desde otro proyecto</button>
         </div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Ubicación de retiro <span class="req">*</span></label>
-            <input type="text" id="retiro-ubicacion" placeholder="Ej: Arraiján, Colón">
+        <div id="panel-galera">
+          <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div>
+        </div>
+        <div id="panel-proyecto" class="hidden">
+          <div class="field-row-2">
+            <div class="field-group">
+              <label>Cliente de retiro <span class="req">*</span></label>
+              <input type="text" id="retiro-cliente" placeholder="Ej: Consorcio HPH">
+            </div>
+            <div class="field-group">
+              <label>Proyecto de retiro <span class="req">*</span></label>
+              <input type="text" id="retiro-proyecto" placeholder="Ej: Línea 3 Metro">
+            </div>
           </div>
-          <div class="field-group">
-            <label>Contacto de retiro</label>
-            <input type="text" id="retiro-contacto" placeholder="Nombre y/o teléfono">
+          <div class="field-row-2">
+            <div class="field-group">
+              <label>Ubicación de retiro <span class="req">*</span></label>
+              <input type="text" id="retiro-ubicacion" placeholder="Ej: Arraiján, Colón">
+            </div>
+            <div class="field-group">
+              <label>Contacto de retiro</label>
+              <input type="text" id="retiro-contacto" placeholder="Nombre y/o teléfono">
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Entrega — siempre visible -->
+      <!-- ORIGEN (desmovilizacion) — cliente/proyecto requerido -->
+      <div id="seccion-origen-desmovil" class="hidden">
+        <div class="card-title">Retiro — desde cliente</div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Cliente <span class="req">*</span></label>
+            <input type="text" id="desmovil-cliente" placeholder="Ej: Consorcio RC Puentes">
+          </div>
+          <div class="field-group">
+            <label>Proyecto <span class="req">*</span></label>
+            <input type="text" id="desmovil-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
+          </div>
+        </div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Ubicación</label>
+            <input type="text" id="desmovil-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
+          </div>
+          <div class="field-group">
+            <label>Contacto</label>
+            <input type="text" id="desmovil-contacto" placeholder="Nombre y/o teléfono">
+          </div>
+        </div>
+      </div>
+
+      <!-- Destino movilizacion: cliente -->
+      <div id="seccion-destino-movil">
       <div class="seccion-divider"><span>Entrega — destino</span></div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Cliente <span class="req">*</span></label>
+            <input type="text" id="entrega-cliente" placeholder="Ej: Consorcio RC Puentes">
+          </div>
+          <div class="field-group">
+            <label>Proyecto <span class="req">*</span></label>
+            <input type="text" id="entrega-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
+          </div>
+        </div>
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Ubicación de entrega</label>
+            <input type="text" id="entrega-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
+          </div>
+          <div class="field-group">
+            <label>Contacto de entrega</label>
+            <input type="text" id="entrega-contacto" placeholder="Nombre y/o teléfono">
+          </div>
+        </div>
+      </div>
 
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Cliente <span class="req">*</span></label>
-          <input type="text" id="entrega-cliente" placeholder="Ej: Consorcio RC Puentes">
+      </div><!-- /seccion-destino-movil -->
+
+      <!-- Destino desmovilizacion: galera SMM por default o cambiar -->
+      <div id="seccion-destino-desmovil" class="hidden">
+      <div class="seccion-divider"><span>Entrega — destino</span></div>
+        <div class="origen-toggle" style="margin-bottom:12px">
+          <button class="origen-btn active" id="btn-dest-galera" onclick="setDestinoDesmo('galera')">📦 Galera SMM</button>
+          <button class="origen-btn" id="btn-dest-otro" onclick="setDestinoDesmo('otro')">🔄 Otro destino</button>
         </div>
-        <div class="field-group">
-          <label>Proyecto <span class="req">*</span></label>
-          <input type="text" id="entrega-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
+        <div id="panel-dest-galera">
+          <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(destino por defecto)</span></div>
+        </div>
+        <div id="panel-dest-otro" class="hidden">
+          <div class="field-row-2">
+            <div class="field-group">
+              <label>Cliente / destino <span class="req">*</span></label>
+              <input type="text" id="dest-otro-cliente" placeholder="Ej: Taller externo">
+            </div>
+            <div class="field-group">
+              <label>Ubicación</label>
+              <input type="text" id="dest-otro-ubicacion" placeholder="Ej: Chorrera">
+            </div>
+          </div>
         </div>
       </div>
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Ubicación de entrega <span class="req">*</span></label>
-          <input type="text" id="entrega-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
-        </div>
-        <div class="field-group">
-          <label>Contacto de entrega</label>
-          <input type="text" id="entrega-contacto" placeholder="Nombre y/o teléfono">
-        </div>
-      </div>
+
     </div>
 
     <!-- 5. FECHAS -->
@@ -391,34 +565,36 @@
       <div class="card-title">Fechas</div>
       <div class="field-row-2">
         <div class="field-group">
-          <label>Fecha de movilización solicitada <span class="req">*</span></label>
+          <label id="label-fecha-movil">Fecha de movilización solicitada <span class="req">*</span></label>
           <input type="date" id="fecha-movil">
         </div>
         <div class="field-group">
-          <label>Fecha inicio de alquiler <span class="req">*</span></label>
+          <label id="label-fecha-alquiler">Fecha inicio de alquiler <span class="req">*</span></label>
           <input type="date" id="fecha-alquiler">
-          <p class="info-note">Base para el control operativo</p>
+          <p class="info-note" id="info-fecha-alquiler">Base para el control operativo</p>
         </div>
       </div>
     </div>
 
     <!-- 6. CONDICIONES -->
-    <div class="card">
+    <div class="card" id="card-condiciones">
       <div class="card-title">Condiciones del equipo</div>
-      <label class="check-row" for="cond-operador">
-        <input type="checkbox" id="cond-operador">
-        <span class="check-label">Operador incluido</span>
-      </label>
-      <label class="check-row" for="cond-diesel">
-        <input type="checkbox" id="cond-diesel">
-        <span class="check-label">Diesel incluido</span>
-      </label>
-      <div class="check-row" style="padding-bottom:0;border-bottom:none">
+      <div id="cond-operador-diesel">
+        <label class="check-row" for="cond-operador">
+          <input type="checkbox" id="cond-operador">
+          <span class="check-label">Operador incluido</span>
+        </label>
+        <label class="check-row" for="cond-diesel">
+          <input type="checkbox" id="cond-diesel">
+          <span class="check-label">Diesel incluido</span>
+        </label>
+      </div>
+      <div class="check-row" style="padding-bottom:0;border-bottom:none;border-top:none">
         <div style="flex:1">
           <div class="check-label" style="margin-bottom:8px">Propiedad del equipo</div>
           <div class="toggle-group">
-            <label class="toggle-option"><input type="radio" name="propiedad" value="smm" checked><span class="toggle-pill">SMM</span></label>
-            <label class="toggle-option"><input type="radio" name="propiedad" value="arrendada"><span class="toggle-pill">Arrendada</span></label>
+            <label class="toggle-option"><input type="radio" name="propiedad" value="smm" checked><span class="toggle-pill">Equipo SMM</span></label>
+            <label class="toggle-option"><input type="radio" name="propiedad" value="arrendada"><span class="toggle-pill">Subarrendado</span></label>
           </div>
         </div>
       </div>
@@ -527,6 +703,7 @@
     poblarEquipos();
     poblarAccSolo();
     poblarCambioEquipos();
+    poblarAccSoloEntra();
     document.getElementById('fecha-solicitud').valueAsDate = new Date();
   });
 
@@ -536,14 +713,30 @@
     document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
     el.classList.add('selected');
 
-    const esCambio    = tipo === 'cambio';
-    const esAccesorio = tipo === 'accesorio';
+    const esCambio      = tipo === 'cambio';
+    const esAccesorio   = tipo === 'accesorio';
+    const esDesmovil    = tipo === 'desmovilizacion';
+    const esMovil       = tipo === 'movilizacion';
 
+    // Tarjetas principales
     document.getElementById('card-equipo').classList.toggle('hidden', esAccesorio || esCambio);
     document.getElementById('card-solo-accesorio').classList.toggle('hidden', !esAccesorio);
     document.getElementById('card-cambio').classList.toggle('hidden', !esCambio);
     document.getElementById('card-cambio-cliente').classList.toggle('hidden', !esCambio);
-    document.getElementById('card-retiro-entrega').classList.toggle('hidden', esCambio);
+    document.getElementById('card-retiro-entrega').classList.toggle('hidden', esCambio || esAccesorio);
+
+    // Secciones dentro de retiro-entrega
+    document.getElementById('seccion-origen-movil').classList.toggle('hidden', esDesmovil || esAccesorio);
+    document.getElementById('seccion-origen-desmovil').classList.toggle('hidden', !esDesmovil);
+    document.getElementById('seccion-destino-movil').classList.toggle('hidden', esDesmovil);
+    document.getElementById('seccion-destino-desmovil').classList.toggle('hidden', !esDesmovil);
+
+    // Ocultar operador/diesel para accesorio y cambio
+    const showOpDiesel = !esAccesorio && !esCambio;
+    document.getElementById('cond-operador-diesel').classList.toggle('hidden', !showOpDiesel);
+
+    // Actualizar labels de fechas
+    actualizarLabelsFechas(esDesmovil);
   }
 
   // ── Origen ────────────────────────────────────────────────
@@ -602,13 +795,34 @@
   // ── Enviar ────────────────────────────────────────────────
   async function submitForm() {
     const alertBox = document.getElementById('alert-box');
-    const vendedor       = document.getElementById('vendedor').value;
-    const fechaMovil     = document.getElementById('fecha-movil').value;
-    const fechaAlquiler  = document.getElementById('fecha-alquiler').value;
-    const entregaCliente = document.getElementById('entrega-cliente').value;
-    const entregaProyecto= document.getElementById('entrega-proyecto').value;
+    const vendedor      = document.getElementById('vendedor').value;
+    const fechaMovil    = document.getElementById('fecha-movil').value;
+    const fechaAlquiler = document.getElementById('fecha-alquiler').value;
 
-    if (!tipoActual || !vendedor || !fechaMovil || !fechaAlquiler || !entregaCliente || !entregaProyecto) {
+    // Validacion por tipo
+    let valid = true;
+    if (!tipoActual || !vendedor || !fechaMovil || !fechaAlquiler) valid = false;
+
+    if (tipoActual === 'movilizacion' || tipoActual === 'desmovilizacion') {
+      const entCliente = document.getElementById('entrega-cliente').value;
+      const entProyecto = document.getElementById('entrega-proyecto').value;
+      if (!entCliente || !entProyecto) valid = false;
+    }
+
+    if (tipoActual === 'cambio') {
+      const sale  = document.getElementById('cambio-equipo-sale').value;
+      const entra = document.getElementById('cambio-equipo-entra').value;
+      const cli   = document.getElementById('cambio-cliente').value;
+      const proy  = document.getElementById('cambio-proyecto').value;
+      if (!sale || !entra || !cli || !proy) valid = false;
+    }
+
+    if (tipoActual === 'accesorio') {
+      const acc = document.getElementById('acc-solo-codigo').value;
+      if (!acc) valid = false;
+    }
+
+    if (!valid) {
       alertBox.style.display = 'block';
       alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -642,14 +856,33 @@
       acc_nuevo:             document.getElementById('acc-nuevo-codigo')?.value || null,
       acc_destino:           document.querySelector('input[name="acc-destino"]:checked')?.value || null,
       origen:                origenActual,
-      retiro_cliente:        origenActual === 'proyecto' ? document.getElementById('retiro-cliente').value : 'SMM — Galera',
-      retiro_proyecto:       origenActual === 'proyecto' ? document.getElementById('retiro-proyecto').value : 'La Mañanitas',
-      retiro_ubicacion:      origenActual === 'proyecto' ? document.getElementById('retiro-ubicacion').value : 'La Mañanitas',
-      retiro_contacto:       origenActual === 'proyecto' ? document.getElementById('retiro-contacto').value : null,
-      entrega_cliente:       entregaCliente,
-      entrega_proyecto:      entregaProyecto,
-      entrega_ubicacion:     document.getElementById('entrega-ubicacion').value || null,
-      entrega_contacto:      document.getElementById('entrega-contacto').value || null,
+      // Origen
+      retiro_cliente:   tipoActual === 'desmovilizacion'
+        ? document.getElementById('desmovil-cliente').value
+        : (origenActual === 'proyecto' ? document.getElementById('retiro-cliente').value : 'SMM — Galera'),
+      retiro_proyecto:  tipoActual === 'desmovilizacion'
+        ? document.getElementById('desmovil-proyecto').value
+        : (origenActual === 'proyecto' ? document.getElementById('retiro-proyecto').value : 'La Mañanitas'),
+      retiro_ubicacion: tipoActual === 'desmovilizacion'
+        ? (document.getElementById('desmovil-ubicacion').value || null)
+        : (origenActual === 'proyecto' ? document.getElementById('retiro-ubicacion').value : 'La Mañanitas'),
+      retiro_contacto:  tipoActual === 'desmovilizacion'
+        ? (document.getElementById('desmovil-contacto').value || null)
+        : (origenActual === 'proyecto' ? document.getElementById('retiro-contacto').value : null),
+
+      // Destino
+      entrega_cliente:  tipoActual === 'desmovilizacion'
+        ? (document.getElementById('btn-dest-otro').classList.contains('active') ? document.getElementById('dest-otro-cliente').value : 'SMM — Galera')
+        : (tipoActual === 'cambio' ? document.getElementById('cambio-cliente').value : document.getElementById('entrega-cliente').value),
+      entrega_proyecto: tipoActual === 'desmovilizacion'
+        ? (document.getElementById('btn-dest-otro').classList.contains('active') ? '' : 'La Mañanitas')
+        : (tipoActual === 'cambio' ? document.getElementById('cambio-proyecto').value : document.getElementById('entrega-proyecto').value),
+      entrega_ubicacion: tipoActual === 'desmovilizacion'
+        ? (document.getElementById('dest-otro-ubicacion')?.value || null)
+        : (tipoActual === 'cambio' ? document.getElementById('cambio-ubicacion').value : document.getElementById('entrega-ubicacion').value) || null,
+      entrega_contacto: tipoActual === 'cambio'
+        ? (document.getElementById('cambio-contacto').value || null)
+        : (document.getElementById('entrega-contacto')?.value || null),
       operador:              document.getElementById('cond-operador').checked,
       diesel:                document.getElementById('cond-diesel').checked,
       propiedad:             document.querySelector('input[name="propiedad"]:checked')?.value || 'smm',
@@ -662,9 +895,16 @@
       enviarEmail(data).catch(e => console.warn('Email:', e));
 
       document.getElementById('success-ref').textContent = ref;
+      const clienteDisplay = tipoActual === 'desmovilizacion'
+        ? document.getElementById('desmovil-cliente').value
+        : (tipoActual === 'cambio' ? document.getElementById('cambio-cliente').value : document.getElementById('entrega-cliente').value);
+      const proyectoDisplay = tipoActual === 'desmovilizacion'
+        ? document.getElementById('desmovil-proyecto').value
+        : (tipoActual === 'cambio' ? document.getElementById('cambio-proyecto').value : document.getElementById('entrega-proyecto').value);
+
       document.getElementById('success-msg').innerHTML =
         `<strong>${tipos[tipoActual]}</strong> — ${equipo || '—'}<br>` +
-        `Cliente: ${entregaCliente} / ${entregaProyecto}<br>` +
+        `Cliente: ${clienteDisplay} / ${proyectoDisplay}<br>` +
         `Solicitado por: ${vendedor}<br><br>` +
         `${CONFIG.responsable_ops} y el equipo han sido notificados.`;
 
@@ -750,6 +990,102 @@
     });
   }
 
+  // ── Destino desmovilizacion ──────────────────────────────
+  function setDestinoDesmo(dest) {
+    document.getElementById('btn-dest-galera').classList.toggle('active', dest === 'galera');
+    document.getElementById('btn-dest-otro').classList.toggle('active', dest === 'otro');
+    document.getElementById('panel-dest-galera').classList.toggle('hidden', dest !== 'galera');
+    document.getElementById('panel-dest-otro').classList.toggle('hidden', dest !== 'otro');
+  }
+
+  // ── Solo accesorio helpers ───────────────────────────────
+  let accSubtipo = 'movilizacion';
+  let accOrigen  = 'galera';
+  let accDestino = 'galera';
+
+  function setAccSubtipo(sub) {
+    accSubtipo = sub;
+    ['movil','desmovil','cambio'].forEach(s => {
+      document.getElementById('btn-acc-' + s).classList.toggle('active', s === sub);
+    });
+
+    // Accesorio entrante solo en cambio
+    document.getElementById('panel-acc-cambio-entra').classList.toggle('hidden', sub !== 'cambio');
+
+    // Origen
+    const esMovil   = sub === 'movilizacion';
+    const esCambio  = sub === 'cambio';
+    document.getElementById('panel-acc-origen-movil').classList.toggle('hidden', !esMovil);
+    document.getElementById('panel-acc-origen-cliente').classList.toggle('hidden', esMovil);
+
+    // Destino
+    document.getElementById('panel-acc-destino-cliente').classList.toggle('hidden', !esMovil);
+    document.getElementById('panel-acc-destino-galera').classList.toggle('hidden', esMovil || esCambio);
+    document.getElementById('panel-acc-destino-mismo').classList.toggle('hidden', !esCambio);
+
+    // Labels
+    document.getElementById('lbl-acc-origen').textContent = esMovil ? 'Origen' : 'Retiro — desde cliente';
+    document.getElementById('lbl-acc-destino').textContent = esMovil ? 'Destino — entrega a cliente' : (esCambio ? 'Destino' : 'Destino');
+
+    // Actualizar labels de fechas para desmovilizacion de accesorio
+    actualizarLabelsFechas(sub === 'desmovilizacion');
+  }
+
+  function setAccOrigen(orig) {
+    accOrigen = orig;
+    document.getElementById('btn-acc-orig-galera').classList.toggle('active', orig === 'galera');
+    document.getElementById('btn-acc-orig-otro').classList.toggle('active', orig === 'otro');
+    document.getElementById('panel-acc-galera').classList.toggle('hidden', orig !== 'galera');
+    document.getElementById('panel-acc-otro').classList.toggle('hidden', orig !== 'otro');
+  }
+
+  function setAccDestino(dest) {
+    accDestino = dest;
+    document.getElementById('btn-acc-dest-galera').classList.toggle('active', dest === 'galera');
+    document.getElementById('btn-acc-dest-otro').classList.toggle('active', dest === 'otro');
+    document.getElementById('panel-acc-dest-galera-badge').classList.toggle('hidden', dest !== 'galera');
+    document.getElementById('panel-acc-dest-otro').classList.toggle('hidden', dest !== 'otro');
+  }
+
+  // Poblar accesorio entrante igual que saliente
+  function poblarAccSoloEntra() {
+    const sel = document.getElementById('acc-solo-codigo-entra');
+    const grupos = {};
+    ACCESORIOS.forEach(a => {
+      if (!grupos[a.tipo]) grupos[a.tipo] = [];
+      grupos[a.tipo].push(a);
+    });
+    const labels = { martillo:'Martillos', balde:'Baldes', orquilla:'Orquillas', barredora:'Barredoras', forro:'Forros' };
+    Object.keys(labels).forEach(tipo => {
+      if (!grupos[tipo]) return;
+      const og = document.createElement('optgroup');
+      og.label = labels[tipo];
+      grupos[tipo].forEach(a => {
+        const opt = document.createElement('option');
+        opt.value = a.codigo;
+        opt.textContent = a.codigo + ' — ' + a.nombre;
+        og.appendChild(opt);
+      });
+      sel.appendChild(og);
+    });
+  }
+
+  // ── Labels fechas dinámicos ─────────────────────────────
+  function actualizarLabelsFechas(esDesmovil) {
+    const lbl1 = document.getElementById('label-fecha-movil');
+    const lbl2 = document.getElementById('label-fecha-alquiler');
+    const info = document.getElementById('info-fecha-alquiler');
+    if (esDesmovil) {
+      lbl1.innerHTML = 'Fecha de desmovilización solicitada <span class="req">*</span>';
+      lbl2.innerHTML = 'Fecha de fin de alquiler <span class="req">*</span>';
+      if (info) info.textContent = 'Hasta cuándo corre el alquiler';
+    } else {
+      lbl1.innerHTML = 'Fecha de movilización solicitada <span class="req">*</span>';
+      lbl2.innerHTML = 'Fecha inicio de alquiler <span class="req">*</span>';
+      if (info) info.textContent = 'Base para el control operativo';
+    }
+  }
+
   // ── Nueva solicitud ───────────────────────────────────────
   function nuevaSolicitud() {
     document.getElementById('form-area').style.display = 'block';
@@ -761,6 +1097,13 @@
     document.getElementById('card-cambio').classList.add('hidden');
     document.getElementById('card-cambio-cliente').classList.add('hidden');
     document.getElementById('card-retiro-entrega').classList.remove('hidden');
+    document.getElementById('seccion-origen-movil').classList.remove('hidden');
+    document.getElementById('seccion-origen-desmovil').classList.add('hidden');
+    document.getElementById('seccion-destino-movil').classList.remove('hidden');
+    document.getElementById('seccion-destino-desmovil').classList.add('hidden');
+    setDestinoDesmo('galera');
+    if (typeof setAccSubtipo === 'function') setAccSubtipo('movilizacion');
+    actualizarLabelsFechas(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
@@ -790,7 +1133,7 @@ async function guardarSolicitud(data) {
 
 async function enviarEmail(data) {
   // Agregar lista de destinatarios desde config
-  data.emails_alerta = ['emir.quiros@infratec.com.pa'];
+  data.emails_alerta = ['emir2785@gmail.com'];
 
   const res = await fetch('/api/send-email', {
     method: 'POST',

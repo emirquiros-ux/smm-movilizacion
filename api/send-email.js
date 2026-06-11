@@ -112,7 +112,7 @@ export default async function handler(req, res) {
 </body></html>`;
 
   // Send to all recipients from config
-  const destinatarios = data.emails_alerta || ['emir2785@gmail.com'];
+  const destinatarios = ['emir.quiros@infratec.com.pa'];
 
   const emailRes = await fetch('https://api.resend.com/emails', {
     method: 'POST',

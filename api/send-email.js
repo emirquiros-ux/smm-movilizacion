@@ -63,13 +63,17 @@ export default async function handler(req, res) {
 <div style="max-width:580px;margin:0 auto;padding:20px 0">
 
   <!-- HEADER -->
-  <div style="background:#fff;padding:22px 32px;border-bottom:4px solid #C0392B;display:flex;align-items:center;justify-content:space-between;border-radius:10px 10px 0 0">
-    <div>
-      <div style="font-size:28px;font-weight:900;letter-spacing:.04em;color:#1a1a1a;line-height:1">SMM</div>
-      <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#999;margin-top:3px">Heavy Equipment Rental</div>
-    </div>
-    <div style="font-size:12px;color:#999;text-align:right;line-height:1.7">${new Date().toLocaleDateString('es-PA',{day:'numeric',month:'short',year:'numeric'})}<br>${new Date().toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'})}</div>
-  </div>
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border-bottom:4px solid #C0392B;border-radius:10px 10px 0 0">
+    <tr>
+      <td style="padding:22px 32px;vertical-align:middle">
+        <div style="font-size:28px;font-weight:900;letter-spacing:.04em;color:#1a1a1a;line-height:1">SMM</div>
+        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#999;margin-top:3px">Heavy Equipment Rental</div>
+      </td>
+      <td style="padding:22px 32px;vertical-align:middle;text-align:right">
+        <div style="font-size:12px;color:#999;line-height:1.7">${new Date().toLocaleDateString('es-PA',{day:'numeric',month:'short',year:'numeric'})}<br>${new Date().toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'})}</div>
+      </td>
+    </tr>
+  </table>
 
   <!-- BANNER -->
   <div style="background:#C0392B;padding:18px 32px;display:flex;align-items:center;gap:14px">
@@ -83,7 +87,7 @@ export default async function handler(req, res) {
     <!-- EQUIPO -->
     <div style="background:#f8f8f8;border-left:5px solid #C0392B;padding:16px 20px;margin-bottom:28px;border-radius:0 8px 8px 0">
       <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#C0392B;margin-bottom:6px">${tipoLabel}</div>
-      <div style="font-size:26px;font-weight:800;color:#1a1a1a;margin-bottom:4px">${data.equipo_codigo || '—'}</div>
+      <div style="font-size:22px;font-weight:800;color:#1a1a1a;margin-bottom:4px">${data.equipo_tipo ? data.equipo_tipo.charAt(0).toUpperCase() + data.equipo_tipo.slice(1) + ' — ' : ''} ${data.equipo_codigo || '—'}</div>
       <div style="font-size:15px;color:#444">Cliente: ${data.entrega_cliente} &nbsp;/&nbsp; ${data.entrega_proyecto}</div>
     </div>
 
@@ -158,10 +162,16 @@ export default async function handler(req, res) {
   </div>
 
   <!-- FOOTER -->
-  <div style="background:#f8f8f8;border-top:1.5px solid #eee;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;border-radius:0 0 10px 10px">
-    <span style="font-size:12px;color:#bbb">Super Mega Maquinas · Heavy Equipment Rental</span>
-    <span style="font-size:10px;color:#ccc;font-family:monospace">${data.referencia}</span>
-  </div>
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f8f8;border-top:1.5px solid #eee;border-radius:0 0 10px 10px">
+    <tr>
+      <td style="padding:14px 32px;vertical-align:middle">
+        <span style="font-size:12px;color:#bbb">Super Mega Maquinas &middot; Heavy Equipment Rental</span>
+      </td>
+      <td style="padding:14px 32px;vertical-align:middle;text-align:right">
+        <span style="font-size:10px;color:#ccc;font-family:monospace">${data.referencia}</span>
+      </td>
+    </tr>
+  </table>
 
 </div>
 </body></html>`;

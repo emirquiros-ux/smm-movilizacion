@@ -13,7 +13,6 @@ const VENDEDORES = [
   "Tomas Aguilar",
   "Emir Quiros",
   "Tony Parra",
-  "Gerardo Gomez",
 ];
 
 // ------------------------------------------------------------

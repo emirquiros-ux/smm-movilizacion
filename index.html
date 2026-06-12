@@ -6,113 +6,70 @@
 <title>SMM — Solicitud de Movilización</title>
 <style>
   :root {
-    --red: #C0392B;
-    --red-light: #fdf2f1;
-    --red-mid: #e8c5c2;
-    --gray-dark: #1a1a1a;
-    --gray: #2c2c2c;
-    --gray-mid: #6b6b6b;
-    --gray-light: #f5f5f5;
-    --gray-border: #e0e0e0;
-    --white: #ffffff;
-    --green: #1a7a4a;
-    --green-light: #edf7f2;
-    --green-border: #b8e0cc;
-    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    --radius: 8px;
-    --radius-lg: 12px;
+    --red:#C0392B; --red-light:#fdf2f1; --red-mid:#e8c5c2;
+    --gray-dark:#1a1a1a; --gray-mid:#6b6b6b; --gray-light:#f5f5f5; --gray-border:#e0e0e0;
+    --white:#fff; --green:#1a7a4a; --green-light:#edf7f2; --green-border:#b8e0cc;
+    --font:'Segoe UI',system-ui,-apple-system,sans-serif; --radius:8px; --radius-lg:12px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font); background: var(--gray-light); color: var(--gray-dark); min-height: 100vh; }
-
-  .header { background: var(--white); border-bottom: 3px solid var(--red); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .header-inner { max-width: 720px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
-  .header-title { color: var(--gray-mid); font-size: 13px; }
-
-  .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 60px; }
-
-  .card { background: var(--white); border: 0.5px solid var(--gray-border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; }
-  .card-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-mid); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-  .card-title::after { content: ''; flex: 1; height: 0.5px; background: var(--gray-border); }
-
-  /* TIPO */
-  .tipo-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
-  .tipo-btn { border: 1.5px solid var(--gray-border); border-radius: var(--radius); padding: 14px 10px; text-align: center; cursor: pointer; transition: all .15s; background: var(--white); }
-  .tipo-btn:hover { border-color: var(--red); background: var(--red-light); }
-  .tipo-btn.selected { border-color: var(--red); background: var(--red-light); }
-  .tipo-icon { font-size: 20px; margin-bottom: 6px; }
-  .tipo-label { font-size: 12px; font-weight: 500; color: var(--gray-dark); }
-  .tipo-sub { font-size: 10px; color: var(--gray-mid); margin-top: 2px; }
-
-  /* ORIGEN TOGGLE */
-  .origen-toggle { display: flex; background: var(--gray-light); border: 0.5px solid var(--gray-border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
-  .origen-btn { flex: 1; padding: 10px 12px; font-size: 12px; font-weight: 500; text-align: center; cursor: pointer; border: none; background: transparent; color: var(--gray-mid); transition: all .15s; border-right: 0.5px solid var(--gray-border); font-family: var(--font); }
-  .origen-btn:last-child { border-right: none; }
-  .origen-btn.active { background: var(--red); color: var(--white); }
-
-  .galera-badge { display: flex; align-items: center; gap: 8px; background: var(--green-light); border: 0.5px solid var(--green-border); border-radius: var(--radius); padding: 10px 14px; font-size: 13px; color: var(--green); font-weight: 500; }
-  .galera-badge span { font-size: 11px; color: #3a9a62; font-weight: 400; }
-
-  /* FIELDS */
-  .field-group { margin-bottom: 14px; }
-  .field-group:last-child { margin-bottom: 0; }
-  .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-  label { display: block; font-size: 12px; font-weight: 500; color: var(--gray-mid); margin-bottom: 5px; }
-  .req { color: var(--red); }
-  .lbl-opt { font-size: 10px; background: var(--gray-light); color: var(--gray-mid); padding: 1px 6px; border-radius: 4px; margin-left: 5px; font-weight: 400; }
-  .lbl-def { font-size: 10px; background: var(--green-light); color: var(--green); padding: 1px 6px; border-radius: 4px; margin-left: 5px; font-weight: 400; }
-  input, select, textarea { width: 100%; border: 0.5px solid var(--gray-border); border-radius: var(--radius); padding: 9px 12px; font-size: 13px; font-family: var(--font); color: var(--gray-dark); background: var(--white); transition: border-color .15s; -webkit-appearance: none; appearance: none; }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.08); }
-  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6b6b' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-  textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
-  .info-note { font-size: 11px; color: var(--gray-mid); margin-top: 4px; line-height: 1.4; }
-
-  /* DIVIDER */
-  .seccion-divider { display: flex; align-items: center; gap: 10px; margin: 20px 0 16px; }
-  .seccion-divider span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-mid); white-space: nowrap; }
-  .seccion-divider::before, .seccion-divider::after { content: ''; flex: 1; height: 0.5px; background: var(--gray-border); }
-
-  /* ACCESORIO PANEL */
-  .acc-panel { background: var(--gray-light); border: 0.5px dashed var(--gray-border); border-radius: var(--radius); padding: 14px; margin-top: 12px; }
-  .acc-panel-title { font-size: 11px; font-weight: 600; color: var(--gray-mid); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
-
-  /* TOGGLE PILLS */
-  .toggle-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-  .toggle-option input[type="radio"], .toggle-option input[type="checkbox"] { display: none; }
-  .toggle-option { cursor: pointer; }
-  .toggle-pill { border: 1px solid var(--gray-border); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 500; color: var(--gray-mid); cursor: pointer; transition: all .15s; display: inline-block; user-select: none; }
-  .toggle-option input:checked + .toggle-pill { border-color: var(--red); background: var(--red); color: var(--white); }
-
-  /* CHECKS */
-  .check-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--gray-border); cursor: pointer; }
-  .check-row:last-child { border-bottom: none; }
-  .check-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--red); cursor: pointer; flex-shrink: 0; appearance: auto; -webkit-appearance: auto; border: 2px solid var(--gray-border); border-radius: 4px; }
-  .check-label { font-size: 13px; flex: 1; cursor: pointer; user-select: none; }
-  .check-row:hover { background: var(--gray-light); border-radius: var(--radius); padding-left: 8px; padding-right: 8px; margin: 0 -8px; }
-
-  /* ALERT */
-  .alert-box { background: var(--red-light); border: 0.5px solid var(--red-mid); border-radius: var(--radius); padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--red); display: none; }
-
-  /* SUBMIT */
-  .btn-submit { width: 100%; background: var(--red); color: var(--white); border: none; border-radius: var(--radius); padding: 14px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background .15s; margin-top: 24px; font-family: var(--font); }
-  .btn-submit:hover { background: #a93226; }
-  .btn-submit:active { transform: scale(0.99); }
-
-  /* SUCCESS */
-  .success-screen { display: none; background: var(--white); border: 0.5px solid var(--gray-border); border-radius: var(--radius-lg); padding: 40px 24px; text-align: center; }
-  .success-icon { width: 56px; height: 56px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; }
-  .success-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-  .success-sub { font-size: 13px; color: var(--gray-mid); margin-bottom: 20px; line-height: 1.6; }
-  .success-ref { font-size: 13px; background: var(--gray-light); border-radius: var(--radius); padding: 10px 16px; display: inline-block; font-weight: 600; letter-spacing: .04em; }
-  .btn-nueva { margin-top: 20px; background: var(--gray-light); color: var(--gray-dark); border: 0.5px solid var(--gray-border); border-radius: var(--radius); padding: 10px 20px; font-size: 13px; cursor: pointer; font-family: var(--font); }
-
-  .hidden { display: none !important; }
-
-  @media (max-width: 500px) {
-    .tipo-grid { grid-template-columns: 1fr 1fr; }
-    .field-row-2, .field-row-3 { grid-template-columns: 1fr; }
-    .header-title { display: none; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font);background:var(--gray-light);color:var(--gray-dark);min-height:100vh}
+  .header{background:var(--white);border-bottom:3px solid var(--red);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .header-inner{max-width:720px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+  .header-title{color:var(--gray-mid);font-size:13px}
+  .container{max-width:720px;margin:0 auto;padding:24px 16px 60px}
+  .card{background:var(--white);border:.5px solid var(--gray-border);border-radius:var(--radius-lg);padding:24px;margin-bottom:16px}
+  .card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-mid);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .card-title::after{content:'';flex:1;height:.5px;background:var(--gray-border)}
+  .tipo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .tipo-btn{border:1.5px solid var(--gray-border);border-radius:var(--radius);padding:14px 8px;text-align:center;cursor:pointer;transition:all .15s;background:var(--white)}
+  .tipo-btn:hover,.tipo-btn.selected{border-color:var(--red);background:var(--red-light)}
+  .tipo-icon{font-size:20px;margin-bottom:6px}
+  .tipo-label{font-size:12px;font-weight:500}
+  .tipo-sub{font-size:10px;color:var(--gray-mid);margin-top:2px}
+  .origen-toggle{display:flex;background:var(--gray-light);border:.5px solid var(--gray-border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px}
+  .origen-btn{flex:1;padding:10px 12px;font-size:12px;font-weight:500;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--gray-mid);transition:all .15s;border-right:.5px solid var(--gray-border);font-family:var(--font)}
+  .origen-btn:last-child{border-right:none}
+  .origen-btn.active{background:var(--red);color:var(--white)}
+  .galera-badge{display:flex;align-items:center;gap:8px;background:var(--green-light);border:.5px solid var(--green-border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:6px}
+  .galera-badge span{font-size:11px;color:#3a9a62;font-weight:400}
+  .field-group{margin-bottom:14px}
+  .field-group:last-child{margin-bottom:0}
+  .field-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  label{display:block;font-size:12px;font-weight:500;color:var(--gray-mid);margin-bottom:5px}
+  .req{color:var(--red)}
+  .lbl-opt{font-size:10px;background:var(--gray-light);color:var(--gray-mid);padding:1px 6px;border-radius:4px;margin-left:5px;font-weight:400}
+  input,select,textarea{width:100%;border:.5px solid var(--gray-border);border-radius:var(--radius);padding:9px 12px;font-size:13px;font-family:var(--font);color:var(--gray-dark);background:var(--white);transition:border-color .15s;-webkit-appearance:none;appearance:none}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.08)}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6b6b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+  textarea{resize:vertical;min-height:80px;line-height:1.5}
+  .info-note{font-size:11px;color:var(--gray-mid);margin-top:4px;line-height:1.4}
+  .seccion-divider{display:flex;align-items:center;gap:10px;margin:20px 0 16px}
+  .seccion-divider span{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-mid);white-space:nowrap}
+  .seccion-divider::before,.seccion-divider::after{content:'';flex:1;height:.5px;background:var(--gray-border)}
+  .check-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:.5px solid var(--gray-border);cursor:pointer}
+  .check-row:last-child{border-bottom:none}
+  .check-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--red);cursor:pointer;flex-shrink:0;appearance:auto;-webkit-appearance:auto}
+  .check-label{font-size:13px;flex:1;cursor:pointer;user-select:none}
+  .toggle-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .toggle-option input{display:none}
+  .toggle-option{cursor:pointer}
+  .toggle-pill{border:1px solid var(--gray-border);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:500;color:var(--gray-mid);cursor:pointer;transition:all .15s;display:inline-block;user-select:none}
+  .toggle-option input:checked + .toggle-pill{border-color:var(--red);background:var(--red);color:var(--white)}
+  .alert-box{background:var(--red-light);border:.5px solid var(--red-mid);border-radius:var(--radius);padding:12px 14px;margin-top:12px;font-size:12px;color:var(--red);display:none}
+  .btn-submit{width:100%;background:var(--red);color:var(--white);border:none;border-radius:var(--radius);padding:14px;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s;margin-top:24px;font-family:var(--font)}
+  .btn-submit:hover{background:#a93226}
+  .btn-submit:disabled{background:var(--gray-mid);cursor:not-allowed}
+  .success-screen{display:none;background:var(--white);border:.5px solid var(--gray-border);border-radius:var(--radius-lg);padding:40px 24px;text-align:center}
+  .success-icon{width:56px;height:56px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px}
+  .success-title{font-size:18px;font-weight:600;margin-bottom:8px}
+  .success-sub{font-size:13px;color:var(--gray-mid);margin-bottom:20px;line-height:1.6}
+  .success-ref{font-size:13px;background:var(--gray-light);border-radius:var(--radius);padding:10px 16px;display:inline-block;font-weight:600;letter-spacing:.04em}
+  .btn-nueva{margin-top:20px;background:var(--gray-light);color:var(--gray-dark);border:.5px solid var(--gray-border);border-radius:var(--radius);padding:10px 20px;font-size:13px;cursor:pointer;font-family:var(--font)}
+  .hidden{display:none!important}
+  @media(max-width:560px){
+    .tipo-grid{grid-template-columns:1fr 1fr}
+    .field-row-2{grid-template-columns:1fr}
+    .header-title{display:none}
   }
 </style>
 </head>
@@ -120,1033 +77,716 @@
 
 <div class="header">
   <div class="header-inner">
-    <img src="data:image/png;base64,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" style="height:44px;width:auto;" alt="Super Mega Máquinas">
+    <img src="data:image/png;base64,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" style="height:44px;width:auto" alt="Super Mega Máquinas">
     <div class="header-title">Solicitud de Movilización</div>
   </div>
 </div>
 
 <div class="container">
-  <div id="form-area">
+<div id="form-area">
 
-    <!-- 1. TIPO -->
-    <div class="card">
-      <div class="card-title">Tipo de solicitud</div>
-      <div class="tipo-grid">
-        <div class="tipo-btn" onclick="setTipo('movilizacion',this)">
-          <div class="tipo-icon">🚛</div>
-          <div class="tipo-label">Movilización</div>
-          <div class="tipo-sub">Traslado a cliente</div>
-        </div>
-        <div class="tipo-btn" onclick="setTipo('desmovilizacion',this)">
-          <div class="tipo-icon">🔙</div>
-          <div class="tipo-label">Desmovilización</div>
-          <div class="tipo-sub">Retiro de cliente</div>
-        </div>
-        <div class="tipo-btn" onclick="setTipo('cambio',this)">
-          <div class="tipo-icon">🔄</div>
-          <div class="tipo-label">Cambio de equipo</div>
-          <div class="tipo-sub">Sale uno, entra otro</div>
-        </div>
-        <div class="tipo-btn" onclick="setTipo('accesorio',this)">
-          <div class="tipo-icon">🔧</div>
-          <div class="tipo-label">Solo accesorio</div>
-          <div class="tipo-sub">Sin equipo base</div>
-        </div>
-      </div>
+  <!-- 1. TIPO -->
+  <div class="card">
+    <div class="card-title">Tipo de solicitud</div>
+    <div class="tipo-grid">
+      <div class="tipo-btn" id="tb-movilizacion" onclick="setTipo('movilizacion')"><div class="tipo-icon">🚛</div><div class="tipo-label">Movilización</div><div class="tipo-sub">Traslado a cliente</div></div>
+      <div class="tipo-btn" id="tb-desmovilizacion" onclick="setTipo('desmovilizacion')"><div class="tipo-icon">🔙</div><div class="tipo-label">Desmovilización</div><div class="tipo-sub">Retiro de cliente</div></div>
+      <div class="tipo-btn" id="tb-cambio" onclick="setTipo('cambio')"><div class="tipo-icon">🔄</div><div class="tipo-label">Cambio de equipo</div><div class="tipo-sub">Sale uno, entra otro</div></div>
+      <div class="tipo-btn" id="tb-accesorio" onclick="setTipo('accesorio')"><div class="tipo-icon">🔧</div><div class="tipo-label">Solo accesorio</div><div class="tipo-sub">Sin equipo base</div></div>
     </div>
-
-    <!-- 2. RESPONSABLE -->
-    <div class="card">
-      <div class="card-title">Responsable</div>
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Vendedor / Solicitante <span class="req">*</span></label>
-          <select id="vendedor"><option value="">Seleccionar…</option></select>
-        </div>
-        <div class="field-group">
-          <label>Fecha de solicitud <span class="req">*</span></label>
-          <input type="date" id="fecha-solicitud">
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. EQUIPO -->
-    <div class="card" id="card-equipo">
-      <div class="card-title">Equipo</div>
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Código del equipo <span class="req">*</span></label>
-          <select id="equipo-codigo" onchange="onEquipoChange()"><option value="">Seleccionar equipo…</option></select>
-        </div>
-        <div class="field-group hidden" id="field-acc-default">
-          <label>Accesorio actual <span class="lbl-def" id="lbl-def-badge">por defecto</span></label>
-          <select id="accesorio-actual"></select>
-          <p class="info-note" id="info-acc"></p>
-        </div>
-      </div>
-
-      <!-- Panel cambio accesorio -->
-      <div class="acc-panel hidden" id="panel-cambio-acc">
-        <div class="acc-panel-title">Cambio de accesorio</div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Acción</label>
-            <select id="acc-accion" onchange="onAccionChange()">
-              <option value="">Seleccionar…</option>
-              <option value="entrega">Entrega con el equipo</option>
-              <option value="cambio">Cambiar antes de entregar</option>
-              <option value="retirar">Retirar accesorio</option>
-            </select>
-          </div>
-          <div class="field-group hidden" id="field-acc-nuevo">
-            <label>Nuevo accesorio <span class="req">*</span></label>
-            <select id="acc-nuevo-codigo"><option value="">Seleccionar…</option></select>
-          </div>
-        </div>
-        <div class="hidden" id="field-acc-destino">
-          <label>Accesorio retirado va a</label>
-          <div class="toggle-group">
-            <label class="toggle-option"><input type="radio" name="acc-destino" value="galera"><span class="toggle-pill">Galera SMM</span></label>
-            <label class="toggle-option"><input type="radio" name="acc-destino" value="queda"><span class="toggle-pill">Se queda en proyecto</span></label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3B. SOLO ACCESORIO -->
-    <div class="card hidden" id="card-solo-accesorio">
-      <div class="card-title">Accesorio / Herramienta</div>
-
-      <div class="field-group" style="margin-bottom:16px">
-        <label>Tipo de movimiento <span class="req">*</span></label>
-        <div class="origen-toggle">
-          <button class="origen-btn active" id="btn-acc-movil" onclick="setAccSubtipo('movilizacion')">🚛 Movilización</button>
-          <button class="origen-btn" id="btn-acc-desmovil" onclick="setAccSubtipo('desmovilizacion')">🔙 Desmovilización</button>
-          <button class="origen-btn" id="btn-acc-cambio" onclick="setAccSubtipo('cambio')">🔄 Cambio</button>
-        </div>
-      </div>
-
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Código del accesorio <span class="req">*</span></label>
-          <select id="acc-solo-codigo"><option value="">Seleccionar…</option></select>
-        </div>
-        <div class="field-group">
-          <label>Compatible con equipo <span class="lbl-opt">opcional</span></label>
-          <input type="text" id="acc-equipo-compat" placeholder="Ej: E-09-2 del cliente">
-        </div>
-      </div>
-
-      <div class="hidden" id="panel-acc-cambio-entra">
-        <div class="seccion-divider"><span>Accesorio que entra</span></div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Accesorio entrante <span class="req">*</span></label>
-            <select id="acc-solo-codigo-entra"><option value="">Seleccionar…</option></select>
-          </div>
-          <div class="field-group">
-            <label>Compatible con equipo <span class="lbl-opt">opcional</span></label>
-            <input type="text" id="acc-equipo-compat-entra" placeholder="Ej: E-09-2 del cliente">
-          </div>
-        </div>
-      </div>
-
-      <div class="seccion-divider"><span id="lbl-acc-origen">Origen</span></div>
-
-      <div id="panel-acc-origen-movil">
-        <div class="origen-toggle">
-          <button class="origen-btn active" id="btn-acc-orig-galera" onclick="setAccOrigen('galera')">📦 Galera SMM</button>
-          <button class="origen-btn" id="btn-acc-orig-otro" onclick="setAccOrigen('otro')">🔄 Otro origen</button>
-        </div>
-        <div id="panel-acc-galera">
-          <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div>
-        </div>
-        <div id="panel-acc-otro" class="hidden">
-          <div class="field-row-2">
-            <div class="field-group">
-              <label>Lugar de origen</label>
-              <input type="text" id="acc-origen-lugar" placeholder="Ej: Taller, proveedor">
-            </div>
-            <div class="field-group">
-              <label>Contacto</label>
-              <input type="text" id="acc-origen-contacto" placeholder="Nombre y/o teléfono">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="panel-acc-origen-cliente" class="hidden">
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Cliente <span class="req">*</span></label>
-            <input type="text" id="acc-cliente" placeholder="Ej: Consorcio RC Puentes">
-          </div>
-          <div class="field-group">
-            <label>Proyecto <span class="req">*</span></label>
-            <input type="text" id="acc-proyecto" placeholder="Ej: ACP Miraflores">
-          </div>
-        </div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Ubicación</label>
-            <input type="text" id="acc-ubicacion" placeholder="Ej: ACP, Línea 3">
-          </div>
-          <div class="field-group">
-            <label>Contacto</label>
-            <input type="text" id="acc-contacto" placeholder="Nombre y/o teléfono">
-          </div>
-        </div>
-      </div>
-
-      <div class="seccion-divider"><span id="lbl-acc-destino">Destino</span></div>
-
-      <div id="panel-acc-destino-cliente">
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Cliente <span class="req">*</span></label>
-            <input type="text" id="acc-dest-cliente" placeholder="Ej: Consorcio RC Puentes">
-          </div>
-          <div class="field-group">
-            <label>Proyecto <span class="req">*</span></label>
-            <input type="text" id="acc-dest-proyecto" placeholder="Ej: ACP Miraflores">
-          </div>
-        </div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Ubicación</label>
-            <input type="text" id="acc-dest-ubicacion" placeholder="Ej: ACP, Línea 3">
-          </div>
-          <div class="field-group">
-            <label>Contacto</label>
-            <input type="text" id="acc-dest-contacto" placeholder="Nombre y/o teléfono">
-          </div>
-        </div>
-      </div>
-
-      <div id="panel-acc-destino-galera" class="hidden">
-        <div class="origen-toggle">
-          <button class="origen-btn active" id="btn-acc-dest-galera" onclick="setAccDestino('galera')">📦 Galera SMM</button>
-          <button class="origen-btn" id="btn-acc-dest-otro" onclick="setAccDestino('otro')">🔄 Otro destino</button>
-        </div>
-        <div id="panel-acc-dest-galera-badge">
-          <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(destino por defecto)</span></div>
-        </div>
-        <div id="panel-acc-dest-otro" class="hidden">
-          <div class="field-row-2">
-            <div class="field-group">
-              <label>Lugar de destino</label>
-              <input type="text" id="acc-dest-otro-lugar" placeholder="Ej: Taller externo">
-            </div>
-            <div class="field-group">
-              <label>Contacto</label>
-              <input type="text" id="acc-dest-otro-contacto" placeholder="Nombre y/o teléfono">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="panel-acc-destino-mismo" class="hidden">
-        <div class="galera-badge">🔄 Mismo cliente / proyecto — el accesorio se cambia en sitio</div>
-      </div>
-
-    </div>
-
-
-    <!-- 3C. CAMBIO DE EQUIPO -->
-    <div class="card hidden" id="card-cambio">
-      <div class="card-title">Equipo que sale</div>
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Código del equipo que sale <span class="req">*</span></label>
-          <select id="cambio-equipo-sale" onchange="onCambioSaleChange()">
-            <option value="">Seleccionar equipo…</option>
-          </select>
-        </div>
-        <div class="field-group hidden" id="field-cambio-acc-sale">
-          <label>Accesorio que lleva</label>
-          <select id="cambio-acc-sale"></select>
-        </div>
-      </div>
-      <div class="galera-badge" style="margin-top:4px">📍 Destino: Galera SMM — La Mañanitas</div>
-
-      <div class="seccion-divider"><span>Equipo que entra</span></div>
-
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Código del equipo que entra <span class="req">*</span></label>
-          <select id="cambio-equipo-entra" onchange="onCambioEntraChange()">
-            <option value="">Seleccionar equipo…</option>
-          </select>
-        </div>
-        <div class="field-group hidden" id="field-cambio-acc-entra">
-          <label>Accesorio que trae</label>
-          <select id="cambio-acc-entra"></select>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <label>Origen del equipo entrante <span class="req">*</span></label>
-        <div class="origen-toggle" style="margin-bottom:0">
-          <button class="origen-btn active" id="btn-cambio-galera" onclick="setCambioOrigen('galera')">📦 Galera SMM</button>
-          <button class="origen-btn" id="btn-cambio-proveedor" onclick="setCambioOrigen('proveedor')">🏭 Proveedor</button>
-          <button class="origen-btn" id="btn-cambio-proyecto" onclick="setCambioOrigen('proyecto')">🔄 Otro proyecto</button>
-        </div>
-      </div>
-
-      <div class="hidden" id="panel-cambio-proveedor" style="margin-top:12px">
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Nombre del proveedor <span class="req">*</span></label>
-            <input type="text" id="cambio-proveedor-nombre" placeholder="Ej: Rental Corp Panama">
-          </div>
-          <div class="field-group">
-            <label>Contacto del proveedor</label>
-            <input type="text" id="cambio-proveedor-contacto" placeholder="Nombre y/o teléfono">
-          </div>
-        </div>
-      </div>
-
-      <div class="hidden" id="panel-cambio-otproyecto" style="margin-top:12px">
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Cliente / proyecto de origen <span class="req">*</span></label>
-            <input type="text" id="cambio-origen-cliente" placeholder="Ej: Consorcio HPH">
-          </div>
-          <div class="field-group">
-            <label>Ubicación</label>
-            <input type="text" id="cambio-origen-ubicacion" placeholder="Ej: Línea 3 Metro">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CLIENTE (solo para cambio de equipo) -->
-    <div class="card hidden" id="card-cambio-cliente">
-      <div class="card-title">Cliente / Proyecto</div>
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Cliente <span class="req">*</span></label>
-          <input type="text" id="cambio-cliente" placeholder="Ej: Consorcio RC Puentes">
-        </div>
-        <div class="field-group">
-          <label>Proyecto <span class="req">*</span></label>
-          <input type="text" id="cambio-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
-        </div>
-      </div>
-      <div class="field-row-2">
-        <div class="field-group">
-          <label>Ubicación</label>
-          <input type="text" id="cambio-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
-        </div>
-        <div class="field-group">
-          <label>Contacto en proyecto</label>
-          <input type="text" id="cambio-contacto" placeholder="Nombre y/o teléfono">
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. RETIRO Y ENTREGA -->
-    <div class="card" id="card-retiro-entrega">
-
-      <!-- ORIGEN (movilizacion) -->
-      <div id="seccion-origen-movil">
-        <div class="card-title">Retiro — origen</div>
-        <div class="origen-toggle">
-          <button class="origen-btn active" id="btn-galera" onclick="setOrigen('galera')">📦 Desde galera SMM</button>
-          <button class="origen-btn" id="btn-proyecto" onclick="setOrigen('proyecto')">🔄 Desde otro proyecto</button>
-        </div>
-        <div id="panel-galera">
-          <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div>
-        </div>
-        <div id="panel-proyecto" class="hidden">
-          <div class="field-row-2">
-            <div class="field-group">
-              <label>Cliente de retiro <span class="req">*</span></label>
-              <input type="text" id="retiro-cliente" placeholder="Ej: Consorcio HPH">
-            </div>
-            <div class="field-group">
-              <label>Proyecto de retiro <span class="req">*</span></label>
-              <input type="text" id="retiro-proyecto" placeholder="Ej: Línea 3 Metro">
-            </div>
-          </div>
-          <div class="field-row-2">
-            <div class="field-group">
-              <label>Ubicación de retiro <span class="req">*</span></label>
-              <input type="text" id="retiro-ubicacion" placeholder="Ej: Arraiján, Colón">
-            </div>
-            <div class="field-group">
-              <label>Contacto de retiro</label>
-              <input type="text" id="retiro-contacto" placeholder="Nombre y/o teléfono">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ORIGEN (desmovilizacion) — cliente/proyecto requerido -->
-      <div id="seccion-origen-desmovil" class="hidden">
-        <div class="card-title">Retiro — desde cliente</div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Cliente <span class="req">*</span></label>
-            <input type="text" id="desmovil-cliente" placeholder="Ej: Consorcio RC Puentes">
-          </div>
-          <div class="field-group">
-            <label>Proyecto <span class="req">*</span></label>
-            <input type="text" id="desmovil-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
-          </div>
-        </div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Ubicación</label>
-            <input type="text" id="desmovil-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
-          </div>
-          <div class="field-group">
-            <label>Contacto</label>
-            <input type="text" id="desmovil-contacto" placeholder="Nombre y/o teléfono">
-          </div>
-        </div>
-      </div>
-
-      <!-- Destino movilizacion: cliente -->
-      <div id="seccion-destino-movil">
-      <div class="seccion-divider"><span>Entrega — destino</span></div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Cliente <span class="req">*</span></label>
-            <input type="text" id="entrega-cliente" placeholder="Ej: Consorcio RC Puentes">
-          </div>
-          <div class="field-group">
-            <label>Proyecto <span class="req">*</span></label>
-            <input type="text" id="entrega-proyecto" placeholder="Ej: Remod. Centro Miraflores ACP">
-          </div>
-        </div>
-        <div class="field-row-2">
-          <div class="field-group">
-            <label>Ubicación de entrega</label>
-            <input type="text" id="entrega-ubicacion" placeholder="Ej: ACP, Línea 3 Metro">
-          </div>
-          <div class="field-group">
-            <label>Contacto de entrega</label>
-            <input type="text" id="entrega-contacto" placeholder="Nombre y/o teléfono">
-          </div>
-        </div>
-      </div>
-
-      </div><!-- /seccion-destino-movil -->
-
-      <!-- Destino desmovilizacion: galera SMM por default o cambiar -->
-      <div id="seccion-destino-desmovil" class="hidden">
-      <div class="seccion-divider"><span>Entrega — destino</span></div>
-        <div class="origen-toggle" style="margin-bottom:12px">
-          <button class="origen-btn active" id="btn-dest-galera" onclick="setDestinoDesmo('galera')">📦 Galera SMM</button>
-          <button class="origen-btn" id="btn-dest-otro" onclick="setDestinoDesmo('otro')">🔄 Otro destino</button>
-        </div>
-        <div id="panel-dest-galera">
-          <div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(destino por defecto)</span></div>
-        </div>
-        <div id="panel-dest-otro" class="hidden">
-          <div class="field-row-2">
-            <div class="field-group">
-              <label>Cliente / destino <span class="req">*</span></label>
-              <input type="text" id="dest-otro-cliente" placeholder="Ej: Taller externo">
-            </div>
-            <div class="field-group">
-              <label>Ubicación</label>
-              <input type="text" id="dest-otro-ubicacion" placeholder="Ej: Chorrera">
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- 5. FECHAS -->
-    <div class="card">
-      <div class="card-title">Fechas</div>
-      <div class="field-row-2">
-        <div class="field-group">
-          <label id="label-fecha-movil">Fecha de movilización solicitada <span class="req">*</span></label>
-          <input type="date" id="fecha-movil">
-        </div>
-        <div class="field-group">
-          <label id="label-fecha-alquiler">Fecha inicio de alquiler <span class="req">*</span></label>
-          <input type="date" id="fecha-alquiler">
-          <p class="info-note" id="info-fecha-alquiler">Base para el control operativo</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. CONDICIONES -->
-    <div class="card" id="card-condiciones">
-      <div class="card-title">Condiciones del equipo</div>
-      <div id="cond-operador-diesel">
-        <label class="check-row" for="cond-operador">
-          <input type="checkbox" id="cond-operador">
-          <span class="check-label">Operador incluido</span>
-        </label>
-        <label class="check-row" for="cond-diesel">
-          <input type="checkbox" id="cond-diesel">
-          <span class="check-label">Diesel incluido</span>
-        </label>
-      </div>
-      <div class="check-row" style="padding-bottom:0;border-bottom:none;border-top:none">
-        <div style="flex:1">
-          <div class="check-label" style="margin-bottom:8px">Propiedad del equipo</div>
-          <div class="toggle-group">
-            <label class="toggle-option"><input type="radio" name="propiedad" value="smm" checked><span class="toggle-pill">Equipo SMM</span></label>
-            <label class="toggle-option"><input type="radio" name="propiedad" value="arrendada"><span class="toggle-pill">Subarrendado</span></label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 7. NOTAS -->
-    <div class="card">
-      <div class="card-title">Notas y observaciones</div>
-      <textarea id="notas" placeholder="Instrucciones especiales, condiciones de entrega, restricciones de horario, cambios de accesorio…"></textarea>
-    </div>
-
-    <div class="alert-box" id="alert-box">⚠ Por favor completa todos los campos requeridos.</div>
-    <button class="btn-submit" onclick="submitForm()">Enviar solicitud</button>
-
-  </div><!-- /form-area -->
-
-  <!-- SUCCESS -->
-  <div class="success-screen" id="success-screen">
-    <div class="success-icon">✓</div>
-    <div class="success-title">Solicitud enviada</div>
-    <div class="success-sub" id="success-msg"></div>
-    <div class="success-ref" id="success-ref"></div>
-    <br>
-    <button class="btn-nueva" onclick="nuevaSolicitud()">Nueva solicitud</button>
   </div>
+
+  <!-- 2. RESPONSABLE -->
+  <div class="card">
+    <div class="card-title">Responsable</div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label>Vendedor / Solicitante <span class="req">*</span></label>
+        <select id="vendedor"><option value="">Seleccionar…</option></select>
+      </div>
+      <div class="field-group">
+        <label>Fecha de solicitud <span class="req">*</span></label>
+        <input type="date" id="fecha-solicitud">
+      </div>
+    </div>
+  </div>
+
+  <!-- 3A. EQUIPO (movilización / desmovilización) -->
+  <div class="card hidden" id="card-equipo">
+    <div class="card-title">Equipo</div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label>Familia / Categoría <span class="req">*</span></label>
+        <select id="eq-familia" onchange="onFamiliaChange('eq')"><option value="">Seleccionar familia…</option></select>
+      </div>
+      <div class="field-group">
+        <label>Código del equipo <span class="req">*</span></label>
+        <select id="eq-codigo" onchange="onEquipoChange()"><option value="">Primero elige la familia</option></select>
+      </div>
+    </div>
+    <div class="field-row-2 hidden" id="row-acc-equipo">
+      <div class="field-group">
+        <label>Accesorio actual</label>
+        <select id="eq-acc-actual"></select>
+        <p class="info-note" id="info-acc-eq"></p>
+      </div>
+      <div class="field-group">
+        <label>Acción sobre accesorio</label>
+        <select id="eq-acc-accion" onchange="onAccionChange()">
+          <option value="entrega">Entrega tal cual</option>
+          <option value="cambio">Cambiar antes de entregar</option>
+          <option value="retirar">Retirar accesorio</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row-2 hidden" id="row-acc-nuevo">
+      <div class="field-group">
+        <label>Nuevo accesorio <span class="req">*</span></label>
+        <select id="eq-acc-nuevo"></select>
+      </div>
+      <div class="field-group" id="grp-acc-destino">
+        <label>Accesorio retirado va a</label>
+        <div class="toggle-group">
+          <label class="toggle-option"><input type="radio" name="acc-destino" value="galera" checked><span class="toggle-pill">Galera SMM</span></label>
+          <label class="toggle-option"><input type="radio" name="acc-destino" value="queda"><span class="toggle-pill">Se queda en proyecto</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3B. CAMBIO DE EQUIPO -->
+  <div class="card hidden" id="card-cambio">
+    <div class="card-title">Equipo que sale → Galera SMM</div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label>Familia <span class="req">*</span></label>
+        <select id="cs-familia" onchange="onFamiliaChange('cs')"><option value="">Seleccionar…</option></select>
+      </div>
+      <div class="field-group">
+        <label>Equipo que sale <span class="req">*</span></label>
+        <select id="cs-codigo"><option value="">Primero elige la familia</option></select>
+      </div>
+    </div>
+    <div class="galera-badge">📍 Destino del equipo saliente: Galera SMM — La Mañanitas</div>
+
+    <div class="seccion-divider"><span>Equipo que entra</span></div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label>Familia <span class="req">*</span></label>
+        <select id="ce-familia" onchange="onFamiliaChange('ce')"><option value="">Seleccionar…</option></select>
+      </div>
+      <div class="field-group">
+        <label>Equipo que entra <span class="req">*</span></label>
+        <select id="ce-codigo"><option value="">Primero elige la familia</option></select>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Origen del equipo entrante <span class="req">*</span></label>
+      <div class="origen-toggle" style="margin-bottom:0">
+        <button type="button" class="origen-btn active" id="btn-co-galera" onclick="setCambioOrigen('galera')">📦 Galera SMM</button>
+        <button type="button" class="origen-btn" id="btn-co-proveedor" onclick="setCambioOrigen('proveedor')">🏭 Proveedor</button>
+        <button type="button" class="origen-btn" id="btn-co-proyecto" onclick="setCambioOrigen('proyecto')">🔄 Otro proyecto</button>
+      </div>
+    </div>
+    <div class="hidden" id="panel-co-detalle" style="margin-top:12px">
+      <div class="field-row-2">
+        <div class="field-group">
+          <label id="lbl-co-detalle">Detalle del origen</label>
+          <input type="text" id="co-detalle" placeholder="Nombre del proveedor / proyecto">
+        </div>
+        <div class="field-group">
+          <label>Contacto</label>
+          <input type="text" id="co-contacto" placeholder="Nombre y/o teléfono">
+        </div>
+      </div>
+    </div>
+
+    <div class="seccion-divider"><span>Cliente / Proyecto donde ocurre el cambio</span></div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label>Cliente <span class="req">*</span></label>
+        <input type="text" id="cb-cliente" placeholder="Ej: Consorcio RC Puentes">
+      </div>
+      <div class="field-group">
+        <label>Proyecto <span class="req">*</span></label>
+        <input type="text" id="cb-proyecto" placeholder="Ej: ACP Miraflores">
+      </div>
+    </div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label>Ubicación</label>
+        <input type="text" id="cb-ubicacion" placeholder="Ej: ACP, Línea 3">
+      </div>
+      <div class="field-group">
+        <label>Contacto en proyecto</label>
+        <input type="text" id="cb-contacto" placeholder="Nombre y/o teléfono">
+      </div>
+    </div>
+  </div>
+
+  <!-- 3C. SOLO ACCESORIO -->
+  <div class="card hidden" id="card-accesorio">
+    <div class="card-title">Accesorio / Herramienta</div>
+    <div class="field-group" style="margin-bottom:16px">
+      <label>Tipo de movimiento <span class="req">*</span></label>
+      <div class="origen-toggle" style="margin-bottom:0">
+        <button type="button" class="origen-btn active" id="btn-as-movilizacion" onclick="setAccSub('movilizacion')">🚛 Movilización</button>
+        <button type="button" class="origen-btn" id="btn-as-desmovilizacion" onclick="setAccSub('desmovilizacion')">🔙 Desmovilización</button>
+        <button type="button" class="origen-btn" id="btn-as-cambio" onclick="setAccSub('cambio')">🔄 Cambio</button>
+      </div>
+    </div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label>Categoría <span class="req">*</span></label>
+        <select id="ac-categoria" onchange="onAccCatChange('ac')"><option value="">Seleccionar…</option></select>
+      </div>
+      <div class="field-group">
+        <label>Accesorio <span class="req">*</span></label>
+        <select id="ac-codigo"><option value="">Primero elige la categoría</option></select>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Compatible con equipo <span class="lbl-opt">opcional</span></label>
+      <input type="text" id="ac-compat" placeholder="Ej: E-09-2 del cliente">
+    </div>
+
+    <div class="hidden" id="panel-ac-entra">
+      <div class="seccion-divider"><span>Accesorio que entra</span></div>
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Categoría <span class="req">*</span></label>
+          <select id="ae-categoria" onchange="onAccCatChange('ae')"><option value="">Seleccionar…</option></select>
+        </div>
+        <div class="field-group">
+          <label>Accesorio entrante <span class="req">*</span></label>
+          <select id="ae-codigo"><option value="">Primero elige la categoría</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORIGEN accesorio -->
+    <div class="seccion-divider"><span id="lbl-ac-origen">Origen</span></div>
+    <div id="ac-origen-galera">
+      <div class="origen-toggle">
+        <button type="button" class="origen-btn active" id="btn-ao-galera" onclick="setAccOrigen('galera')">📦 Galera SMM</button>
+        <button type="button" class="origen-btn" id="btn-ao-otro" onclick="setAccOrigen('otro')">🔄 Otro origen</button>
+      </div>
+      <div id="panel-ao-galera"><div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div></div>
+      <div class="hidden" id="panel-ao-otro">
+        <div class="field-row-2">
+          <div class="field-group"><label>Lugar de origen</label><input type="text" id="ao-lugar" placeholder="Ej: Taller, proveedor"></div>
+          <div class="field-group"><label>Contacto</label><input type="text" id="ao-contacto" placeholder="Nombre y/o teléfono"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hidden" id="ac-origen-cliente">
+      <div class="field-row-2">
+        <div class="field-group"><label>Cliente <span class="req">*</span></label><input type="text" id="acl-cliente" placeholder="Ej: Consorcio RC Puentes"></div>
+        <div class="field-group"><label>Proyecto <span class="req">*</span></label><input type="text" id="acl-proyecto" placeholder="Ej: ACP Miraflores"></div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group"><label>Ubicación</label><input type="text" id="acl-ubicacion" placeholder="Ej: ACP, Línea 3"></div>
+        <div class="field-group"><label>Contacto</label><input type="text" id="acl-contacto" placeholder="Nombre y/o teléfono"></div>
+      </div>
+    </div>
+
+    <!-- DESTINO accesorio -->
+    <div class="seccion-divider"><span id="lbl-ac-destino">Destino — entrega a cliente</span></div>
+    <div id="ac-dest-cliente">
+      <div class="field-row-2">
+        <div class="field-group"><label>Cliente <span class="req">*</span></label><input type="text" id="adc-cliente" placeholder="Ej: Consorcio RC Puentes"></div>
+        <div class="field-group"><label>Proyecto <span class="req">*</span></label><input type="text" id="adc-proyecto" placeholder="Ej: ACP Miraflores"></div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group"><label>Ubicación</label><input type="text" id="adc-ubicacion" placeholder="Ej: ACP, Línea 3"></div>
+        <div class="field-group"><label>Contacto</label><input type="text" id="adc-contacto" placeholder="Nombre y/o teléfono"></div>
+      </div>
+    </div>
+    <div class="hidden" id="ac-dest-galera">
+      <div class="origen-toggle">
+        <button type="button" class="origen-btn active" id="btn-ad-galera" onclick="setAccDestino('galera')">📦 Galera SMM</button>
+        <button type="button" class="origen-btn" id="btn-ad-otro" onclick="setAccDestino('otro')">🔄 Otro destino</button>
+      </div>
+      <div id="panel-ad-galera"><div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(destino por defecto)</span></div></div>
+      <div class="hidden" id="panel-ad-otro">
+        <div class="field-row-2">
+          <div class="field-group"><label>Lugar de destino</label><input type="text" id="ad-lugar" placeholder="Ej: Taller externo"></div>
+          <div class="field-group"><label>Contacto</label><input type="text" id="ad-contacto" placeholder="Nombre y/o teléfono"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hidden" id="ac-dest-mismo">
+      <div class="galera-badge">🔄 Mismo cliente / proyecto — el accesorio se cambia en sitio</div>
+    </div>
+  </div>
+
+  <!-- 4. RETIRO Y ENTREGA (movilización / desmovilización) -->
+  <div class="card hidden" id="card-ruta">
+    <!-- Origen movilización -->
+    <div id="sec-origen-movil">
+      <div class="card-title">Retiro — origen</div>
+      <div class="origen-toggle">
+        <button type="button" class="origen-btn active" id="btn-om-galera" onclick="setOrigenMovil('galera')">📦 Desde galera SMM</button>
+        <button type="button" class="origen-btn" id="btn-om-proyecto" onclick="setOrigenMovil('proyecto')">🔄 Desde otro proyecto</button>
+      </div>
+      <div id="panel-om-galera"><div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div></div>
+      <div class="hidden" id="panel-om-proyecto">
+        <div class="field-row-2">
+          <div class="field-group"><label>Cliente de retiro <span class="req">*</span></label><input type="text" id="om-cliente" placeholder="Ej: Consorcio HPH"></div>
+          <div class="field-group"><label>Proyecto de retiro <span class="req">*</span></label><input type="text" id="om-proyecto" placeholder="Ej: Línea 3 Metro"></div>
+        </div>
+        <div class="field-row-2">
+          <div class="field-group"><label>Ubicación de retiro</label><input type="text" id="om-ubicacion" placeholder="Ej: Arraiján, Colón"></div>
+          <div class="field-group"><label>Contacto de retiro</label><input type="text" id="om-contacto" placeholder="Nombre y/o teléfono"></div>
+        </div>
+      </div>
+      <div class="seccion-divider"><span>Entrega — destino</span></div>
+      <div class="field-row-2">
+        <div class="field-group"><label>Cliente <span class="req">*</span></label><input type="text" id="dm-cliente" placeholder="Ej: Consorcio RC Puentes"></div>
+        <div class="field-group"><label>Proyecto <span class="req">*</span></label><input type="text" id="dm-proyecto" placeholder="Ej: ACP Miraflores"></div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group"><label>Ubicación de entrega</label><input type="text" id="dm-ubicacion" placeholder="Ej: ACP, Línea 3"></div>
+        <div class="field-group"><label>Contacto de entrega</label><input type="text" id="dm-contacto" placeholder="Nombre y/o teléfono"></div>
+      </div>
+    </div>
+
+    <!-- Origen / destino desmovilización -->
+    <div class="hidden" id="sec-origen-desmovil">
+      <div class="card-title">Retiro — desde cliente</div>
+      <div class="field-row-2">
+        <div class="field-group"><label>Cliente <span class="req">*</span></label><input type="text" id="od-cliente" placeholder="Ej: Consorcio RC Puentes"></div>
+        <div class="field-group"><label>Proyecto <span class="req">*</span></label><input type="text" id="od-proyecto" placeholder="Ej: ACP Miraflores"></div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group"><label>Ubicación</label><input type="text" id="od-ubicacion" placeholder="Ej: ACP, Línea 3"></div>
+        <div class="field-group"><label>Contacto</label><input type="text" id="od-contacto" placeholder="Nombre y/o teléfono"></div>
+      </div>
+      <div class="seccion-divider"><span>Entrega — destino</span></div>
+      <div class="origen-toggle">
+        <button type="button" class="origen-btn active" id="btn-dd-galera" onclick="setDestinoDesmo('galera')">📦 Galera SMM</button>
+        <button type="button" class="origen-btn" id="btn-dd-otro" onclick="setDestinoDesmo('otro')">🔄 Otro destino</button>
+      </div>
+      <div id="panel-dd-galera"><div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(destino por defecto)</span></div></div>
+      <div class="hidden" id="panel-dd-otro">
+        <div class="field-row-2">
+          <div class="field-group"><label>Cliente / destino <span class="req">*</span></label><input type="text" id="dd-cliente" placeholder="Ej: Taller externo"></div>
+          <div class="field-group"><label>Ubicación</label><input type="text" id="dd-ubicacion" placeholder="Ej: Chorrera"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. FECHAS -->
+  <div class="card hidden" id="card-fechas">
+    <div class="card-title">Fechas</div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label id="lbl-fecha-1">Fecha de movilización solicitada <span class="req">*</span></label>
+        <input type="date" id="fecha-movil">
+      </div>
+      <div class="field-group">
+        <label id="lbl-fecha-2">Fecha inicio de alquiler <span class="req">*</span></label>
+        <input type="date" id="fecha-alquiler">
+        <p class="info-note" id="info-fecha-2">Base para el control operativo</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. CONDICIONES -->
+  <div class="card hidden" id="card-condiciones">
+    <div class="card-title">Condiciones del equipo</div>
+    <div id="grp-op-diesel">
+      <label class="check-row" for="cond-operador"><input type="checkbox" id="cond-operador"><span class="check-label">Operador incluido</span></label>
+      <label class="check-row" for="cond-diesel"><input type="checkbox" id="cond-diesel"><span class="check-label">Diesel incluido</span></label>
+    </div>
+    <div class="check-row" style="padding-bottom:0;border-bottom:none">
+      <div style="flex:1">
+        <div class="check-label" style="margin-bottom:8px">Propiedad del equipo</div>
+        <div class="toggle-group">
+          <label class="toggle-option"><input type="radio" name="propiedad" value="smm" checked><span class="toggle-pill">Equipo SMM</span></label>
+          <label class="toggle-option"><input type="radio" name="propiedad" value="arrendada"><span class="toggle-pill">Subarrendado</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. NOTAS -->
+  <div class="card hidden" id="card-notas">
+    <div class="card-title">Notas y observaciones</div>
+    <textarea id="notas" placeholder="Instrucciones especiales, condiciones de entrega, restricciones de horario…"></textarea>
+  </div>
+
+  <div class="alert-box" id="alert-box">⚠ Por favor completa todos los campos requeridos.</div>
+  <button type="button" class="btn-submit hidden" id="btn-enviar" onclick="submitForm()">Enviar solicitud</button>
+
+</div><!-- /form-area -->
+
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✓</div>
+  <div class="success-title">Solicitud enviada</div>
+  <div class="success-sub" id="success-msg"></div>
+  <div class="success-ref" id="success-ref"></div>
+  <br>
+  <button class="btn-nueva" onclick="location.reload()">Nueva solicitud</button>
+</div>
 </div>
 
 <script src="config.js"></script>
 <script>
-  let tipoActual = '';
-  let origenActual = 'galera';
+// ════════════════════════════════════════════════
+//  Estado global
+// ════════════════════════════════════════════════
+let tipo = '';          // movilizacion | desmovilizacion | cambio | accesorio
+let accSub = 'movilizacion';   // sub-tipo de solo accesorio
+let origenMovil = 'galera';    // origen en movilización
+let destinoDesmo = 'galera';   // destino en desmovilización
+let cambioOrigen = 'galera';   // origen del equipo entrante en cambio
+let accOrigen = 'galera';      // origen accesorio (movilización)
+let accDestino = 'galera';     // destino accesorio (desmovilización)
 
-  // ── Poblar vendedores ──────────────────────────────────────
-  function poblarVendedores() {
-    const sel = document.getElementById('vendedor');
-    VENDEDORES.forEach(v => {
-      const opt = document.createElement('option');
-      opt.value = v;
-      opt.textContent = v;
-      sel.appendChild(opt);
-    });
-  }
+const $ = id => document.getElementById(id);
+const val = id => ($(id) && $(id).value) ? $(id).value.trim() : '';
 
-  // ── Poblar equipos agrupados por tipo ─────────────────────
-  function poblarEquipos() {
-    const sel = document.getElementById('equipo-codigo');
-    const grupos = {};
-    EQUIPOS.forEach(eq => {
-      if (!grupos[eq.tipo]) grupos[eq.tipo] = [];
-      grupos[eq.tipo].push(eq);
-    });
-
-    const labels = {
-      excavadora: 'Excavadoras', retroexcavadora: 'Retroexcavadoras',
-      miniexcavadora: 'Miniexcavadoras', minicargador: 'Minicargadores',
-      telehandler: 'Telehandlers', compactadora: 'Compactadoras / Rolas',
-      bulldozer: 'Bulldozers', motoniveladora: 'Motoniveladoras'
-    };
-
-    Object.keys(labels).forEach(tipo => {
-      if (!grupos[tipo]) return;
-      const og = document.createElement('optgroup');
-      og.label = labels[tipo];
-      grupos[tipo].forEach(eq => {
-        const opt = document.createElement('option');
-        opt.value = eq.tipo;
-        opt.textContent = eq.codigo + (eq.desc ? ' — ' + eq.desc : '');
-        opt.dataset.codigo = eq.codigo;
-        og.appendChild(opt);
-      });
-      sel.appendChild(og);
-    });
-  }
-
-  // ── Poblar accesorios independientes ──────────────────────
-  function poblarAccSolo() {
-    const sel = document.getElementById('acc-solo-codigo');
-    const grupos = {};
-    ACCESORIOS.forEach(a => {
-      if (!grupos[a.tipo]) grupos[a.tipo] = [];
-      grupos[a.tipo].push(a);
-    });
-
-    const labels = {
-      martillo: 'Martillos', balde: 'Baldes',
-      orquilla: 'Orquillas', barredora: 'Barredoras', forro: 'Forros'
-    };
-
-    Object.keys(labels).forEach(tipo => {
-      if (!grupos[tipo]) return;
-      const og = document.createElement('optgroup');
-      og.label = labels[tipo];
-      grupos[tipo].forEach(a => {
-        const opt = document.createElement('option');
-        opt.value = a.codigo;
-        opt.textContent = a.codigo + ' — ' + a.nombre;
-        og.appendChild(opt);
-      });
-      sel.appendChild(og);
-    });
-  }
-
-  // ── Init ──────────────────────────────────────────────────
-  document.addEventListener('DOMContentLoaded', () => {
-    poblarVendedores();
-    poblarEquipos();
-    poblarAccSolo();
-    poblarCambioEquipos();
-    poblarAccSoloEntra();
-    document.getElementById('fecha-solicitud').valueAsDate = new Date();
+// ════════════════════════════════════════════════
+//  Poblar selects desde config.js
+// ════════════════════════════════════════════════
+function poblarVendedores(){
+  VENDEDORES.forEach(v => $('vendedor').insertAdjacentHTML('beforeend', `<option>${v}</option>`));
+}
+function poblarFamilias(selId){
+  Object.keys(FAMILIAS).forEach(f => $(selId).insertAdjacentHTML('beforeend', `<option value="${f}">${FAMILIAS[f]}</option>`));
+}
+function onFamiliaChange(prefijo){
+  const fam = val(prefijo + '-familia');
+  const sel = $(prefijo + '-codigo');
+  sel.innerHTML = '<option value="">Seleccionar equipo…</option>';
+  EQUIPOS.filter(e => e.tipo === fam).forEach(e => {
+    sel.insertAdjacentHTML('beforeend', `<option value="${e.codigo}">${e.codigo} — ${e.desc}</option>`);
   });
+  if (prefijo === 'eq') actualizarAccesorios(fam);
+}
+function poblarCategoriasAcc(selId){
+  CATEGORIAS_ACCESORIOS.forEach(c => $(selId).insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.label}</option>`));
+}
+function onAccCatChange(prefijo){
+  const cat = val(prefijo + '-categoria');
+  const sel = $(prefijo + '-codigo');
+  sel.innerHTML = '<option value="">Seleccionar…</option>';
+  ACCESORIOS.filter(a => a.cat === cat).forEach(a => {
+    sel.insertAdjacentHTML('beforeend', `<option value="${a.codigo}">${a.codigo} — ${a.nombre} (${a.clase})</option>`);
+  });
+}
 
-  // ── Tipo de movimiento ────────────────────────────────────
-  function setTipo(tipo, el) {
-    tipoActual = tipo;
-    document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
+// ════════════════════════════════════════════════
+//  Accesorios del equipo (movilización/desmovilización)
+// ════════════════════════════════════════════════
+function actualizarAccesorios(fam){
+  const info = ACCESORIOS_POR_TIPO[fam];
+  const row = $('row-acc-equipo');
+  if (!info){ row.classList.add('hidden'); $('row-acc-nuevo').classList.add('hidden'); return; }
+  row.classList.remove('hidden');
+  const act = $('eq-acc-actual'); act.innerHTML = '';
+  act.insertAdjacentHTML('beforeend', `<option value="${info.default}" selected>${info.default} (por defecto)</option>`);
+  info.opcionales.forEach(o => act.insertAdjacentHTML('beforeend', `<option>${o}</option>`));
+  $('info-acc-eq').textContent = 'Opcionales: ' + info.opcionales.join(', ');
+  const nue = $('eq-acc-nuevo'); nue.innerHTML = '<option value="">Seleccionar…</option>';
+  [info.default, ...info.opcionales].forEach(o => nue.insertAdjacentHTML('beforeend', `<option>${o}</option>`));
+  $('eq-acc-accion').value = 'entrega';
+  onAccionChange();
+}
+function onEquipoChange(){ /* hook reservado */ }
+function onAccionChange(){
+  const acc = val('eq-acc-accion');
+  $('row-acc-nuevo').classList.toggle('hidden', acc !== 'cambio' && acc !== 'retirar');
+  // si retira, no hay nuevo accesorio
+  $('eq-acc-nuevo').parentElement.classList.toggle('hidden', acc !== 'cambio');
+}
 
-    const esCambio      = tipo === 'cambio';
-    const esAccesorio   = tipo === 'accesorio';
-    const esDesmovil    = tipo === 'desmovilizacion';
-    const esMovil       = tipo === 'movilizacion';
+// ════════════════════════════════════════════════
+//  Toggles
+// ════════════════════════════════════════════════
+function activar(botones, activo){
+  botones.forEach(([id,key]) => $(id).classList.toggle('active', key === activo));
+}
+function setOrigenMovil(o){
+  origenMovil = o;
+  activar([['btn-om-galera','galera'],['btn-om-proyecto','proyecto']], o);
+  $('panel-om-galera').classList.toggle('hidden', o !== 'galera');
+  $('panel-om-proyecto').classList.toggle('hidden', o !== 'proyecto');
+}
+function setDestinoDesmo(d){
+  destinoDesmo = d;
+  activar([['btn-dd-galera','galera'],['btn-dd-otro','otro']], d);
+  $('panel-dd-galera').classList.toggle('hidden', d !== 'galera');
+  $('panel-dd-otro').classList.toggle('hidden', d !== 'otro');
+}
+function setCambioOrigen(o){
+  cambioOrigen = o;
+  activar([['btn-co-galera','galera'],['btn-co-proveedor','proveedor'],['btn-co-proyecto','proyecto']], o);
+  $('panel-co-detalle').classList.toggle('hidden', o === 'galera');
+  $('lbl-co-detalle').textContent = o === 'proveedor' ? 'Nombre del proveedor' : 'Cliente / proyecto de origen';
+}
+function setAccOrigen(o){
+  accOrigen = o;
+  activar([['btn-ao-galera','galera'],['btn-ao-otro','otro']], o);
+  $('panel-ao-galera').classList.toggle('hidden', o !== 'galera');
+  $('panel-ao-otro').classList.toggle('hidden', o !== 'otro');
+}
+function setAccDestino(d){
+  accDestino = d;
+  activar([['btn-ad-galera','galera'],['btn-ad-otro','otro']], d);
+  $('panel-ad-galera').classList.toggle('hidden', d !== 'galera');
+  $('panel-ad-otro').classList.toggle('hidden', d !== 'otro');
+}
 
-    // Tarjetas principales
-    document.getElementById('card-equipo').classList.toggle('hidden', esAccesorio || esCambio);
-    document.getElementById('card-solo-accesorio').classList.toggle('hidden', !esAccesorio);
-    document.getElementById('card-cambio').classList.toggle('hidden', !esCambio);
-    document.getElementById('card-cambio-cliente').classList.toggle('hidden', !esCambio);
-    document.getElementById('card-retiro-entrega').classList.toggle('hidden', esCambio || esAccesorio);
+// ════════════════════════════════════════════════
+//  Tipo principal
+// ════════════════════════════════════════════════
+function setTipo(t){
+  tipo = t;
+  ['movilizacion','desmovilizacion','cambio','accesorio'].forEach(x =>
+    $('tb-'+x).classList.toggle('selected', x === t));
 
-    // Secciones dentro de retiro-entrega
-    document.getElementById('seccion-origen-movil').classList.toggle('hidden', esDesmovil || esAccesorio);
-    document.getElementById('seccion-origen-desmovil').classList.toggle('hidden', !esDesmovil);
-    document.getElementById('seccion-destino-movil').classList.toggle('hidden', esDesmovil);
-    document.getElementById('seccion-destino-desmovil').classList.toggle('hidden', !esDesmovil);
+  const esMov = t === 'movilizacion', esDes = t === 'desmovilizacion',
+        esCam = t === 'cambio', esAcc = t === 'accesorio';
 
-    // Ocultar operador/diesel para accesorio y cambio
-    const showOpDiesel = !esAccesorio && !esCambio;
-    document.getElementById('cond-operador-diesel').classList.toggle('hidden', !showOpDiesel);
+  $('card-equipo').classList.toggle('hidden', !esMov && !esDes);
+  $('card-cambio').classList.toggle('hidden', !esCam);
+  $('card-accesorio').classList.toggle('hidden', !esAcc);
+  $('card-ruta').classList.toggle('hidden', !esMov && !esDes);
+  $('sec-origen-movil').classList.toggle('hidden', !esMov);
+  $('sec-origen-desmovil').classList.toggle('hidden', !esDes);
+  $('card-fechas').classList.remove('hidden');
+  $('card-condiciones').classList.remove('hidden');
+  $('card-notas').classList.remove('hidden');
+  $('btn-enviar').classList.remove('hidden');
+  $('grp-op-diesel').classList.toggle('hidden', esAcc || esCam);
 
-    // Actualizar labels de fechas
-    actualizarLabelsFechas(esDesmovil);
+  actualizarLabelsFechas(esDes || (esAcc && accSub === 'desmovilizacion'));
+}
+function setAccSub(s){
+  accSub = s;
+  activar([['btn-as-movilizacion','movilizacion'],['btn-as-desmovilizacion','desmovilizacion'],['btn-as-cambio','cambio']], s);
+  const esMov = s === 'movilizacion', esCam = s === 'cambio';
+  $('panel-ac-entra').classList.toggle('hidden', !esCam);
+  $('ac-origen-galera').classList.toggle('hidden', !esMov);
+  $('ac-origen-cliente').classList.toggle('hidden', esMov);
+  $('ac-dest-cliente').classList.toggle('hidden', !esMov);
+  $('ac-dest-galera').classList.toggle('hidden', esMov || esCam);
+  $('ac-dest-mismo').classList.toggle('hidden', !esCam);
+  $('lbl-ac-origen').textContent = esMov ? 'Origen' : 'Retiro — desde cliente';
+  $('lbl-ac-destino').textContent = esMov ? 'Destino — entrega a cliente' : 'Destino';
+  actualizarLabelsFechas(s === 'desmovilizacion');
+}
+function actualizarLabelsFechas(esDesmovil){
+  if (esDesmovil){
+    $('lbl-fecha-1').innerHTML = 'Fecha de desmovilización solicitada <span class="req">*</span>';
+    $('lbl-fecha-2').innerHTML = 'Fecha de fin de alquiler <span class="req">*</span>';
+    $('info-fecha-2').textContent = 'Hasta cuándo corre el alquiler';
+  } else {
+    $('lbl-fecha-1').innerHTML = 'Fecha de movilización solicitada <span class="req">*</span>';
+    $('lbl-fecha-2').innerHTML = 'Fecha inicio de alquiler <span class="req">*</span>';
+    $('info-fecha-2').textContent = 'Base para el control operativo';
   }
+}
 
-  // ── Origen ────────────────────────────────────────────────
-  function setOrigen(origen) {
-    origenActual = origen;
-    document.getElementById('btn-galera').classList.toggle('active', origen === 'galera');
-    document.getElementById('btn-proyecto').classList.toggle('active', origen === 'proyecto');
-    document.getElementById('panel-galera').classList.toggle('hidden', origen !== 'galera');
-    document.getElementById('panel-proyecto').classList.toggle('hidden', origen !== 'proyecto');
-  }
-
-  // ── Equipo seleccionado → accesorios ─────────────────────
-  function onEquipoChange() {
-    const sel = document.getElementById('equipo-codigo');
-    const tipo = sel.options[sel.selectedIndex]?.value || '';
-    const info = ACCESORIOS_POR_TIPO[tipo];
-    const fieldDef = document.getElementById('field-acc-default');
-    const panelCambio = document.getElementById('panel-cambio-acc');
-    const accActual = document.getElementById('accesorio-actual');
-    const accNuevo = document.getElementById('acc-nuevo-codigo');
-
-    accActual.innerHTML = '';
-    accNuevo.innerHTML = '<option value="">Seleccionar…</option>';
-
-    if (!info) {
-      fieldDef.classList.add('hidden');
-      panelCambio.classList.add('hidden');
-      return;
-    }
-
-    fieldDef.classList.remove('hidden');
-    accActual.innerHTML = `<option value="${info.default}" selected>${info.default} (por defecto)</option>`;
-    info.opcionales.forEach(o => {
-      accActual.innerHTML += `<option value="${o}">${o}</option>`;
-      accNuevo.innerHTML  += `<option value="${o}">${o}</option>`;
-    });
-    accNuevo.innerHTML += `<option value="${info.default}">${info.default}</option>`;
-    document.getElementById('info-acc').textContent = `Opcionales: ${info.opcionales.join(', ')}`;
-    panelCambio.classList.remove('hidden');
-  }
-
-  // ── Acción sobre accesorio ────────────────────────────────
-  function onAccionChange() {
-    const accion = document.getElementById('acc-accion').value;
-    document.getElementById('field-acc-nuevo').classList.toggle('hidden', accion !== 'cambio');
-    document.getElementById('field-acc-destino').classList.toggle('hidden', accion !== 'cambio' && accion !== 'retirar');
-  }
-
-  // ── Referencia automática ─────────────────────────────────
-  function generateRef() {
-    const d = new Date();
-    const pad = n => String(n).padStart(2,'0');
-    return `${CONFIG.prefijo_ref}-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${Math.floor(Math.random()*900)+100}`;
-  }
-
-  // ── Enviar ────────────────────────────────────────────────
-  async function submitForm() {
-    const alertBox = document.getElementById('alert-box');
-    const vendedor      = document.getElementById('vendedor').value;
-    const fechaMovil    = document.getElementById('fecha-movil').value;
-    const fechaAlquiler = document.getElementById('fecha-alquiler').value;
-
-    // Validacion por tipo
-    let valid = true;
-    if (!tipoActual || !vendedor || !fechaMovil || !fechaAlquiler) valid = false;
-
-    if (tipoActual === 'movilizacion' || tipoActual === 'desmovilizacion') {
-      const entCliente = document.getElementById('entrega-cliente').value;
-      const entProyecto = document.getElementById('entrega-proyecto').value;
-      if (!entCliente || !entProyecto) valid = false;
-    }
-
-    if (tipoActual === 'cambio') {
-      const sale  = document.getElementById('cambio-equipo-sale').value;
-      const entra = document.getElementById('cambio-equipo-entra').value;
-      const cli   = document.getElementById('cambio-cliente').value;
-      const proy  = document.getElementById('cambio-proyecto').value;
-      if (!sale || !entra || !cli || !proy) valid = false;
-    }
-
-    if (tipoActual === 'accesorio') {
-      const acc = document.getElementById('acc-solo-codigo').value;
-      if (!acc) valid = false;
-    }
-
-    if (!valid) {
-      alertBox.style.display = 'block';
-      alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-
-    alertBox.style.display = 'none';
-
-    const btn = document.querySelector('.btn-submit');
-    btn.disabled = true;
-    btn.textContent = 'Enviando…';
-
-    const ref   = generateRef();
-    const tipos = { movilizacion: 'Movilización', desmovilizacion: 'Desmovilización', accesorio: 'Solo accesorio' };
-    const sel   = document.getElementById('equipo-codigo');
-    const equipo = tipoActual !== 'accesorio'
-      ? (sel.options[sel.selectedIndex]?.dataset.codigo || sel.value)
-      : document.getElementById('acc-solo-codigo').value;
-
-    // Construir objeto para Supabase
-    const data = {
-      referencia:            ref,
-      tipo:                  tipoActual,
-      vendedor:              vendedor,
-      fecha_solicitud:       document.getElementById('fecha-solicitud').value,
-      fecha_movilizacion:    fechaMovil,
-      fecha_inicio_alquiler: fechaAlquiler,
-      equipo_codigo:         equipo || null,
-      equipo_tipo:           tipoActual !== 'accesorio' ? (sel.options[sel.selectedIndex]?.value || null) : null,
-      accesorio_actual:      document.getElementById('accesorio-actual')?.value || null,
-      acc_accion:            document.getElementById('acc-accion')?.value || null,
-      acc_nuevo:             document.getElementById('acc-nuevo-codigo')?.value || null,
-      acc_destino:           document.querySelector('input[name="acc-destino"]:checked')?.value || null,
-      origen:                origenActual,
-      // Origen
-      retiro_cliente:   tipoActual === 'desmovilizacion'
-        ? document.getElementById('desmovil-cliente').value
-        : (origenActual === 'proyecto' ? document.getElementById('retiro-cliente').value : 'SMM — Galera'),
-      retiro_proyecto:  tipoActual === 'desmovilizacion'
-        ? document.getElementById('desmovil-proyecto').value
-        : (origenActual === 'proyecto' ? document.getElementById('retiro-proyecto').value : 'La Mañanitas'),
-      retiro_ubicacion: tipoActual === 'desmovilizacion'
-        ? (document.getElementById('desmovil-ubicacion').value || null)
-        : (origenActual === 'proyecto' ? document.getElementById('retiro-ubicacion').value : 'La Mañanitas'),
-      retiro_contacto:  tipoActual === 'desmovilizacion'
-        ? (document.getElementById('desmovil-contacto').value || null)
-        : (origenActual === 'proyecto' ? document.getElementById('retiro-contacto').value : null),
-
-      // Destino
-      entrega_cliente:  tipoActual === 'desmovilizacion'
-        ? (document.getElementById('btn-dest-otro').classList.contains('active') ? document.getElementById('dest-otro-cliente').value : 'SMM — Galera')
-        : (tipoActual === 'cambio' ? document.getElementById('cambio-cliente').value : document.getElementById('entrega-cliente').value),
-      entrega_proyecto: tipoActual === 'desmovilizacion'
-        ? (document.getElementById('btn-dest-otro').classList.contains('active') ? '' : 'La Mañanitas')
-        : (tipoActual === 'cambio' ? document.getElementById('cambio-proyecto').value : document.getElementById('entrega-proyecto').value),
-      entrega_ubicacion: tipoActual === 'desmovilizacion'
-        ? (document.getElementById('dest-otro-ubicacion')?.value || null)
-        : (tipoActual === 'cambio' ? document.getElementById('cambio-ubicacion').value : document.getElementById('entrega-ubicacion').value) || null,
-      entrega_contacto: tipoActual === 'cambio'
-        ? (document.getElementById('cambio-contacto').value || null)
-        : (document.getElementById('entrega-contacto')?.value || null),
-      operador:              document.getElementById('cond-operador').checked,
-      diesel:                document.getElementById('cond-diesel').checked,
-      propiedad:             document.querySelector('input[name="propiedad"]:checked')?.value || 'smm',
-      notas:                 document.getElementById('notas').value || null,
-      estado:                'pendiente'
-    };
-
-    try {
-      await guardarSolicitud(data);
-      enviarEmail(data).catch(e => console.warn('Email:', e));
-
-      document.getElementById('success-ref').textContent = ref;
-      const clienteDisplay = tipoActual === 'desmovilizacion'
-        ? document.getElementById('desmovil-cliente').value
-        : (tipoActual === 'cambio' ? document.getElementById('cambio-cliente').value : document.getElementById('entrega-cliente').value);
-      const proyectoDisplay = tipoActual === 'desmovilizacion'
-        ? document.getElementById('desmovil-proyecto').value
-        : (tipoActual === 'cambio' ? document.getElementById('cambio-proyecto').value : document.getElementById('entrega-proyecto').value);
-
-      document.getElementById('success-msg').innerHTML =
-        `<strong>${tipos[tipoActual]}</strong> — ${equipo || '—'}<br>` +
-        `Cliente: ${clienteDisplay} / ${proyectoDisplay}<br>` +
-        `Solicitado por: ${vendedor}<br><br>` +
-        `${CONFIG.responsable_ops} y el equipo han sido notificados.`;
-
-      document.getElementById('form-area').style.display = 'none';
-      document.getElementById('success-screen').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    } catch(e) {
-      alertBox.textContent = '⚠ Error al guardar. Intenta de nuevo.';
-      alertBox.style.display = 'block';
-      console.error(e);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Enviar solicitud';
-    }
-  }
-
-  // ── Cambio de equipo helpers ─────────────────────────────
-  let cambioOrigenActual = 'galera';
-
-  function setCambioOrigen(origen) {
-    cambioOrigenActual = origen;
-    ['galera','proveedor','proyecto'].forEach(o => {
-      document.getElementById('btn-cambio-' + o).classList.toggle('active', o === origen);
-    });
-    document.getElementById('panel-cambio-proveedor').classList.toggle('hidden', origen !== 'proveedor');
-    document.getElementById('panel-cambio-otproyecto').classList.toggle('hidden', origen !== 'proyecto');
-  }
-
-  function onCambioSaleChange() {
-    const sel  = document.getElementById('cambio-equipo-sale');
-    const tipo = sel.options[sel.selectedIndex]?.value || '';
-    const info = ACCESORIOS_POR_TIPO[tipo];
-    const field = document.getElementById('field-cambio-acc-sale');
-    const acc   = document.getElementById('cambio-acc-sale');
-    acc.innerHTML = '';
-    if (!info) { field.classList.add('hidden'); return; }
-    field.classList.remove('hidden');
-    acc.innerHTML = `<option value="${info.default}" selected>${info.default} (por defecto)</option>`;
-    info.opcionales.forEach(o => acc.innerHTML += `<option value="${o}">${o}</option>`);
-  }
-
-  function onCambioEntraChange() {
-    const sel  = document.getElementById('cambio-equipo-entra');
-    const tipo = sel.options[sel.selectedIndex]?.value || '';
-    const info = ACCESORIOS_POR_TIPO[tipo];
-    const field = document.getElementById('field-cambio-acc-entra');
-    const acc   = document.getElementById('cambio-acc-entra');
-    acc.innerHTML = '';
-    if (!info) { field.classList.add('hidden'); return; }
-    field.classList.remove('hidden');
-    acc.innerHTML = `<option value="${info.default}" selected>${info.default} (por defecto)</option>`;
-    info.opcionales.forEach(o => acc.innerHTML += `<option value="${o}">${o}</option>`);
-  }
-
-  function poblarCambioEquipos() {
-    ['cambio-equipo-sale','cambio-equipo-entra'].forEach(id => {
-      const sel = document.getElementById(id);
-      const grupos = {};
-      EQUIPOS.forEach(eq => {
-        if (!grupos[eq.tipo]) grupos[eq.tipo] = [];
-        grupos[eq.tipo].push(eq);
-      });
-      const labels = {
-        excavadora:'Excavadoras', retroexcavadora:'Retroexcavadoras',
-        miniexcavadora:'Miniexcavadoras', minicargador:'Minicargadores',
-        telehandler:'Telehandlers', compactadora:'Compactadoras / Rolas',
-        bulldozer:'Bulldozers', motoniveladora:'Motoniveladoras'
-      };
-      Object.keys(labels).forEach(tipo => {
-        if (!grupos[tipo]) return;
-        const og = document.createElement('optgroup');
-        og.label = labels[tipo];
-        grupos[tipo].forEach(eq => {
-          const opt = document.createElement('option');
-          opt.value = eq.tipo;
-          opt.textContent = eq.codigo + ' — ' + eq.desc;
-          opt.dataset.codigo = eq.codigo;
-          og.appendChild(opt);
-        });
-        sel.appendChild(og);
-      });
-    });
-  }
-
-  // ── Destino desmovilizacion ──────────────────────────────
-  function setDestinoDesmo(dest) {
-    document.getElementById('btn-dest-galera').classList.toggle('active', dest === 'galera');
-    document.getElementById('btn-dest-otro').classList.toggle('active', dest === 'otro');
-    document.getElementById('panel-dest-galera').classList.toggle('hidden', dest !== 'galera');
-    document.getElementById('panel-dest-otro').classList.toggle('hidden', dest !== 'otro');
-  }
-
-  // ── Solo accesorio helpers ───────────────────────────────
-  let accSubtipo = 'movilizacion';
-  let accOrigen  = 'galera';
-  let accDestino = 'galera';
-
-  function setAccSubtipo(sub) {
-    accSubtipo = sub;
-    ['movil','desmovil','cambio'].forEach(s => {
-      document.getElementById('btn-acc-' + s).classList.toggle('active', s === sub);
-    });
-
-    // Accesorio entrante solo en cambio
-    document.getElementById('panel-acc-cambio-entra').classList.toggle('hidden', sub !== 'cambio');
-
-    // Origen
-    const esMovil   = sub === 'movilizacion';
-    const esCambio  = sub === 'cambio';
-    document.getElementById('panel-acc-origen-movil').classList.toggle('hidden', !esMovil);
-    document.getElementById('panel-acc-origen-cliente').classList.toggle('hidden', esMovil);
-
-    // Destino
-    document.getElementById('panel-acc-destino-cliente').classList.toggle('hidden', !esMovil);
-    document.getElementById('panel-acc-destino-galera').classList.toggle('hidden', esMovil || esCambio);
-    document.getElementById('panel-acc-destino-mismo').classList.toggle('hidden', !esCambio);
-
-    // Labels
-    document.getElementById('lbl-acc-origen').textContent = esMovil ? 'Origen' : 'Retiro — desde cliente';
-    document.getElementById('lbl-acc-destino').textContent = esMovil ? 'Destino — entrega a cliente' : (esCambio ? 'Destino' : 'Destino');
-
-    // Actualizar labels de fechas para desmovilizacion de accesorio
-    actualizarLabelsFechas(sub === 'desmovilizacion');
-  }
-
-  function setAccOrigen(orig) {
-    accOrigen = orig;
-    document.getElementById('btn-acc-orig-galera').classList.toggle('active', orig === 'galera');
-    document.getElementById('btn-acc-orig-otro').classList.toggle('active', orig === 'otro');
-    document.getElementById('panel-acc-galera').classList.toggle('hidden', orig !== 'galera');
-    document.getElementById('panel-acc-otro').classList.toggle('hidden', orig !== 'otro');
-  }
-
-  function setAccDestino(dest) {
-    accDestino = dest;
-    document.getElementById('btn-acc-dest-galera').classList.toggle('active', dest === 'galera');
-    document.getElementById('btn-acc-dest-otro').classList.toggle('active', dest === 'otro');
-    document.getElementById('panel-acc-dest-galera-badge').classList.toggle('hidden', dest !== 'galera');
-    document.getElementById('panel-acc-dest-otro').classList.toggle('hidden', dest !== 'otro');
-  }
-
-  // Poblar accesorio entrante igual que saliente
-  function poblarAccSoloEntra() {
-    const sel = document.getElementById('acc-solo-codigo-entra');
-    const grupos = {};
-    ACCESORIOS.forEach(a => {
-      if (!grupos[a.tipo]) grupos[a.tipo] = [];
-      grupos[a.tipo].push(a);
-    });
-    const labels = { martillo:'Martillos', balde:'Baldes', orquilla:'Orquillas', barredora:'Barredoras', forro:'Forros' };
-    Object.keys(labels).forEach(tipo => {
-      if (!grupos[tipo]) return;
-      const og = document.createElement('optgroup');
-      og.label = labels[tipo];
-      grupos[tipo].forEach(a => {
-        const opt = document.createElement('option');
-        opt.value = a.codigo;
-        opt.textContent = a.codigo + ' — ' + a.nombre;
-        og.appendChild(opt);
-      });
-      sel.appendChild(og);
-    });
-  }
-
-  // ── Labels fechas dinámicos ─────────────────────────────
-  function actualizarLabelsFechas(esDesmovil) {
-    const lbl1 = document.getElementById('label-fecha-movil');
-    const lbl2 = document.getElementById('label-fecha-alquiler');
-    const info = document.getElementById('info-fecha-alquiler');
-    if (esDesmovil) {
-      lbl1.innerHTML = 'Fecha de desmovilización solicitada <span class="req">*</span>';
-      lbl2.innerHTML = 'Fecha de fin de alquiler <span class="req">*</span>';
-      if (info) info.textContent = 'Hasta cuándo corre el alquiler';
-    } else {
-      lbl1.innerHTML = 'Fecha de movilización solicitada <span class="req">*</span>';
-      lbl2.innerHTML = 'Fecha inicio de alquiler <span class="req">*</span>';
-      if (info) info.textContent = 'Base para el control operativo';
-    }
-  }
-
-  // ── Nueva solicitud ───────────────────────────────────────
-  function nuevaSolicitud() {
-    document.getElementById('form-area').style.display = 'block';
-    document.getElementById('success-screen').style.display = 'none';
-    document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
-    tipoActual = '';
-    setOrigen('galera');
-    setCambioOrigen('galera');
-    document.getElementById('card-cambio').classList.add('hidden');
-    document.getElementById('card-cambio-cliente').classList.add('hidden');
-    document.getElementById('card-retiro-entrega').classList.remove('hidden');
-    document.getElementById('seccion-origen-movil').classList.remove('hidden');
-    document.getElementById('seccion-origen-desmovil').classList.add('hidden');
-    document.getElementById('seccion-destino-movil').classList.remove('hidden');
-    document.getElementById('seccion-destino-desmovil').classList.add('hidden');
-    setDestinoDesmo('galera');
-    if (typeof setAccSubtipo === 'function') setAccSubtipo('movilizacion');
-    actualizarLabelsFechas(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-</script>
-
-<script>
-// ── Supabase config ──────────────────────────────────────────
+// ════════════════════════════════════════════════
+//  Supabase
+// ════════════════════════════════════════════════
 const SUPABASE_URL = "https://ujoxrtwyfsqabhrjtjlr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqb3hydHd5ZnNxYWJocmp0amxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMTA4NzksImV4cCI6MjA5NjY4Njg3OX0.BSKtUjdvoUMsJ7L6buzUKjDM3ZxWipf-6Tz7YhS3C-4";
+const DB_COLS = ['referencia','tipo','subtipo','vendedor','fecha_solicitud','fecha_movilizacion','fecha_inicio_alquiler',
+  'equipo_codigo','equipo_tipo','equipo_sale','equipo_entra','origen_entrante','accesorio_actual','acc_accion','acc_nuevo',
+  'acc_destino','accesorio_entra','origen','retiro_cliente','retiro_proyecto','retiro_ubicacion','retiro_contacto',
+  'entrega_cliente','entrega_proyecto','entrega_ubicacion','entrega_contacto','operador','diesel','propiedad','notas','estado'];
 
-async function guardarSolicitud(data) {
+async function guardarSolicitud(d){
+  const db = {};
+  DB_COLS.forEach(c => { if (d[c] !== undefined) db[c] = d[c]; });
   const res = await fetch(`${SUPABASE_URL}/rest/v1/solicitudes`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`,
-      "Prefer": "return=representation"
-    },
-    body: JSON.stringify(data)
+    method:'POST',
+    headers:{ 'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal' },
+    body: JSON.stringify(db)
   });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
-  }
-  return await res.json();
+  if (!res.ok) throw new Error(await res.text());
 }
-
-async function enviarEmail(data) {
-  // Agregar lista de destinatarios desde config
-  data.emails_alerta = ['emir2785@gmail.com'];
-
+async function enviarEmail(d){
   const res = await fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(d)
   });
+  if (!res.ok) console.warn('Email error:', await res.text());
+}
+function generateRef(){
+  const x = new Date(), p = n => String(n).padStart(2,'0');
+  return `${CONFIG.prefijo_ref}-${x.getFullYear()}${p(x.getMonth()+1)}${p(x.getDate())}-${Math.floor(Math.random()*900)+100}`;
+}
 
-  if (!res.ok) {
-    const err = await res.text();
-    console.warn('Email error:', err);
+// ════════════════════════════════════════════════
+//  Recolección y validación por tipo
+// ════════════════════════════════════════════════
+function recolectar(){
+  const d = {
+    referencia: generateRef(),
+    tipo, subtipo: tipo === 'accesorio' ? accSub : null,
+    vendedor: val('vendedor'),
+    fecha_solicitud: val('fecha-solicitud'),
+    fecha_movilizacion: val('fecha-movil'),
+    fecha_inicio_alquiler: val('fecha-alquiler'),
+    operador: $('cond-operador').checked,
+    diesel: $('cond-diesel').checked,
+    propiedad: document.querySelector('input[name="propiedad"]:checked').value,
+    notas: val('notas') || null,
+    estado: 'pendiente',
+    origen: 'galera',
+  };
+  let ok = !!(tipo && d.vendedor && d.fecha_movilizacion && d.fecha_inicio_alquiler);
+
+  if (tipo === 'movilizacion'){
+    d.equipo_codigo = val('eq-codigo');
+    d.equipo_tipo   = FAMILIAS[val('eq-familia')] || val('eq-familia');
+    d.accesorio_actual = val('eq-acc-actual') || null;
+    d.acc_accion = val('eq-acc-accion') || null;
+    d.acc_nuevo  = val('eq-acc-nuevo') || null;
+    d.acc_destino = document.querySelector('input[name="acc-destino"]:checked')?.value || null;
+    d.origen = origenMovil;
+    if (origenMovil === 'galera'){
+      d.retiro_cliente='SMM — Galera'; d.retiro_proyecto='La Mañanitas'; d.retiro_ubicacion='La Mañanitas, Panamá';
+    } else {
+      d.retiro_cliente=val('om-cliente'); d.retiro_proyecto=val('om-proyecto');
+      d.retiro_ubicacion=val('om-ubicacion')||null; d.retiro_contacto=val('om-contacto')||null;
+      if (!d.retiro_cliente || !d.retiro_proyecto) ok = false;
+    }
+    d.entrega_cliente=val('dm-cliente'); d.entrega_proyecto=val('dm-proyecto');
+    d.entrega_ubicacion=val('dm-ubicacion')||null; d.entrega_contacto=val('dm-contacto')||null;
+    if (!d.equipo_codigo || !d.entrega_cliente || !d.entrega_proyecto) ok = false;
+    d.cliente_principal = d.entrega_cliente; d.proyecto_principal = d.entrega_proyecto;
+  }
+
+  if (tipo === 'desmovilizacion'){
+    d.equipo_codigo = val('eq-codigo');
+    d.equipo_tipo   = FAMILIAS[val('eq-familia')] || val('eq-familia');
+    d.accesorio_actual = val('eq-acc-actual') || null;
+    d.origen = 'proyecto';
+    d.retiro_cliente=val('od-cliente'); d.retiro_proyecto=val('od-proyecto');
+    d.retiro_ubicacion=val('od-ubicacion')||null; d.retiro_contacto=val('od-contacto')||null;
+    if (destinoDesmo === 'galera'){
+      d.entrega_cliente='SMM — Galera'; d.entrega_proyecto='La Mañanitas'; d.entrega_ubicacion='La Mañanitas, Panamá';
+    } else {
+      d.entrega_cliente=val('dd-cliente'); d.entrega_proyecto='';
+      d.entrega_ubicacion=val('dd-ubicacion')||null;
+      if (!d.entrega_cliente) ok = false;
+    }
+    if (!d.equipo_codigo || !d.retiro_cliente || !d.retiro_proyecto) ok = false;
+    d.cliente_principal = d.retiro_cliente; d.proyecto_principal = d.retiro_proyecto;
+  }
+
+  if (tipo === 'cambio'){
+    d.equipo_sale  = val('cs-codigo');
+    d.equipo_entra = val('ce-codigo');
+    d.equipo_codigo = d.equipo_entra;
+    d.equipo_tipo = FAMILIAS[val('ce-familia')] || val('ce-familia');
+    d.origen_entrante = cambioOrigen === 'galera' ? 'Galera SMM'
+      : (cambioOrigen === 'proveedor' ? 'Proveedor: ' + val('co-detalle') : 'Proyecto: ' + val('co-detalle'));
+    d.retiro_cliente=val('cb-cliente'); d.retiro_proyecto=val('cb-proyecto');
+    d.entrega_cliente=val('cb-cliente'); d.entrega_proyecto=val('cb-proyecto');
+    d.entrega_ubicacion=val('cb-ubicacion')||null; d.entrega_contacto=val('cb-contacto')||null;
+    if (!d.equipo_sale || !d.equipo_entra || !d.entrega_cliente || !d.entrega_proyecto) ok = false;
+    d.cliente_principal = d.entrega_cliente; d.proyecto_principal = d.entrega_proyecto;
+  }
+
+  if (tipo === 'accesorio'){
+    d.equipo_codigo = val('ac-codigo');
+    d.equipo_tipo = 'Accesorio';
+    d.accesorio_actual = val('ac-codigo') || null;
+    d.acc_nuevo = accSub === 'cambio' ? (val('ae-codigo') || null) : null;
+    d.accesorio_entra = d.acc_nuevo;
+    if (!d.equipo_codigo) ok = false;
+    if (accSub === 'cambio' && !d.acc_nuevo) ok = false;
+
+    if (accSub === 'movilizacion'){
+      d.origen = accOrigen;
+      if (accOrigen === 'galera'){ d.retiro_cliente='SMM — Galera'; d.retiro_proyecto='La Mañanitas'; d.retiro_ubicacion='La Mañanitas, Panamá'; }
+      else { d.retiro_cliente=val('ao-lugar')||'Otro origen'; d.retiro_proyecto=''; d.retiro_contacto=val('ao-contacto')||null; }
+      d.entrega_cliente=val('adc-cliente'); d.entrega_proyecto=val('adc-proyecto');
+      d.entrega_ubicacion=val('adc-ubicacion')||null; d.entrega_contacto=val('adc-contacto')||null;
+      if (!d.entrega_cliente || !d.entrega_proyecto) ok = false;
+      d.cliente_principal=d.entrega_cliente; d.proyecto_principal=d.entrega_proyecto;
+    } else {
+      // desmovilizacion o cambio: origen es el cliente
+      d.origen = 'proyecto';
+      d.retiro_cliente=val('acl-cliente'); d.retiro_proyecto=val('acl-proyecto');
+      d.retiro_ubicacion=val('acl-ubicacion')||null; d.retiro_contacto=val('acl-contacto')||null;
+      if (!d.retiro_cliente || !d.retiro_proyecto) ok = false;
+      if (accSub === 'desmovilizacion'){
+        if (accDestino === 'galera'){ d.entrega_cliente='SMM — Galera'; d.entrega_proyecto='La Mañanitas'; d.entrega_ubicacion='La Mañanitas, Panamá'; }
+        else { d.entrega_cliente=val('ad-lugar')||'Otro destino'; d.entrega_proyecto=''; d.entrega_contacto=val('ad-contacto')||null; }
+      } else {
+        d.entrega_cliente=d.retiro_cliente; d.entrega_proyecto=d.retiro_proyecto;
+        d.entrega_ubicacion=d.retiro_ubicacion;
+      }
+      d.cliente_principal=d.retiro_cliente; d.proyecto_principal=d.retiro_proyecto;
+    }
+  }
+
+  return { d, ok };
+}
+
+// ════════════════════════════════════════════════
+//  Enviar
+// ════════════════════════════════════════════════
+async function submitForm(){
+  const { d, ok } = recolectar();
+  const alertBox = $('alert-box');
+  if (!ok){
+    alertBox.style.display='block';
+    alertBox.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  alertBox.style.display='none';
+  const btn = $('btn-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+
+  try {
+    await guardarSolicitud(d);
+    enviarEmail(d).catch(e => console.warn(e));
+
+    const tipos = {movilizacion:'Movilización',desmovilizacion:'Desmovilización',cambio:'Cambio de equipos',accesorio:'Solo accesorio'};
+    let detalle = d.equipo_codigo || '—';
+    if (tipo === 'cambio') detalle = `Sale ${d.equipo_sale} ⇄ Entra ${d.equipo_entra}`;
+
+    $('success-ref').textContent = d.referencia;
+    $('success-msg').innerHTML =
+      `<strong>${tipos[tipo]}${d.subtipo ? ' — ' + d.subtipo : ''}</strong><br>` +
+      `${detalle}<br>` +
+      `Cliente: ${d.cliente_principal}${d.proyecto_principal ? ' / ' + d.proyecto_principal : ''}<br>` +
+      `Solicitado por: ${d.vendedor}<br><br>` +
+      `${CONFIG.responsable_ops} y el equipo han sido notificados.`;
+
+    $('form-area').style.display = 'none';
+    $('success-screen').style.display = 'block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  } catch(e){
+    console.error(e);
+    alertBox.textContent = '⚠ Error al guardar. Intenta de nuevo.';
+    alertBox.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Enviar solicitud';
   }
 }
-</script>
 
+// ════════════════════════════════════════════════
+//  Init
+// ════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  poblarVendedores();
+  poblarFamilias('eq-familia');
+  poblarFamilias('cs-familia');
+  poblarFamilias('ce-familia');
+  poblarCategoriasAcc('ac-categoria');
+  poblarCategoriasAcc('ae-categoria');
+  $('fecha-solicitud').valueAsDate = new Date();
+});
+</script>
 </body>
 </html>

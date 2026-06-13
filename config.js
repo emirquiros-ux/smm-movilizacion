@@ -13,6 +13,7 @@ const VENDEDORES = [
   "Tomas Aguilar",
   "Emir Quiros",
   "Tony Parra",
+  "Gerardo Gomez",
 ];
 
 // ------------------------------------------------------------
@@ -190,12 +191,12 @@ const ACCESORIOS_POR_TIPO = {
 //     clase = compatibilidad / clasificación técnica
 // ------------------------------------------------------------
 const CATEGORIAS_ACCESORIOS = [
-  { id:"maex",     label:"Martillos para excavadora (MAEX)" },
-  { id:"mare",     label:"Martillos para retroexcavadora / mini (MARE)" },
-  { id:"balde",    label:"Baldes" },
-  { id:"orquilla", label:"Orquillas" },
-  { id:"barredora",label:"Barredoras (BARR)" },
-  { id:"forro",    label:"Forros de piña (FOR)" },
+  { id:"maex",     label:"Martillos para excavadora (MAEX)",          tipo:"Martillo" },
+  { id:"mare",     label:"Martillos para retroexcavadora / mini (MARE)", tipo:"Martillo" },
+  { id:"balde",    label:"Baldes",                                    tipo:"Balde" },
+  { id:"orquilla", label:"Orquillas",                                 tipo:"Orquilla" },
+  { id:"barredora",label:"Barredoras (BARR)",                         tipo:"Barredora" },
+  { id:"forro",    label:"Forros de piña (FOR)",                      tipo:"Forro" },
 ];
 
 const ACCESORIOS = [

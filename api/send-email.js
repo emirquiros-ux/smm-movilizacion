@@ -79,14 +79,32 @@ export default async function handler(req, res) {
     <rect x="28" y="15" width="4" height="5" rx="0.5" fill="#FFD700" opacity="0.7"/>
   </svg>`;
 
+  // Helpers de "ruta" (caja origen/destino con flecha)
+  const flechaSVG = `<svg width="28" height="16" viewBox="0 0 28 16" fill="none"><line x1="0" y1="8" x2="22" y2="8" stroke="#C0392B" stroke-width="2.5"/><polygon points="16,2 28,8 16,14" fill="#C0392B"/></svg>`;
+  const rutaCaja = (titulo, nombre, detalle, contacto) => {
+    const cont = contacto
+      ? `<div style="font-size:12px;color:#555;margin-top:8px;padding-top:8px;border-top:1px solid #eee"><b style="color:#1a1a1a">Contacto:</b> ${contacto}</div>` : '';
+    return `<td width="46%" style="border:1.5px solid #e0e0e0;border-radius:8px;padding:16px;vertical-align:top">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#999;margin-bottom:6px">${titulo}</div>
+        <div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:4px">${nombre || '—'}</div>
+        <div style="font-size:13px;color:#444;line-height:1.5">${detalle || ''}</div>
+        ${cont}
+      </td>`;
+  };
+  const rutaTabla = (origenCaja, destinoCaja) => `
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px"><tr>
+      ${origenCaja}
+      <td width="8%" style="text-align:center;vertical-align:middle;padding:0 8px">${flechaSVG}</td>
+      ${destinoCaja}
+    </tr></table>`;
+  const tituloSeccion = txt => `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#999;margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid #eee">${txt}</div>`;
+
   // Bloque principal (equipo + cliente)
   let bloqueEquipo;
+  let saleLabel, entraLabel;
   if (d.tipo === 'cambio') {
-    const saleLabel  = (d.tipo_sale  ? d.tipo_sale  + ' ' : '') + (d.equipo_sale  || '—');
-    const entraLabel = (d.tipo_entra ? d.tipo_entra + ' ' : '') + (d.equipo_entra || '—');
-    const destinoSaleTxt = d.destino_saliente_direccion
-      ? `${d.destino_saliente} — ${d.destino_saliente_direccion}`
-      : (d.destino_saliente || 'Galera SMM');
+    saleLabel  = (d.tipo_sale  ? d.tipo_sale  + ' ' : '') + (d.equipo_sale  || '—');
+    entraLabel = (d.tipo_entra ? d.tipo_entra + ' ' : '') + (d.equipo_entra || '—');
     bloqueEquipo = `
       <div style="border-left:5px solid #C0392B;padding:16px 20px;background:#fafafa;margin-bottom:28px;border-radius:0 8px 8px 0">
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#C0392B;margin-bottom:8px">Cambio de Equipos</div>
@@ -94,7 +112,7 @@ export default async function handler(req, res) {
           <td style="vertical-align:top;padding-right:14px">
             <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#999;margin-bottom:3px">Sale</div>
             <div style="font-size:20px;font-weight:800;color:#1a1a1a">${saleLabel}</div>
-            <div style="font-size:12px;color:#666">→ ${destinoSaleTxt}</div>
+            <div style="font-size:12px;color:#666">→ ${d.destino_saliente || 'Galera SMM'}</div>
           </td>
           <td style="vertical-align:middle;padding:0 8px;font-size:22px;color:#C0392B;font-weight:700">⇄</td>
           <td style="vertical-align:top;padding-left:14px">
@@ -116,41 +134,29 @@ export default async function handler(req, res) {
   }
 
   // Ruta
-  const contactoOrigen = d.retiro_contacto
-    ? `<div style="font-size:12px;color:#555;margin-top:8px;padding-top:8px;border-top:1px solid #eee"><b style="color:#1a1a1a">Contacto:</b> ${d.retiro_contacto}</div>` : '';
-  const contactoDestino = d.entrega_contacto
-    ? `<div style="font-size:12px;color:#555;margin-top:8px;padding-top:8px;border-top:1px solid #eee"><b style="color:#1a1a1a">Contacto:</b> ${d.entrega_contacto}</div>` : '';
-
   let rutaHtml;
   if (d.tipo === 'cambio') {
-    // Para cambio, el origen/destino ya se muestran en bloqueEquipo (Sale → / Entra ←).
-    // Aquí solo mostramos la ubicación física donde ocurre el cambio.
-    rutaHtml = d.entrega_ubicacion ? `
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#999;margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid #eee">Ubicación del cambio</div>
-    <div style="border:1.5px solid #e0e0e0;border-radius:8px;padding:16px;margin-bottom:28px">
-      <div style="font-size:13px;color:#444;line-height:1.5">${d.entrega_ubicacion}</div>
-      ${contactoDestino}
-    </div>` : '';
+    const ubicCambio = (d.entrega_proyecto ? 'Proyecto: ' + d.entrega_proyecto + '<br>' : '') + (d.entrega_ubicacion || '');
+    rutaHtml = `
+    ${tituloSeccion('Ruta — ' + saleLabel + ' (sale)')}
+    ${rutaTabla(
+      rutaCaja('Origen — Retiro', d.entrega_cliente, ubicCambio, d.entrega_contacto),
+      rutaCaja('Destino — Entrega', d.destino_saliente || 'Galera SMM', d.destino_saliente_direccion || '', d.destino_saliente_contacto)
+    )}
+    ${tituloSeccion('Ruta — ' + entraLabel + ' (entra)')}
+    ${rutaTabla(
+      rutaCaja('Origen — Retiro', d.origen_entrante || 'Galera SMM', d.origen_entrante_direccion || '', d.origen_entrante_contacto),
+      rutaCaja('Destino — Entrega', d.entrega_cliente, ubicCambio, d.entrega_contacto)
+    )}
+    <div style="margin-bottom:12px"></div>`;
   } else {
     rutaHtml = `
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#999;margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid #eee">Ruta del movimiento</div>
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px"><tr>
-      <td width="46%" style="border:1.5px solid #e0e0e0;border-radius:8px;padding:16px;vertical-align:top">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#999;margin-bottom:6px">Origen — Retiro</div>
-        <div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:4px">${d.retiro_cliente || '—'}</div>
-        <div style="font-size:13px;color:#444;line-height:1.5">${d.retiro_proyecto ? 'Proyecto: ' + d.retiro_proyecto + '<br>' : ''}${d.retiro_ubicacion || ''}</div>
-        ${contactoOrigen}
-      </td>
-      <td width="8%" style="text-align:center;vertical-align:middle;padding:0 8px">
-        <svg width="28" height="16" viewBox="0 0 28 16" fill="none"><line x1="0" y1="8" x2="22" y2="8" stroke="#C0392B" stroke-width="2.5"/><polygon points="16,2 28,8 16,14" fill="#C0392B"/></svg>
-      </td>
-      <td width="46%" style="border:1.5px solid #e0e0e0;border-radius:8px;padding:16px;vertical-align:top">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#999;margin-bottom:6px">Destino — Entrega</div>
-        <div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:4px">${d.entrega_cliente || '—'}</div>
-        <div style="font-size:13px;color:#444;line-height:1.5">${d.entrega_proyecto ? 'Proyecto: ' + d.entrega_proyecto + '<br>' : ''}${d.entrega_ubicacion || ''}</div>
-        ${contactoDestino}
-      </td>
-    </tr></table>`;
+    ${tituloSeccion('Ruta del movimiento')}
+    ${rutaTabla(
+      rutaCaja('Origen — Retiro', d.retiro_cliente, (d.retiro_proyecto ? 'Proyecto: ' + d.retiro_proyecto + '<br>' : '') + (d.retiro_ubicacion || ''), d.retiro_contacto),
+      rutaCaja('Destino — Entrega', d.entrega_cliente, (d.entrega_proyecto ? 'Proyecto: ' + d.entrega_proyecto + '<br>' : '') + (d.entrega_ubicacion || ''), d.entrega_contacto)
+    )}
+    <div style="margin-bottom:12px"></div>`;
   }
 
   const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>

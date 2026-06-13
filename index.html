@@ -815,7 +815,7 @@ const DB_COLS = ['referencia','tipo','subtipo','vendedor','fecha_solicitud','fec
   'equipo_codigo','equipo_tipo','equipo_tipo_singular','equipo_sale','equipo_entra','tipo_sale','tipo_entra',
   'origen_entrante','origen_entrante_direccion','origen_entrante_contacto',
   'destino_saliente','destino_saliente_direccion','destino_saliente_contacto',
-  'accesorio_actual','acc_accion','acc_nuevo',
+  'accesorio_actual','acc_accion','acc_nuevo','equipo_compatible',
   'acc_destino','accesorio_entra','origen','retiro_cliente','retiro_proyecto','retiro_ubicacion','retiro_contacto',
   'entrega_cliente','entrega_proyecto','entrega_ubicacion','entrega_contacto','operador','diesel','propiedad','notas','estado'];
 
@@ -938,6 +938,7 @@ function recolectar(){
     d.accesorio_actual = val('ac-codigo') || null;
     d.acc_nuevo = accSub === 'cambio' ? (val('ae-codigo') || null) : null;
     d.accesorio_entra = d.acc_nuevo;
+    d.equipo_compatible = val('ac-compat') || null;
     if (!d.equipo_codigo) ok = false;
     if (accSub === 'cambio' && !d.acc_nuevo) ok = false;
 

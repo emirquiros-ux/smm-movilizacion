@@ -38,6 +38,20 @@ const FAMILIAS = {
 };
 
 // ------------------------------------------------------------
+//  3B. FAMILIAS — nombre en singular (para asunto/cuerpo de email)
+// ------------------------------------------------------------
+const FAMILIAS_SINGULAR = {
+  excavadora:      "Excavadora",
+  retroexcavadora: "Retroexcavadora",
+  miniexcavadora:  "Miniexcavadora",
+  minicargador:    "Minicargador",
+  telehandler:     "Telehandler",
+  compactadora:    "Compactadora",
+  bulldozer:       "Bulldozer",
+  motoniveladora:  "Motoniveladora",
+};
+
+// ------------------------------------------------------------
 //  4. EQUIPOS  { codigo, tipo (familia), desc }
 // ------------------------------------------------------------
 const EQUIPOS = [
@@ -264,4 +278,12 @@ const CONFIG = {
   nombre_empresa:  "Super Mega Máquinas",
   prefijo_ref:     "SMM-MOV",
   responsable_ops: "José Olmedo",
+};
+
+// ------------------------------------------------------------
+//  8. GALERA SMM — datos fijos (origen/destino por defecto)
+// ------------------------------------------------------------
+const GALERA = {
+  nombre:    "Galera SMM",
+  direccion: "Tocumen Warehouse, Galera 12B, Las Mañanitas, Ciudad de Panamá",
 };

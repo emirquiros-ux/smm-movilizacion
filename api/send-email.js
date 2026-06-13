@@ -125,11 +125,15 @@ export default async function handler(req, res) {
       </div>`;
   } else {
     const tipoPrefix = d.equipo_tipo_singular || (d.equipo_tipo && d.equipo_tipo !== 'Accesorio' ? d.equipo_tipo : '');
+    const compatibleHtml = (d.tipo === 'accesorio' && d.equipo_compatible)
+      ? `<div style="font-size:13px;color:#C0392B;font-weight:700;margin-top:6px">⚙ Para equipo: ${d.equipo_compatible} <span style="font-weight:500;color:#888">(del cliente)</span></div>`
+      : '';
     bloqueEquipo = `
       <div style="border-left:5px solid #C0392B;padding:16px 20px;background:#fafafa;margin-bottom:28px;border-radius:0 8px 8px 0">
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#C0392B;margin-bottom:6px">${tipoLabel}</div>
         <div style="font-size:24px;font-weight:800;color:#1a1a1a;margin-bottom:4px">${tipoPrefix ? tipoPrefix + ' — ' : ''}${d.equipo_codigo || '—'}</div>
         <div style="font-size:15px;color:#444">Cliente: <b>${cliente}</b>${proyecto ? ' &nbsp;/&nbsp; ' + proyecto : ''}</div>
+        ${compatibleHtml}
       </div>`;
   }
 

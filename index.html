@@ -89,10 +89,26 @@
   <div class="card">
     <div class="card-title">Tipo de solicitud</div>
     <div class="tipo-grid">
-      <div class="tipo-btn" id="tb-movilizacion" onclick="setTipo('movilizacion')"><div class="tipo-icon">🚛</div><div class="tipo-label">Movilización</div><div class="tipo-sub">Traslado a cliente</div></div>
-      <div class="tipo-btn" id="tb-desmovilizacion" onclick="setTipo('desmovilizacion')"><div class="tipo-icon">🔙</div><div class="tipo-label">Desmovilización</div><div class="tipo-sub">Retiro de cliente</div></div>
-      <div class="tipo-btn" id="tb-cambio" onclick="setTipo('cambio')"><div class="tipo-icon">🔄</div><div class="tipo-label">Cambio de equipo</div><div class="tipo-sub">Sale uno, entra otro</div></div>
-      <div class="tipo-btn" id="tb-accesorio" onclick="setTipo('accesorio')"><div class="tipo-icon">🔧</div><div class="tipo-label">Solo accesorio</div><div class="tipo-sub">Sin equipo base</div></div>
+      <div class="tipo-btn" id="tb-movilizacion" onclick="setTipo('movilizacion')">
+<div class="tipo-icon">🚛</div>
+<div class="tipo-label">Movilización</div>
+<div class="tipo-sub">Traslado a cliente</div>
+</div>
+      <div class="tipo-btn" id="tb-desmovilizacion" onclick="setTipo('desmovilizacion')">
+<div class="tipo-icon">🔙</div>
+<div class="tipo-label">Desmovilización</div>
+<div class="tipo-sub">Retiro de cliente</div>
+</div>
+      <div class="tipo-btn" id="tb-cambio" onclick="setTipo('cambio')">
+<div class="tipo-icon">🔄</div>
+<div class="tipo-label">Cambio de equipo</div>
+<div class="tipo-sub">Sale uno, entra otro</div>
+</div>
+      <div class="tipo-btn" id="tb-accesorio" onclick="setTipo('accesorio')">
+<div class="tipo-icon">🔧</div>
+<div class="tipo-label">Solo accesorio</div>
+<div class="tipo-sub">Sin equipo base</div>
+</div>
     </div>
   </div>
 
@@ -101,11 +117,15 @@
     <div class="card-title">Responsable</div>
     <div class="field-row-2">
       <div class="field-group">
-        <label>Vendedor / Solicitante <span class="req">*</span></label>
-        <select id="vendedor"><option value="">Seleccionar…</option></select>
+        <label>Vendedor / Solicitante <span class="req">*</span>
+</label>
+        <select id="vendedor">
+<option value="">Seleccionar…</option>
+</select>
       </div>
       <div class="field-group">
-        <label>Fecha de solicitud <span class="req">*</span></label>
+        <label>Fecha de solicitud <span class="req">*</span>
+</label>
         <input type="date" id="fecha-solicitud">
       </div>
     </div>
@@ -116,72 +136,106 @@
     <div class="card-title">Equipo</div>
     <div class="field-row-2">
       <div class="field-group">
-        <label>Familia / Categoría <span class="req">*</span></label>
-        <select id="eq-familia" onchange="onFamiliaChange('eq')"><option value="">Seleccionar familia…</option></select>
+        <label>Familia / Categoría <span class="req">*</span>
+</label>
+        <select id="eq-familia" onchange="onFamiliaChange('eq')">
+<option value="">Seleccionar familia…</option>
+</select>
       </div>
       <div class="field-group">
-        <label>Código del equipo <span class="req">*</span></label>
-        <select id="eq-codigo" onchange="onEquipoChange()"><option value="">Primero elige la familia</option></select>
+        <label>Código del equipo <span class="req">*</span>
+</label>
+        <select id="eq-codigo" onchange="onEquipoChange()">
+<option value="">Primero elige la familia</option>
+</select>
       </div>
     </div>
-    <div class="field-row-2 hidden" id="row-acc-equipo">
-      <div class="field-group">
-        <label>Accesorio actual</label>
-        <select id="eq-acc-actual"></select>
-        <p class="info-note" id="info-acc-eq"></p>
-      </div>
-      <div class="field-group">
-        <label>Acción sobre accesorio</label>
-        <select id="eq-acc-accion" onchange="onAccionChange()">
-          <option value="entrega">Entrega tal cual</option>
-          <option value="cambio">Cambiar antes de entregar</option>
-          <option value="retirar">Retirar accesorio</option>
-        </select>
-      </div>
+    <div class="field-group hidden" id="row-acc-equipo">
+        <label>¿Con qué accesorio sale el equipo? <span class="req">*</span>
+</label>
+        <select id="eq-acc-sale" onchange="onAccSaleChange()">
+</select>
+        <p class="info-note" id="info-acc-eq">
+</p>
     </div>
-    <div class="field-row-2 hidden" id="row-acc-nuevo">
-      <div class="field-group">
-        <label>Nuevo accesorio <span class="req">*</span></label>
-        <select id="eq-acc-nuevo"></select>
-      </div>
-      <div class="field-group" id="grp-acc-destino">
-        <label>Accesorio retirado va a</label>
-        <div class="toggle-group">
-          <label class="toggle-option"><input type="radio" name="acc-destino" value="galera" checked><span class="toggle-pill">Galera SMM</span></label>
-          <label class="toggle-option"><input type="radio" name="acc-destino" value="queda"><span class="toggle-pill">Se queda en proyecto</span></label>
-        </div>
-      </div>
+    <div class="field-group hidden" id="row-acc-balde">
+      <label class="check-row" for="eq-incluye-balde">
+<input type="checkbox" id="eq-incluye-balde" checked>
+<span class="check-label">✓ Incluye también el balde</span>
+</label>
     </div>
   </div>
 
   <!-- 3B. CAMBIO DE EQUIPO -->
   <div class="card hidden" id="card-cambio">
-    <div class="card-title">Equipo que sale → Galera SMM</div>
+    <div class="card-title">Equipo que sale</div>
     <div class="field-row-2">
       <div class="field-group">
-        <label>Familia <span class="req">*</span></label>
-        <select id="cs-familia" onchange="onFamiliaChange('cs')"><option value="">Seleccionar…</option></select>
+        <label>Familia <span class="req">*</span>
+</label>
+        <select id="cs-familia" onchange="onFamiliaChange('cs')">
+<option value="">Seleccionar…</option>
+</select>
       </div>
       <div class="field-group">
-        <label>Equipo que sale <span class="req">*</span></label>
-        <select id="cs-codigo"><option value="">Primero elige la familia</option></select>
-      </div>
-    </div>
-    <div class="galera-badge">📍 Destino del equipo saliente: Galera SMM — La Mañanitas</div>
-
-    <div class="seccion-divider"><span>Equipo que entra</span></div>
-    <div class="field-row-2">
-      <div class="field-group">
-        <label>Familia <span class="req">*</span></label>
-        <select id="ce-familia" onchange="onFamiliaChange('ce')"><option value="">Seleccionar…</option></select>
-      </div>
-      <div class="field-group">
-        <label>Equipo que entra <span class="req">*</span></label>
-        <select id="ce-codigo"><option value="">Primero elige la familia</option></select>
+        <label>Equipo que sale <span class="req">*</span>
+</label>
+        <select id="cs-codigo">
+<option value="">Primero elige la familia</option>
+</select>
       </div>
     </div>
     <div class="field-group">
-      <label>Origen del equipo entrante <span class="req">*</span></label>
+      <label>Destino del equipo que sale <span class="req">*</span>
+</label>
+      <div class="origen-toggle" style="margin-bottom:0">
+        <button type="button" class="origen-btn active" id="btn-cd-galera" onclick="setCambioDestino('galera')">📦 Galera SMM</button>
+        <button type="button" class="origen-btn" id="btn-cd-otro" onclick="setCambioDestino('otro')">🔄 Otro destino</button>
+      </div>
+    </div>
+    <div id="panel-cd-galera" style="margin-top:6px">
+<div class="galera-badge">📍 Galera SMM — Tocumen Warehouse, Galera 12B, Las Mañanitas
+</div>
+</div>
+    <div class="hidden" id="panel-cd-otro" style="margin-top:12px">
+      <div class="field-row-2">
+        <div class="field-group">
+          <label>Cliente / lugar de destino <span class="req">*</span>
+</label>
+          <input type="text" id="cd-lugar" placeholder="Ej: Consorcio XYZ">
+        </div>
+        <div class="field-group">
+          <label>Contacto</label>
+          <input type="text" id="cd-contacto" placeholder="Nombre y/o teléfono">
+        </div>
+      </div>
+      <div class="alert-box" style="display:block;margin-top:10px">
+        ⚠ Si el equipo va a otro cliente/proyecto, esto requiere generar una <b>solicitud de Movilización aparte</b> para ese equipo.
+      </div>
+    </div>
+
+    <div class="seccion-divider">
+<span>Equipo que entra</span>
+</div>
+    <div class="field-row-2">
+      <div class="field-group">
+        <label>Familia <span class="req">*</span>
+</label>
+        <select id="ce-familia" onchange="onFamiliaChange('ce')">
+<option value="">Seleccionar…</option>
+</select>
+      </div>
+      <div class="field-group">
+        <label>Equipo que entra <span class="req">*</span>
+</label>
+        <select id="ce-codigo">
+<option value="">Primero elige la familia</option>
+</select>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Origen del equipo entrante <span class="req">*</span>
+</label>
       <div class="origen-toggle" style="margin-bottom:0">
         <button type="button" class="origen-btn active" id="btn-co-galera" onclick="setCambioOrigen('galera')">📦 Galera SMM</button>
         <button type="button" class="origen-btn" id="btn-co-proveedor" onclick="setCambioOrigen('proveedor')">🏭 Proveedor</button>
@@ -201,14 +255,18 @@
       </div>
     </div>
 
-    <div class="seccion-divider"><span>Cliente / Proyecto donde ocurre el cambio</span></div>
+    <div class="seccion-divider">
+<span>Cliente / Proyecto donde ocurre el cambio</span>
+</div>
     <div class="field-row-2">
       <div class="field-group">
-        <label>Cliente <span class="req">*</span></label>
+        <label>Cliente <span class="req">*</span>
+</label>
         <input type="text" id="cb-cliente" placeholder="Ej: Consorcio RC Puentes">
       </div>
       <div class="field-group">
-        <label>Proyecto <span class="req">*</span></label>
+        <label>Proyecto <span class="req">*</span>
+</label>
         <input type="text" id="cb-proyecto" placeholder="Ej: ACP Miraflores">
       </div>
     </div>
@@ -228,7 +286,8 @@
   <div class="card hidden" id="card-accesorio">
     <div class="card-title">Accesorio / Herramienta</div>
     <div class="field-group" style="margin-bottom:16px">
-      <label>Tipo de movimiento <span class="req">*</span></label>
+      <label>Tipo de movimiento <span class="req">*</span>
+</label>
       <div class="origen-toggle" style="margin-bottom:0">
         <button type="button" class="origen-btn active" id="btn-as-movilizacion" onclick="setAccSub('movilizacion')">🚛 Movilización</button>
         <button type="button" class="origen-btn" id="btn-as-desmovilizacion" onclick="setAccSub('desmovilizacion')">🔙 Desmovilización</button>
@@ -237,69 +296,125 @@
     </div>
     <div class="field-row-2">
       <div class="field-group">
-        <label>Categoría <span class="req">*</span></label>
-        <select id="ac-categoria" onchange="onAccCatChange('ac')"><option value="">Seleccionar…</option></select>
+        <label>Categoría <span class="req">*</span>
+</label>
+        <select id="ac-categoria" onchange="onAccCatChange('ac')">
+<option value="">Seleccionar…</option>
+</select>
       </div>
       <div class="field-group">
-        <label>Accesorio <span class="req">*</span></label>
-        <select id="ac-codigo"><option value="">Primero elige la categoría</option></select>
+        <label>Accesorio <span class="req">*</span>
+</label>
+        <select id="ac-codigo">
+<option value="">Primero elige la categoría</option>
+</select>
       </div>
     </div>
     <div class="field-group">
-      <label>Compatible con equipo <span class="lbl-opt">opcional</span></label>
+      <label>Compatible con equipo <span class="lbl-opt">opcional</span>
+</label>
       <input type="text" id="ac-compat" placeholder="Ej: E-09-2 del cliente">
     </div>
 
     <div class="hidden" id="panel-ac-entra">
-      <div class="seccion-divider"><span>Accesorio que entra</span></div>
+      <div class="seccion-divider">
+<span>Accesorio que entra</span>
+</div>
       <div class="field-row-2">
         <div class="field-group">
-          <label>Categoría <span class="req">*</span></label>
-          <select id="ae-categoria" onchange="onAccCatChange('ae')"><option value="">Seleccionar…</option></select>
+          <label>Categoría <span class="req">*</span>
+</label>
+          <select id="ae-categoria" onchange="onAccCatChange('ae')">
+<option value="">Seleccionar…</option>
+</select>
         </div>
         <div class="field-group">
-          <label>Accesorio entrante <span class="req">*</span></label>
-          <select id="ae-codigo"><option value="">Primero elige la categoría</option></select>
+          <label>Accesorio entrante <span class="req">*</span>
+</label>
+          <select id="ae-codigo">
+<option value="">Primero elige la categoría</option>
+</select>
         </div>
       </div>
     </div>
 
     <!-- ORIGEN accesorio -->
-    <div class="seccion-divider"><span id="lbl-ac-origen">Origen</span></div>
+    <div class="seccion-divider">
+<span id="lbl-ac-origen">Origen</span>
+</div>
     <div id="ac-origen-galera">
       <div class="origen-toggle">
         <button type="button" class="origen-btn active" id="btn-ao-galera" onclick="setAccOrigen('galera')">📦 Galera SMM</button>
         <button type="button" class="origen-btn" id="btn-ao-otro" onclick="setAccOrigen('otro')">🔄 Otro origen</button>
       </div>
-      <div id="panel-ao-galera"><div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div></div>
+      <div id="panel-ao-galera">
+<div class="galera-badge">📍 Galera SMM — Tocumen Warehouse, Galera 12B, Las Mañanitas <span>(origen por defecto)</span>
+</div>
+</div>
       <div class="hidden" id="panel-ao-otro">
         <div class="field-row-2">
-          <div class="field-group"><label>Lugar de origen</label><input type="text" id="ao-lugar" placeholder="Ej: Taller, proveedor"></div>
-          <div class="field-group"><label>Contacto</label><input type="text" id="ao-contacto" placeholder="Nombre y/o teléfono"></div>
+          <div class="field-group">
+<label>Lugar de origen</label>
+<input type="text" id="ao-lugar" placeholder="Ej: Taller, proveedor">
+</div>
+          <div class="field-group">
+<label>Contacto</label>
+<input type="text" id="ao-contacto" placeholder="Nombre y/o teléfono">
+</div>
         </div>
       </div>
     </div>
     <div class="hidden" id="ac-origen-cliente">
       <div class="field-row-2">
-        <div class="field-group"><label>Cliente <span class="req">*</span></label><input type="text" id="acl-cliente" placeholder="Ej: Consorcio RC Puentes"></div>
-        <div class="field-group"><label>Proyecto <span class="req">*</span></label><input type="text" id="acl-proyecto" placeholder="Ej: ACP Miraflores"></div>
+        <div class="field-group">
+<label>Cliente <span class="req">*</span>
+</label>
+<input type="text" id="acl-cliente" placeholder="Ej: Consorcio RC Puentes">
+</div>
+        <div class="field-group">
+<label>Proyecto <span class="req">*</span>
+</label>
+<input type="text" id="acl-proyecto" placeholder="Ej: ACP Miraflores">
+</div>
       </div>
       <div class="field-row-2">
-        <div class="field-group"><label>Ubicación</label><input type="text" id="acl-ubicacion" placeholder="Ej: ACP, Línea 3"></div>
-        <div class="field-group"><label>Contacto</label><input type="text" id="acl-contacto" placeholder="Nombre y/o teléfono"></div>
+        <div class="field-group">
+<label>Ubicación</label>
+<input type="text" id="acl-ubicacion" placeholder="Ej: ACP, Línea 3">
+</div>
+        <div class="field-group">
+<label>Contacto</label>
+<input type="text" id="acl-contacto" placeholder="Nombre y/o teléfono">
+</div>
       </div>
     </div>
 
     <!-- DESTINO accesorio -->
-    <div class="seccion-divider"><span id="lbl-ac-destino">Destino — entrega a cliente</span></div>
+    <div class="seccion-divider">
+<span id="lbl-ac-destino">Destino — entrega a cliente</span>
+</div>
     <div id="ac-dest-cliente">
       <div class="field-row-2">
-        <div class="field-group"><label>Cliente <span class="req">*</span></label><input type="text" id="adc-cliente" placeholder="Ej: Consorcio RC Puentes"></div>
-        <div class="field-group"><label>Proyecto <span class="req">*</span></label><input type="text" id="adc-proyecto" placeholder="Ej: ACP Miraflores"></div>
+        <div class="field-group">
+<label>Cliente <span class="req">*</span>
+</label>
+<input type="text" id="adc-cliente" placeholder="Ej: Consorcio RC Puentes">
+</div>
+        <div class="field-group">
+<label>Proyecto <span class="req">*</span>
+</label>
+<input type="text" id="adc-proyecto" placeholder="Ej: ACP Miraflores">
+</div>
       </div>
       <div class="field-row-2">
-        <div class="field-group"><label>Ubicación</label><input type="text" id="adc-ubicacion" placeholder="Ej: ACP, Línea 3"></div>
-        <div class="field-group"><label>Contacto</label><input type="text" id="adc-contacto" placeholder="Nombre y/o teléfono"></div>
+        <div class="field-group">
+<label>Ubicación</label>
+<input type="text" id="adc-ubicacion" placeholder="Ej: ACP, Línea 3">
+</div>
+        <div class="field-group">
+<label>Contacto</label>
+<input type="text" id="adc-contacto" placeholder="Nombre y/o teléfono">
+</div>
       </div>
     </div>
     <div class="hidden" id="ac-dest-galera">
@@ -307,11 +422,20 @@
         <button type="button" class="origen-btn active" id="btn-ad-galera" onclick="setAccDestino('galera')">📦 Galera SMM</button>
         <button type="button" class="origen-btn" id="btn-ad-otro" onclick="setAccDestino('otro')">🔄 Otro destino</button>
       </div>
-      <div id="panel-ad-galera"><div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(destino por defecto)</span></div></div>
+      <div id="panel-ad-galera">
+<div class="galera-badge">📍 Galera SMM — Tocumen Warehouse, Galera 12B, Las Mañanitas <span>(destino por defecto)</span>
+</div>
+</div>
       <div class="hidden" id="panel-ad-otro">
         <div class="field-row-2">
-          <div class="field-group"><label>Lugar de destino</label><input type="text" id="ad-lugar" placeholder="Ej: Taller externo"></div>
-          <div class="field-group"><label>Contacto</label><input type="text" id="ad-contacto" placeholder="Nombre y/o teléfono"></div>
+          <div class="field-group">
+<label>Lugar de destino</label>
+<input type="text" id="ad-lugar" placeholder="Ej: Taller externo">
+</div>
+          <div class="field-group">
+<label>Contacto</label>
+<input type="text" id="ad-contacto" placeholder="Nombre y/o teléfono">
+</div>
         </div>
       </div>
     </div>
@@ -329,25 +453,58 @@
         <button type="button" class="origen-btn active" id="btn-om-galera" onclick="setOrigenMovil('galera')">📦 Desde galera SMM</button>
         <button type="button" class="origen-btn" id="btn-om-proyecto" onclick="setOrigenMovil('proyecto')">🔄 Desde otro proyecto</button>
       </div>
-      <div id="panel-om-galera"><div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(origen por defecto)</span></div></div>
+      <div id="panel-om-galera">
+<div class="galera-badge">📍 Galera SMM — Tocumen Warehouse, Galera 12B, Las Mañanitas <span>(origen por defecto)</span>
+</div>
+</div>
       <div class="hidden" id="panel-om-proyecto">
         <div class="field-row-2">
-          <div class="field-group"><label>Cliente de retiro <span class="req">*</span></label><input type="text" id="om-cliente" placeholder="Ej: Consorcio HPH"></div>
-          <div class="field-group"><label>Proyecto de retiro <span class="req">*</span></label><input type="text" id="om-proyecto" placeholder="Ej: Línea 3 Metro"></div>
+          <div class="field-group">
+<label>Cliente de retiro <span class="req">*</span>
+</label>
+<input type="text" id="om-cliente" placeholder="Ej: Consorcio HPH">
+</div>
+          <div class="field-group">
+<label>Proyecto de retiro <span class="req">*</span>
+</label>
+<input type="text" id="om-proyecto" placeholder="Ej: Línea 3 Metro">
+</div>
         </div>
         <div class="field-row-2">
-          <div class="field-group"><label>Ubicación de retiro</label><input type="text" id="om-ubicacion" placeholder="Ej: Arraiján, Colón"></div>
-          <div class="field-group"><label>Contacto de retiro</label><input type="text" id="om-contacto" placeholder="Nombre y/o teléfono"></div>
+          <div class="field-group">
+<label>Ubicación de retiro</label>
+<input type="text" id="om-ubicacion" placeholder="Ej: Arraiján, Colón">
+</div>
+          <div class="field-group">
+<label>Contacto de retiro</label>
+<input type="text" id="om-contacto" placeholder="Nombre y/o teléfono">
+</div>
         </div>
       </div>
-      <div class="seccion-divider"><span>Entrega — destino</span></div>
+      <div class="seccion-divider">
+<span>Entrega — destino</span>
+</div>
       <div class="field-row-2">
-        <div class="field-group"><label>Cliente <span class="req">*</span></label><input type="text" id="dm-cliente" placeholder="Ej: Consorcio RC Puentes"></div>
-        <div class="field-group"><label>Proyecto <span class="req">*</span></label><input type="text" id="dm-proyecto" placeholder="Ej: ACP Miraflores"></div>
+        <div class="field-group">
+<label>Cliente <span class="req">*</span>
+</label>
+<input type="text" id="dm-cliente" placeholder="Ej: Consorcio RC Puentes">
+</div>
+        <div class="field-group">
+<label>Proyecto <span class="req">*</span>
+</label>
+<input type="text" id="dm-proyecto" placeholder="Ej: ACP Miraflores">
+</div>
       </div>
       <div class="field-row-2">
-        <div class="field-group"><label>Ubicación de entrega</label><input type="text" id="dm-ubicacion" placeholder="Ej: ACP, Línea 3"></div>
-        <div class="field-group"><label>Contacto de entrega</label><input type="text" id="dm-contacto" placeholder="Nombre y/o teléfono"></div>
+        <div class="field-group">
+<label>Ubicación de entrega</label>
+<input type="text" id="dm-ubicacion" placeholder="Ej: ACP, Línea 3">
+</div>
+        <div class="field-group">
+<label>Contacto de entrega</label>
+<input type="text" id="dm-contacto" placeholder="Nombre y/o teléfono">
+</div>
       </div>
     </div>
 
@@ -355,23 +512,49 @@
     <div class="hidden" id="sec-origen-desmovil">
       <div class="card-title">Retiro — desde cliente</div>
       <div class="field-row-2">
-        <div class="field-group"><label>Cliente <span class="req">*</span></label><input type="text" id="od-cliente" placeholder="Ej: Consorcio RC Puentes"></div>
-        <div class="field-group"><label>Proyecto <span class="req">*</span></label><input type="text" id="od-proyecto" placeholder="Ej: ACP Miraflores"></div>
+        <div class="field-group">
+<label>Cliente <span class="req">*</span>
+</label>
+<input type="text" id="od-cliente" placeholder="Ej: Consorcio RC Puentes">
+</div>
+        <div class="field-group">
+<label>Proyecto <span class="req">*</span>
+</label>
+<input type="text" id="od-proyecto" placeholder="Ej: ACP Miraflores">
+</div>
       </div>
       <div class="field-row-2">
-        <div class="field-group"><label>Ubicación</label><input type="text" id="od-ubicacion" placeholder="Ej: ACP, Línea 3"></div>
-        <div class="field-group"><label>Contacto</label><input type="text" id="od-contacto" placeholder="Nombre y/o teléfono"></div>
+        <div class="field-group">
+<label>Ubicación</label>
+<input type="text" id="od-ubicacion" placeholder="Ej: ACP, Línea 3">
+</div>
+        <div class="field-group">
+<label>Contacto</label>
+<input type="text" id="od-contacto" placeholder="Nombre y/o teléfono">
+</div>
       </div>
-      <div class="seccion-divider"><span>Entrega — destino</span></div>
+      <div class="seccion-divider">
+<span>Entrega — destino</span>
+</div>
       <div class="origen-toggle">
         <button type="button" class="origen-btn active" id="btn-dd-galera" onclick="setDestinoDesmo('galera')">📦 Galera SMM</button>
         <button type="button" class="origen-btn" id="btn-dd-otro" onclick="setDestinoDesmo('otro')">🔄 Otro destino</button>
       </div>
-      <div id="panel-dd-galera"><div class="galera-badge">📍 La Mañanitas — Galera SMM <span>(destino por defecto)</span></div></div>
+      <div id="panel-dd-galera">
+<div class="galera-badge">📍 Galera SMM — Tocumen Warehouse, Galera 12B, Las Mañanitas <span>(destino por defecto)</span>
+</div>
+</div>
       <div class="hidden" id="panel-dd-otro">
         <div class="field-row-2">
-          <div class="field-group"><label>Cliente / destino <span class="req">*</span></label><input type="text" id="dd-cliente" placeholder="Ej: Taller externo"></div>
-          <div class="field-group"><label>Ubicación</label><input type="text" id="dd-ubicacion" placeholder="Ej: Chorrera"></div>
+          <div class="field-group">
+<label>Cliente / destino <span class="req">*</span>
+</label>
+<input type="text" id="dd-cliente" placeholder="Ej: Taller externo">
+</div>
+          <div class="field-group">
+<label>Ubicación</label>
+<input type="text" id="dd-ubicacion" placeholder="Ej: Chorrera">
+</div>
         </div>
       </div>
     </div>
@@ -382,11 +565,13 @@
     <div class="card-title">Fechas</div>
     <div class="field-row-2">
       <div class="field-group">
-        <label id="lbl-fecha-1">Fecha de movilización solicitada <span class="req">*</span></label>
+        <label id="lbl-fecha-1">Fecha de movilización solicitada <span class="req">*</span>
+</label>
         <input type="date" id="fecha-movil">
       </div>
       <div class="field-group">
-        <label id="lbl-fecha-2">Fecha inicio de alquiler <span class="req">*</span></label>
+        <label id="lbl-fecha-2">Fecha inicio de alquiler <span class="req">*</span>
+</label>
         <input type="date" id="fecha-alquiler">
         <p class="info-note" id="info-fecha-2">Base para el control operativo</p>
       </div>
@@ -397,15 +582,27 @@
   <div class="card hidden" id="card-condiciones">
     <div class="card-title">Condiciones del equipo</div>
     <div id="grp-op-diesel">
-      <label class="check-row" for="cond-operador"><input type="checkbox" id="cond-operador"><span class="check-label">Operador incluido</span></label>
-      <label class="check-row" for="cond-diesel"><input type="checkbox" id="cond-diesel"><span class="check-label">Diesel incluido</span></label>
+      <label class="check-row" for="cond-operador">
+<input type="checkbox" id="cond-operador">
+<span class="check-label">Operador incluido</span>
+</label>
+      <label class="check-row" for="cond-diesel">
+<input type="checkbox" id="cond-diesel">
+<span class="check-label">Diesel incluido</span>
+</label>
     </div>
     <div class="check-row" style="padding-bottom:0;border-bottom:none">
       <div style="flex:1">
         <div class="check-label" style="margin-bottom:8px">Propiedad del equipo</div>
         <div class="toggle-group">
-          <label class="toggle-option"><input type="radio" name="propiedad" value="smm" checked><span class="toggle-pill">Equipo SMM</span></label>
-          <label class="toggle-option"><input type="radio" name="propiedad" value="arrendada"><span class="toggle-pill">Subarrendado</span></label>
+          <label class="toggle-option">
+<input type="radio" name="propiedad" value="smm" checked>
+<span class="toggle-pill">Equipo SMM</span>
+</label>
+          <label class="toggle-option">
+<input type="radio" name="propiedad" value="arrendada">
+<span class="toggle-pill">Subarrendado</span>
+</label>
         </div>
       </div>
     </div>
@@ -414,25 +611,30 @@
   <!-- 7. NOTAS -->
   <div class="card hidden" id="card-notas">
     <div class="card-title">Notas y observaciones</div>
-    <textarea id="notas" placeholder="Instrucciones especiales, condiciones de entrega, restricciones de horario…"></textarea>
+    <textarea id="notas" placeholder="Instrucciones especiales, condiciones de entrega, restricciones de horario…">
+</textarea>
   </div>
 
   <div class="alert-box" id="alert-box">⚠ Por favor completa todos los campos requeridos.</div>
   <button type="button" class="btn-submit hidden" id="btn-enviar" onclick="submitForm()">Enviar solicitud</button>
 
-</div><!-- /form-area -->
+</div>
+<!-- /form-area -->
 
 <div class="success-screen" id="success-screen">
   <div class="success-icon">✓</div>
   <div class="success-title">Solicitud enviada</div>
-  <div class="success-sub" id="success-msg"></div>
-  <div class="success-ref" id="success-ref"></div>
+  <div class="success-sub" id="success-msg">
+</div>
+  <div class="success-ref" id="success-ref">
+</div>
   <br>
   <button class="btn-nueva" onclick="location.reload()">Nueva solicitud</button>
 </div>
 </div>
 
-<script src="config.js"></script>
+<script src="config.js">
+</script>
 <script>
 // ════════════════════════════════════════════════
 //  Estado global
@@ -442,8 +644,10 @@ let accSub = 'movilizacion';   // sub-tipo de solo accesorio
 let origenMovil = 'galera';    // origen en movilización
 let destinoDesmo = 'galera';   // destino en desmovilización
 let cambioOrigen = 'galera';   // origen del equipo entrante en cambio
+let cambioDestino = 'galera';  // destino del equipo saliente en cambio
 let accOrigen = 'galera';      // origen accesorio (movilización)
 let accDestino = 'galera';     // destino accesorio (desmovilización)
+let famAccActual = '';         // familia activa para accesorio del equipo (movil./desmovil.)
 
 const $ = id => document.getElementById(id);
 const val = id => ($(id) && $(id).value) ? $(id).value.trim() : '';
@@ -481,26 +685,25 @@ function onAccCatChange(prefijo){
 // ════════════════════════════════════════════════
 //  Accesorios del equipo (movilización/desmovilización)
 // ════════════════════════════════════════════════
+const FAMILIAS_CON_BALDE_AUTO = ['excavadora','retroexcavadora','miniexcavadora'];
 function actualizarAccesorios(fam){
   const info = ACCESORIOS_POR_TIPO[fam];
   const row = $('row-acc-equipo');
-  if (!info){ row.classList.add('hidden'); $('row-acc-nuevo').classList.add('hidden'); return; }
+  famAccActual = fam;
+  if (!info){ row.classList.add('hidden'); $('row-acc-balde').classList.add('hidden'); return; }
   row.classList.remove('hidden');
-  const act = $('eq-acc-actual'); act.innerHTML = '';
-  act.insertAdjacentHTML('beforeend', `<option value="${info.default}" selected>${info.default} (por defecto)</option>`);
-  info.opcionales.forEach(o => act.insertAdjacentHTML('beforeend', `<option>${o}</option>`));
-  $('info-acc-eq').textContent = 'Opcionales: ' + info.opcionales.join(', ');
-  const nue = $('eq-acc-nuevo'); nue.innerHTML = '<option value="">Seleccionar…</option>';
-  [info.default, ...info.opcionales].forEach(o => nue.insertAdjacentHTML('beforeend', `<option>${o}</option>`));
-  $('eq-acc-accion').value = 'entrega';
-  onAccionChange();
+  const sel = $('eq-acc-sale'); sel.innerHTML = '';
+  sel.insertAdjacentHTML('beforeend', `<option value="${info.default}" selected>${info.default} (por defecto)</option>`);
+  info.opcionales.forEach(o => sel.insertAdjacentHTML('beforeend', `<option>${o}</option>`));
+  $('info-acc-eq').textContent = info.opcionales.length ? 'Opcionales: ' + info.opcionales.join(', ') : '';
+  onAccSaleChange();
 }
 function onEquipoChange(){ /* hook reservado */ }
-function onAccionChange(){
-  const acc = val('eq-acc-accion');
-  $('row-acc-nuevo').classList.toggle('hidden', acc !== 'cambio' && acc !== 'retirar');
-  // si retira, no hay nuevo accesorio
-  $('eq-acc-nuevo').parentElement.classList.toggle('hidden', acc !== 'cambio');
+function onAccSaleChange(){
+  const sel = val('eq-acc-sale');
+  const mostrar = FAMILIAS_CON_BALDE_AUTO.includes(famAccActual) && sel === 'Martillo hidráulico';
+  $('row-acc-balde').classList.toggle('hidden', !mostrar);
+  if (mostrar) $('eq-incluye-balde').checked = true;
 }
 
 // ════════════════════════════════════════════════
@@ -526,6 +729,12 @@ function setCambioOrigen(o){
   activar([['btn-co-galera','galera'],['btn-co-proveedor','proveedor'],['btn-co-proyecto','proyecto']], o);
   $('panel-co-detalle').classList.toggle('hidden', o === 'galera');
   $('lbl-co-detalle').textContent = o === 'proveedor' ? 'Nombre del proveedor' : 'Cliente / proyecto de origen';
+}
+function setCambioDestino(d){
+  cambioDestino = d;
+  activar([['btn-cd-galera','galera'],['btn-cd-otro','otro']], d);
+  $('panel-cd-galera').classList.toggle('hidden', d !== 'galera');
+  $('panel-cd-otro').classList.toggle('hidden', d !== 'otro');
 }
 function setAccOrigen(o){
   accOrigen = o;
@@ -597,7 +806,9 @@ function actualizarLabelsFechas(esDesmovil){
 const SUPABASE_URL = "https://ujoxrtwyfsqabhrjtjlr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqb3hydHd5ZnNxYWJocmp0amxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMTA4NzksImV4cCI6MjA5NjY4Njg3OX0.BSKtUjdvoUMsJ7L6buzUKjDM3ZxWipf-6Tz7YhS3C-4";
 const DB_COLS = ['referencia','tipo','subtipo','vendedor','fecha_solicitud','fecha_movilizacion','fecha_inicio_alquiler',
-  'equipo_codigo','equipo_tipo','equipo_sale','equipo_entra','origen_entrante','accesorio_actual','acc_accion','acc_nuevo',
+  'equipo_codigo','equipo_tipo','equipo_tipo_singular','equipo_sale','equipo_entra','tipo_sale','tipo_entra',
+  'origen_entrante','destino_saliente','destino_saliente_direccion','destino_saliente_contacto',
+  'accesorio_actual','acc_accion','acc_nuevo',
   'acc_destino','accesorio_entra','origen','retiro_cliente','retiro_proyecto','retiro_ubicacion','retiro_contacto',
   'entrega_cliente','entrega_proyecto','entrega_ubicacion','entrega_contacto','operador','diesel','propiedad','notas','estado'];
 
@@ -645,13 +856,14 @@ function recolectar(){
   if (tipo === 'movilizacion'){
     d.equipo_codigo = val('eq-codigo');
     d.equipo_tipo   = FAMILIAS[val('eq-familia')] || val('eq-familia');
-    d.accesorio_actual = val('eq-acc-actual') || null;
-    d.acc_accion = val('eq-acc-accion') || null;
-    d.acc_nuevo  = val('eq-acc-nuevo') || null;
-    d.acc_destino = document.querySelector('input[name="acc-destino"]:checked')?.value || null;
+    d.equipo_tipo_singular = FAMILIAS_SINGULAR[val('eq-familia')] || null;
+    d.accesorio_actual = val('eq-acc-sale') || null;
+    if (d.accesorio_actual === 'Martillo hidráulico' && !$('row-acc-balde').classList.contains('hidden') && $('eq-incluye-balde').checked) {
+      d.accesorio_actual += ' + Balde';
+    }
     d.origen = origenMovil;
     if (origenMovil === 'galera'){
-      d.retiro_cliente='SMM — Galera'; d.retiro_proyecto='La Mañanitas'; d.retiro_ubicacion='La Mañanitas, Panamá';
+      d.retiro_cliente=GALERA.nombre; d.retiro_proyecto=''; d.retiro_ubicacion=GALERA.direccion;
     } else {
       d.retiro_cliente=val('om-cliente'); d.retiro_proyecto=val('om-proyecto');
       d.retiro_ubicacion=val('om-ubicacion')||null; d.retiro_contacto=val('om-contacto')||null;
@@ -666,12 +878,16 @@ function recolectar(){
   if (tipo === 'desmovilizacion'){
     d.equipo_codigo = val('eq-codigo');
     d.equipo_tipo   = FAMILIAS[val('eq-familia')] || val('eq-familia');
-    d.accesorio_actual = val('eq-acc-actual') || null;
+    d.equipo_tipo_singular = FAMILIAS_SINGULAR[val('eq-familia')] || null;
+    d.accesorio_actual = val('eq-acc-sale') || null;
+    if (d.accesorio_actual === 'Martillo hidráulico' && !$('row-acc-balde').classList.contains('hidden') && $('eq-incluye-balde').checked) {
+      d.accesorio_actual += ' + Balde';
+    }
     d.origen = 'proyecto';
     d.retiro_cliente=val('od-cliente'); d.retiro_proyecto=val('od-proyecto');
     d.retiro_ubicacion=val('od-ubicacion')||null; d.retiro_contacto=val('od-contacto')||null;
     if (destinoDesmo === 'galera'){
-      d.entrega_cliente='SMM — Galera'; d.entrega_proyecto='La Mañanitas'; d.entrega_ubicacion='La Mañanitas, Panamá';
+      d.entrega_cliente=GALERA.nombre; d.entrega_proyecto=''; d.entrega_ubicacion=GALERA.direccion;
     } else {
       d.entrega_cliente=val('dd-cliente'); d.entrega_proyecto='';
       d.entrega_ubicacion=val('dd-ubicacion')||null;
@@ -686,8 +902,18 @@ function recolectar(){
     d.equipo_entra = val('ce-codigo');
     d.equipo_codigo = d.equipo_entra;
     d.equipo_tipo = FAMILIAS[val('ce-familia')] || val('ce-familia');
+    d.tipo_sale  = FAMILIAS_SINGULAR[val('cs-familia')] || null;
+    d.tipo_entra = FAMILIAS_SINGULAR[val('ce-familia')] || null;
     d.origen_entrante = cambioOrigen === 'galera' ? 'Galera SMM'
       : (cambioOrigen === 'proveedor' ? 'Proveedor: ' + val('co-detalle') : 'Proyecto: ' + val('co-detalle'));
+    if (cambioDestino === 'galera'){
+      d.destino_saliente = GALERA.nombre;
+      d.destino_saliente_direccion = GALERA.direccion;
+    } else {
+      d.destino_saliente = val('cd-lugar') || 'Otro destino';
+      d.destino_saliente_contacto = val('cd-contacto') || null;
+      if (!val('cd-lugar')) ok = false;
+    }
     d.retiro_cliente=val('cb-cliente'); d.retiro_proyecto=val('cb-proyecto');
     d.entrega_cliente=val('cb-cliente'); d.entrega_proyecto=val('cb-proyecto');
     d.entrega_ubicacion=val('cb-ubicacion')||null; d.entrega_contacto=val('cb-contacto')||null;
@@ -698,6 +924,7 @@ function recolectar(){
   if (tipo === 'accesorio'){
     d.equipo_codigo = val('ac-codigo');
     d.equipo_tipo = 'Accesorio';
+    d.equipo_tipo_singular = 'Accesorio';
     d.accesorio_actual = val('ac-codigo') || null;
     d.acc_nuevo = accSub === 'cambio' ? (val('ae-codigo') || null) : null;
     d.accesorio_entra = d.acc_nuevo;
@@ -706,7 +933,7 @@ function recolectar(){
 
     if (accSub === 'movilizacion'){
       d.origen = accOrigen;
-      if (accOrigen === 'galera'){ d.retiro_cliente='SMM — Galera'; d.retiro_proyecto='La Mañanitas'; d.retiro_ubicacion='La Mañanitas, Panamá'; }
+      if (accOrigen === 'galera'){ d.retiro_cliente=GALERA.nombre; d.retiro_proyecto=''; d.retiro_ubicacion=GALERA.direccion; }
       else { d.retiro_cliente=val('ao-lugar')||'Otro origen'; d.retiro_proyecto=''; d.retiro_contacto=val('ao-contacto')||null; }
       d.entrega_cliente=val('adc-cliente'); d.entrega_proyecto=val('adc-proyecto');
       d.entrega_ubicacion=val('adc-ubicacion')||null; d.entrega_contacto=val('adc-contacto')||null;
@@ -719,7 +946,7 @@ function recolectar(){
       d.retiro_ubicacion=val('acl-ubicacion')||null; d.retiro_contacto=val('acl-contacto')||null;
       if (!d.retiro_cliente || !d.retiro_proyecto) ok = false;
       if (accSub === 'desmovilizacion'){
-        if (accDestino === 'galera'){ d.entrega_cliente='SMM — Galera'; d.entrega_proyecto='La Mañanitas'; d.entrega_ubicacion='La Mañanitas, Panamá'; }
+        if (accDestino === 'galera'){ d.entrega_cliente=GALERA.nombre; d.entrega_proyecto=''; d.entrega_ubicacion=GALERA.direccion; }
         else { d.entrega_cliente=val('ad-lugar')||'Otro destino'; d.entrega_proyecto=''; d.entrega_contacto=val('ad-contacto')||null; }
       } else {
         d.entrega_cliente=d.retiro_cliente; d.entrega_proyecto=d.retiro_proyecto;
@@ -757,10 +984,12 @@ async function submitForm(){
 
     $('success-ref').textContent = d.referencia;
     $('success-msg').innerHTML =
-      `<strong>${tipos[tipo]}${d.subtipo ? ' — ' + d.subtipo : ''}</strong><br>` +
+      `<strong>${tipos[tipo]}${d.subtipo ? ' — ' + d.subtipo : ''}</strong>
+<br>` +
       `${detalle}<br>` +
       `Cliente: ${d.cliente_principal}${d.proyecto_principal ? ' / ' + d.proyecto_principal : ''}<br>` +
-      `Solicitado por: ${d.vendedor}<br><br>` +
+      `Solicitado por: ${d.vendedor}<br>
+<br>` +
       `${CONFIG.responsable_ops} y el equipo han sido notificados.`;
 
     $('form-area').style.display = 'none';

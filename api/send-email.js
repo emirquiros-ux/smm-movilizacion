@@ -20,11 +20,19 @@ export default async function handler(req, res) {
   const proyecto = d.proyecto_principal || d.entrega_proyecto || '';
 
   // Asunto
-  let subjectDetalle = d.equipo_codigo || '';
-  if (d.tipo === 'cambio') subjectDetalle = `${d.equipo_sale} / ${d.equipo_entra}`;
+  const ALERTA = '🚨';
+  let subjectDetalle;
+  if (d.tipo === 'cambio') {
+    const saleTxt  = (d.tipo_sale  ? d.tipo_sale  + ' ' : '') + (d.equipo_sale  || '');
+    const entraTxt = (d.tipo_entra ? d.tipo_entra + ' ' : '') + (d.equipo_entra || '');
+    subjectDetalle = `${saleTxt} ⇄ ${entraTxt}`;
+  } else {
+    const tipoSing = d.equipo_tipo_singular || '';
+    subjectDetalle = (tipoSing ? tipoSing + ' ' : '') + (d.equipo_codigo || '');
+  }
   const subject = d.tipo === 'cambio'
-    ? `Solicitud de Cambio de Equipos — ${subjectDetalle} | ${cliente}`
-    : `Nueva solicitud de ${tipoLabel} — ${subjectDetalle} | ${cliente}`;
+    ? `${ALERTA} Solicitud de Cambio de Equipos — ${subjectDetalle} | ${cliente}`
+    : `${ALERTA} Nueva solicitud de ${tipoLabel} — ${subjectDetalle} | ${cliente}`;
 
   const fmt = f => f ? f.split('-').reverse().join('/') : '—';
   const fechaMovil = fmt(d.fecha_movilizacion);
@@ -55,8 +63,6 @@ export default async function handler(req, res) {
 
   // Detalle accesorio del equipo
   let accesorioInfo = d.accesorio_actual || '—';
-  if (d.acc_accion === 'cambio' && d.acc_nuevo) accesorioInfo = `${d.accesorio_actual} → cambiar a ${d.acc_nuevo}`;
-  if (d.acc_accion === 'retirar') accesorioInfo = `${d.accesorio_actual} (retirar${d.acc_destino === 'galera' ? ' a galera SMM' : d.acc_destino === 'queda' ? ', queda en proyecto' : ''})`;
   if (d.tipo === 'accesorio' && d.subtipo === 'cambio' && d.accesorio_entra) accesorioInfo = `Sale: ${d.equipo_codigo} / Entra: ${d.accesorio_entra}`;
 
   const excavadoraSVG = `<svg width="42" height="32" viewBox="0 0 42 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,29 +82,35 @@ export default async function handler(req, res) {
   // Bloque principal (equipo + cliente)
   let bloqueEquipo;
   if (d.tipo === 'cambio') {
+    const saleLabel  = (d.tipo_sale  ? d.tipo_sale  + ' ' : '') + (d.equipo_sale  || '—');
+    const entraLabel = (d.tipo_entra ? d.tipo_entra + ' ' : '') + (d.equipo_entra || '—');
+    const destinoSaleTxt = d.destino_saliente_direccion
+      ? `${d.destino_saliente} — ${d.destino_saliente_direccion}`
+      : (d.destino_saliente || 'Galera SMM');
     bloqueEquipo = `
       <div style="border-left:5px solid #C0392B;padding:16px 20px;background:#fafafa;margin-bottom:28px;border-radius:0 8px 8px 0">
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#C0392B;margin-bottom:8px">Cambio de Equipos</div>
         <table cellpadding="0" cellspacing="0" width="100%"><tr>
           <td style="vertical-align:top;padding-right:14px">
             <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#999;margin-bottom:3px">Sale</div>
-            <div style="font-size:20px;font-weight:800;color:#1a1a1a">${d.equipo_sale}</div>
-            <div style="font-size:12px;color:#666">→ Galera SMM</div>
+            <div style="font-size:20px;font-weight:800;color:#1a1a1a">${saleLabel}</div>
+            <div style="font-size:12px;color:#666">→ ${destinoSaleTxt}</div>
           </td>
           <td style="vertical-align:middle;padding:0 8px;font-size:22px;color:#C0392B;font-weight:700">⇄</td>
           <td style="vertical-align:top;padding-left:14px">
             <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#999;margin-bottom:3px">Entra</div>
-            <div style="font-size:20px;font-weight:800;color:#1a1a1a">${d.equipo_entra}</div>
+            <div style="font-size:20px;font-weight:800;color:#1a1a1a">${entraLabel}</div>
             <div style="font-size:12px;color:#666">← ${d.origen_entrante || 'Galera SMM'}</div>
           </td>
         </tr></table>
         <div style="font-size:15px;color:#444;margin-top:12px;padding-top:12px;border-top:1px solid #eee">Cliente: <b>${cliente}</b> &nbsp;/&nbsp; ${proyecto}</div>
       </div>`;
   } else {
+    const tipoPrefix = d.equipo_tipo_singular || (d.equipo_tipo && d.equipo_tipo !== 'Accesorio' ? d.equipo_tipo : '');
     bloqueEquipo = `
       <div style="border-left:5px solid #C0392B;padding:16px 20px;background:#fafafa;margin-bottom:28px;border-radius:0 8px 8px 0">
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#C0392B;margin-bottom:6px">${tipoLabel}</div>
-        <div style="font-size:24px;font-weight:800;color:#1a1a1a;margin-bottom:4px">${d.equipo_tipo && d.equipo_tipo !== 'Accesorio' ? d.equipo_tipo + ' — ' : ''}${d.equipo_codigo || '—'}</div>
+        <div style="font-size:24px;font-weight:800;color:#1a1a1a;margin-bottom:4px">${tipoPrefix ? tipoPrefix + ' — ' : ''}${d.equipo_codigo || '—'}</div>
         <div style="font-size:15px;color:#444">Cliente: <b>${cliente}</b>${proyecto ? ' &nbsp;/&nbsp; ' + proyecto : ''}</div>
       </div>`;
   }
@@ -109,7 +121,18 @@ export default async function handler(req, res) {
   const contactoDestino = d.entrega_contacto
     ? `<div style="font-size:12px;color:#555;margin-top:8px;padding-top:8px;border-top:1px solid #eee"><b style="color:#1a1a1a">Contacto:</b> ${d.entrega_contacto}</div>` : '';
 
-  const rutaHtml = `
+  let rutaHtml;
+  if (d.tipo === 'cambio') {
+    // Para cambio, el origen/destino ya se muestran en bloqueEquipo (Sale → / Entra ←).
+    // Aquí solo mostramos la ubicación física donde ocurre el cambio.
+    rutaHtml = d.entrega_ubicacion ? `
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#999;margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid #eee">Ubicación del cambio</div>
+    <div style="border:1.5px solid #e0e0e0;border-radius:8px;padding:16px;margin-bottom:28px">
+      <div style="font-size:13px;color:#444;line-height:1.5">${d.entrega_ubicacion}</div>
+      ${contactoDestino}
+    </div>` : '';
+  } else {
+    rutaHtml = `
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#999;margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid #eee">Ruta del movimiento</div>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px"><tr>
       <td width="46%" style="border:1.5px solid #e0e0e0;border-radius:8px;padding:16px;vertical-align:top">
@@ -128,6 +151,7 @@ export default async function handler(req, res) {
         ${contactoDestino}
       </td>
     </tr></table>`;
+  }
 
   const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#e8e8e8;font-family:'Segoe UI',system-ui,sans-serif">

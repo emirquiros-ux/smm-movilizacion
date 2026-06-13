@@ -673,6 +673,12 @@ function onFamiliaChange(prefijo){
 function poblarCategoriasAcc(selId){
   CATEGORIAS_ACCESORIOS.forEach(c => $(selId).insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.label}</option>`));
 }
+function infoAccesorio(codigo){
+  const acc = ACCESORIOS.find(a => a.codigo === codigo);
+  if (!acc) return { tipo:'Accesorio', label:'Accesorio' };
+  const cat = CATEGORIAS_ACCESORIOS.find(c => c.id === acc.cat);
+  return { tipo: cat?.tipo || 'Accesorio', label: cat?.label || 'Accesorio' };
+}
 function onAccCatChange(prefijo){
   const cat = val(prefijo + '-categoria');
   const sel = $(prefijo + '-codigo');
@@ -807,7 +813,8 @@ const SUPABASE_URL = "https://ujoxrtwyfsqabhrjtjlr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqb3hydHd5ZnNxYWJocmp0amxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMTA4NzksImV4cCI6MjA5NjY4Njg3OX0.BSKtUjdvoUMsJ7L6buzUKjDM3ZxWipf-6Tz7YhS3C-4";
 const DB_COLS = ['referencia','tipo','subtipo','vendedor','fecha_solicitud','fecha_movilizacion','fecha_inicio_alquiler',
   'equipo_codigo','equipo_tipo','equipo_tipo_singular','equipo_sale','equipo_entra','tipo_sale','tipo_entra',
-  'origen_entrante','destino_saliente','destino_saliente_direccion','destino_saliente_contacto',
+  'origen_entrante','origen_entrante_direccion','origen_entrante_contacto',
+  'destino_saliente','destino_saliente_direccion','destino_saliente_contacto',
   'accesorio_actual','acc_accion','acc_nuevo',
   'acc_destino','accesorio_entra','origen','retiro_cliente','retiro_proyecto','retiro_ubicacion','retiro_contacto',
   'entrega_cliente','entrega_proyecto','entrega_ubicacion','entrega_contacto','operador','diesel','propiedad','notas','estado'];
@@ -906,6 +913,8 @@ function recolectar(){
     d.tipo_entra = FAMILIAS_SINGULAR[val('ce-familia')] || null;
     d.origen_entrante = cambioOrigen === 'galera' ? 'Galera SMM'
       : (cambioOrigen === 'proveedor' ? 'Proveedor: ' + val('co-detalle') : 'Proyecto: ' + val('co-detalle'));
+    d.origen_entrante_direccion = cambioOrigen === 'galera' ? GALERA.direccion : null;
+    d.origen_entrante_contacto = val('co-contacto') || null;
     if (cambioDestino === 'galera'){
       d.destino_saliente = GALERA.nombre;
       d.destino_saliente_direccion = GALERA.direccion;
@@ -923,8 +932,9 @@ function recolectar(){
 
   if (tipo === 'accesorio'){
     d.equipo_codigo = val('ac-codigo');
-    d.equipo_tipo = 'Accesorio';
-    d.equipo_tipo_singular = 'Accesorio';
+    const accInfo = infoAccesorio(d.equipo_codigo);
+    d.equipo_tipo = accInfo.label;
+    d.equipo_tipo_singular = accInfo.tipo;
     d.accesorio_actual = val('ac-codigo') || null;
     d.acc_nuevo = accSub === 'cambio' ? (val('ae-codigo') || null) : null;
     d.accesorio_entra = d.acc_nuevo;

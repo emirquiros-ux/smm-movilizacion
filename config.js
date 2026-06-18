@@ -10,13 +10,11 @@
 //     EN PRUEBAS: todos apuntan al correo de Emir. Reemplazar por los reales luego.
 // ------------------------------------------------------------
 const VENDEDORES = [
-  { nombre: "Vanesa Patiño",   email: "emir.quiros@infratec.com.pa" },
-  { nombre: "Ernesto Kochman", email: "emir.quiros@infratec.com.pa" },
-  { nombre: "Tomas Aguilar",   email: "emir.quiros@infratec.com.pa" },
-  { nombre: "Emir Quiros",     email: "emir.quiros@infratec.com.pa" },
-  { nombre: "Tony Parra",      email: "emir.quiros@infratec.com.pa" },
-  { nombre: "Gerardo Gomez",   email: "emir.quiros@infratec.com.pa" },
-];
+  { nombre: "Vanesa Patiño",   email: "vanesa.patino@smm.com.pa" },
+  { nombre: "Ernesto Kochman", email: "ek@smm.com.pa" },
+  { nombre: "Tomas Aguilar",   email: "tomas.aguilar@smm.com.pa" },
+  { nombre: "Emir Quiros",     email: "emir.quiros@smm.com.pa" },
+  { nombre: "Tony Parra",      email: "tony_parra@smm.com.pa" },];
 
 // ------------------------------------------------------------
 //  2. DESTINATARIOS DE ALERTAS (informativo — el envío real

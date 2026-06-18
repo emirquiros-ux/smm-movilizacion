@@ -6,7 +6,7 @@
 
 // 1) GERENTES — reciben el correo con botones Aprobar / Rechazar
 export const EMAILS_GERENTES = [
-  "ek@smm.com",            // Ernesto Kochman
+  "ek@smm.com.pa",            // Ernesto Kochman
   "tony_parra@smm.com.pa",    // Tony Parra
 ];
 
@@ -17,9 +17,9 @@ export const EMAILS_ALERTA = [
   "ana.gonzalez@smm.com.pa",     // Ana Gonzalez
   "jhonabet.pitty@smm.com.pa",   // Jhonabet Pitty
   "gerardo.gomez@smm.com.pa",    // Gerardo Gomez
-  "vanesa.patino@smm.com",    // Vanesa Patiño
-  "ek@smm.com",               // Ernesto Kochman
-  "tomas.aguilar@smm.com",    // Tomas Aguilar
+  "vanesa.patino@smm.com.pa",    // Vanesa Patiño
+  "ek@smm.com.pa",               // Ernesto Kochman
+  "tomas.aguilar@smm.com.pa",    // Tomas Aguilar
   "tony_parra@smm.com.pa",       // Tony Parra
   "emir.quiros@smm.com.pa",      // Emir Quiros
 ];
@@ -28,7 +28,7 @@ export const EMAILS_ALERTA = [
 //    La clave debe coincidir EXACTAMENTE con el nombre en el formulario.
 export const VENDEDOR_EMAIL = {
   "Vanesa Patiño":   "vanesa.patino@smm.com",
-  "Ernesto Kochman": "ek@smm.com",
+  "Ernesto Kochman": "ek@smm.com.pa",
   "Tomas Aguilar":   "tomas.aguilar@smm.com",
   "Tony Parra":      "tony_parra@smm.com.pa",
   "Emir Quiros":     "emir.quiros@smm.com.pa",

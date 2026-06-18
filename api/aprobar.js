@@ -1,9 +1,9 @@
 import nodemailer from 'nodemailer';
 import { construirEmail } from './_email-template.js';
+import { EMAILS_ALERTA } from './_emails.js';
 
 const SUPABASE_URL = "https://ujoxrtwyfsqabhrjtjlr.supabase.co";
 const SUPABASE_KEY = "sb_publishable_skDHEZ0PRVa3z-3fAaw4lw_v3LD0TSA";
-const EMAILS_ALERTA = ['emir.quiros@infratec.com.pa']; // EN PRUEBAS: solo Emir
 
 const fmt = f => f ? String(f).split('-').reverse().join('/') : '—';
 const tipoLabelOf = (d) => {

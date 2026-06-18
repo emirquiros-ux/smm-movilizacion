@@ -656,7 +656,7 @@ const val = id => ($(id) && $(id).value) ? $(id).value.trim() : '';
 //  Poblar selects desde config.js
 // ════════════════════════════════════════════════
 function poblarVendedores(){
-  VENDEDORES.forEach(v => $('vendedor').insertAdjacentHTML('beforeend', `<option>${v}</option>`));
+  VENDEDORES.forEach(v => $('vendedor').insertAdjacentHTML('beforeend', `<option>${v.nombre}</option>`));
 }
 function poblarFamilias(selId){
   Object.keys(FAMILIAS).forEach(f => $(selId).insertAdjacentHTML('beforeend', `<option value="${f}">${FAMILIAS[f]}</option>`));

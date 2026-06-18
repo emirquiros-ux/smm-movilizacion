@@ -6,13 +6,16 @@
 
 // ------------------------------------------------------------
 //  1. VENDEDORES / SOLICITANTES
+//     Cada uno con su correo (para avisarle si su solicitud es rechazada).
+//     EN PRUEBAS: todos apuntan al correo de Emir. Reemplazar por los reales luego.
 // ------------------------------------------------------------
 const VENDEDORES = [
-  "Vanesa Patiño",
-  "Ernesto Kochman",
-  "Tomas Aguilar",
-  "Emir Quiros",
-  "Tony Parra",
+  { nombre: "Vanesa Patiño",   email: "emir.quiros@infratec.com.pa" },
+  { nombre: "Ernesto Kochman", email: "emir.quiros@infratec.com.pa" },
+  { nombre: "Tomas Aguilar",   email: "emir.quiros@infratec.com.pa" },
+  { nombre: "Emir Quiros",     email: "emir.quiros@infratec.com.pa" },
+  { nombre: "Tony Parra",      email: "emir.quiros@infratec.com.pa" },
+  { nombre: "Gerardo Gomez",   email: "emir.quiros@infratec.com.pa" },
 ];
 
 // ------------------------------------------------------------
@@ -20,6 +23,14 @@ const VENDEDORES = [
 //     se configura en api/send-email.js)
 // ------------------------------------------------------------
 const EMAILS_ALERTA = [
+  "emir.quiros@infratec.com.pa",
+];
+
+// ------------------------------------------------------------
+//  2B. GERENTES APROBADORES (reciben el correo con botones
+//     Aprobar/Rechazar). EN PRUEBAS: solo Emir.
+// ------------------------------------------------------------
+const EMAILS_GERENTES = [
   "emir.quiros@infratec.com.pa",
 ];
 

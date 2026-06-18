@@ -1,19 +1,8 @@
 import nodemailer from 'nodemailer';
+import { EMAILS_GERENTES, VENDEDOR_EMAIL, DEFAULT_EMAIL } from './_emails.js';
 
 const SUPABASE_URL = "https://ujoxrtwyfsqabhrjtjlr.supabase.co";
 const SUPABASE_KEY = "sb_publishable_skDHEZ0PRVa3z-3fAaw4lw_v3LD0TSA";
-const EMAILS_GERENTES = ['emir.quiros@infratec.com.pa']; // EN PRUEBAS: solo Emir
-
-// Mapa vendedor → email (para avisar al solicitante). EN PRUEBAS: todos a Emir.
-const VENDEDOR_EMAIL = {
-  "Vanesa Patiño":   "emir.quiros@infratec.com.pa",
-  "Ernesto Kochman": "emir.quiros@infratec.com.pa",
-  "Tomas Aguilar":   "emir.quiros@infratec.com.pa",
-  "Emir Quiros":     "emir.quiros@infratec.com.pa",
-  "Tony Parra":      "emir.quiros@infratec.com.pa",
-  "Gerardo Gomez":   "emir.quiros@infratec.com.pa",
-};
-const DEFAULT_EMAIL = "emir.quiros@infratec.com.pa";
 
 const fmt = f => f ? String(f).split('-').reverse().join('/') : '—';
 const tipoLabelOf = (d) => {
@@ -177,4 +166,3 @@ export default async function handler(req, res) {
 
   return res.status(405).send('Método no permitido');
 }
-

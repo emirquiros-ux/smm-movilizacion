@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { construirEmail } from './_email-template.js';
 
 const SUPABASE_URL = "https://ujoxrtwyfsqabhrjtjlr.supabase.co";
 const SUPABASE_KEY = "sb_publishable_skDHEZ0PRVa3z-3fAaw4lw_v3LD0TSA";
@@ -137,28 +138,31 @@ export default async function handler(req, res) {
         '<h1>Esta solicitud ya fue gestionada</h1><p class="muted">Otro gerente actuó primero.</p>', '#9a6a00'));
     }
 
-    // Notificar a todos
+    // Notificar a todos con el CORREO COMPLETO (orden de ejecución), banner verde
     try {
       const GMAIL_USER = process.env.GMAIL_USER, GMAIL_PASS = process.env.GMAIL_PASS;
       if (GMAIL_USER && GMAIL_PASS) {
         const transporter = nodemailer.createTransport({ host:'smtp.gmail.com', port:465, secure:true, auth:{ user:GMAIL_USER, pass:GMAIL_PASS } });
         const cliente = d.cliente_principal || d.entrega_cliente || '';
-        const det = d.tipo === 'cambio' ? equipoOf(d) : (d.equipo_tipo_singular ? d.equipo_tipo_singular + ' ' : '') + (d.equipo_codigo || '');
-        const cambioTxt = equipoReal ? `<p style="margin:6px 0;color:#1a7a4a"><b>Equipo asignado:</b> ${equipoReal} (en vez de ${d.equipo_codigo || '—'})</p>` : '';
-        const html = `<div style="font-family:'Segoe UI',sans-serif;max-width:560px;margin:0 auto;border:1px solid #e0e0e0;border-radius:10px;overflow:hidden">
-          <div style="background:#1a7a4a;color:#fff;padding:18px 24px;font-size:17px;font-weight:700">✅ ${tipoLabelOf(d)} APROBADA</div>
-          <div style="padding:22px 24px">
-            <p style="margin:0 0 10px;font-size:16px"><b>${det}</b> — Cliente: <b>${cliente}</b></p>
-            <p style="margin:6px 0;color:#444">Estado: <b>Programada</b> · Fecha: ${fmt(d.fecha_movilizacion)}</p>
-            <p style="margin:6px 0;color:#444">Solicitado por: ${d.vendedor || '—'}</p>
-            ${cambioTxt}
-            <p style="margin:14px 0 0;font-family:monospace;color:#bbb;font-size:12px">${d.referencia || ''}</p>
-          </div></div>`;
+        // Si se asignó un equipo diferente, reflejarlo en los datos del correo
+        const dParaEmail = { ...d };
+        if (equipoReal) dParaEmail.equipo_real = equipoReal;
+        const subjAprobada = `✅ ${tipoLabelOf(d)} APROBADA — ${equipoOf(d)} | ${cliente}`;
+        const { htmlContent } = construirEmail(dParaEmail, {
+          bannerOverride: subjAprobada,
+          bannerColor: '#1a7a4a'
+        });
+        // Si cambió el equipo, agregar una nota destacada arriba del cuerpo
+        let htmlFinal = htmlContent;
+        if (equipoReal) {
+          const nota = `<div style="background:#edf7f2;border:1.5px solid #b8e0cc;border-radius:8px;padding:14px 18px;margin:0 0 18px"><b style="color:#1a7a4a">Equipo asignado por gerencia:</b> ${equipoReal} <span style="color:#888">(solicitado: ${d.equipo_codigo || '—'})</span></div>`;
+          htmlFinal = htmlContent.replace('<div style="background:#fff;padding:28px 32px">', '<div style="background:#fff;padding:28px 32px">' + nota);
+        }
         await transporter.sendMail({
           from: `"Movilizaciones SMM" <${GMAIL_USER}>`,
           to: EMAILS_ALERTA,
-          subject: `✅ ${tipoLabelOf(d)} APROBADA — ${equipoOf(d)} | ${d.cliente_principal || d.entrega_cliente || ''}`,
-          html
+          subject: subjAprobada,
+          html: htmlFinal
         });
       }
     } catch(e) { /* la aprobación ya quedó guardada; el correo es secundario */ }
@@ -169,4 +173,3 @@ export default async function handler(req, res) {
 
   return res.status(405).send('Método no permitido');
 }
-

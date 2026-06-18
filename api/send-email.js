@@ -1,10 +1,13 @@
+import nodemailer from 'nodemailer';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  const RESEND_KEY = process.env.RESEND_API_KEY;
-  if (!RESEND_KEY) {
-    return res.status(500).json({ error: 'Missing API key' });
+  const GMAIL_USER = process.env.GMAIL_USER;
+  const GMAIL_PASS = process.env.GMAIL_PASS;
+  if (!GMAIL_USER || !GMAIL_PASS) {
+    return res.status(500).json({ error: 'Faltan las variables GMAIL_USER / GMAIL_PASS en Vercel' });
   }
 
   const d = req.body;
@@ -238,20 +241,18 @@ export default async function handler(req, res) {
 
   const destinatarios = ['emir.quiros@infratec.com.pa'];
 
-  const emailRes = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RESEND_KEY}` },
-    body: JSON.stringify({
-      from: 'SMM Movilizaciones <onboarding@resend.dev>',
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: { user: GMAIL_USER, pass: GMAIL_PASS }
+  });
+
+  try {
+    await transporter.sendMail({
+      from: `"Movilizaciones SMM" <${GMAIL_USER}>`,
       to: destinatarios,
       subject: subject,
       html: htmlContent
-    })
-  });
-
-  if (!emailRes.ok) {
-    const err = await emailRes.text();
-    return res.status(500).json({ error: err });
-  }
-  return res.status(200).json({ ok: true });
-}
+    });
+    return res.status(200).json({ ok: 

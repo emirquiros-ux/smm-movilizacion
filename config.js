@@ -74,6 +74,7 @@ const EQUIPOS = [
   { codigo:"E-08-2",  tipo:"excavadora", desc:"Excavadora hidráulica" },
   { codigo:"E-09-2",  tipo:"excavadora", desc:"Excavadora hidráulica" },
   { codigo:"E-10-2",  tipo:"excavadora", desc:"Excavadora hidráulica" },
+  { codigo:"E-11",  tipo:"excavadora", desc:"Excavadora hidráulica" },
   { codigo:"E-12-2",  tipo:"excavadora", desc:"Excavadora hidráulica" },
   { codigo:"E-13-LR", tipo:"excavadora", desc:"Excavadora brazo largo" },
   { codigo:"E-14-2",  tipo:"excavadora", desc:"Excavadora hidráulica" },

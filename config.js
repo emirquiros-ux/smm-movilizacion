@@ -160,6 +160,7 @@ const EQUIPOS = [
   { codigo:"C-14",    tipo:"compactadora", desc:"Compactadora" },
   { codigo:"C-15",    tipo:"compactadora", desc:"Compactadora" },
   { codigo:"C-16",    tipo:"compactadora", desc:"Compactadora" }, 
+  { codigo:"CA-11",    tipo:"compactadora", desc:"Compactadora" },
   { codigo:"CA-12",    tipo:"compactadora", desc:"Compactadora" },
   { codigo:"CT-01-2", tipo:"compactadora", desc:"Compactadora 4 ton" },
   { codigo:"CT-06",   tipo:"compactadora", desc:"Compactadora 4 ton" },
